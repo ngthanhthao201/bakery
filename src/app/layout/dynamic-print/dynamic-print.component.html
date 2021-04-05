@@ -1,0 +1,261 @@
+<!-- //
+//
+//
+// Checkout Print
+//
+// -->
+<div style="display: none;" id="invoice-POS" #invoicePOS>
+
+    <!-- <div class="info-shop-name" *ngIf="shopService.currentShop">
+        <h3>{{shopService.currentShop.name}}</h3>
+    </div> -->
+    <div class="info-shop-name" [innerHtml]="shopService.getShopConfigByName('bill-header')">
+    </div>
+    <div *ngIf="incomeHeader && incomeHeader.memberId > 0">
+        <span>Người tạo: {{shopService.getMemberNameById(incomeHeader.memberId)}}</span>
+    </div>
+
+    <div style="padding:0px; margin:0px; margin-bottom: 5px;" class="info-shop-name" style="text-align: center;">
+        <span>{{dateTimeService.now | date:'short'}}</span>
+    </div>
+
+    <div id="bot">
+
+        <div id="table">
+            <table class="table table-transactions" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="text-align: left">
+                            <h5 style="margin:0px; padding:0px;font-size:12px; font-weight:bold;">S.Phẩm</h5>
+                        </th>
+                        <th style="text-align: left">
+                            <h5 style="margin:0px; padding:0px;font-size:12px; font-weight:bold;">SL</h5>
+                        </th>
+                        <th style="text-align: left">
+                            <h5 style="margin:0px; padding:0px;font-size:12px; font-weight:bold;">ĐG</h5>
+                        </th>
+                        <th style="text-align: left">
+                            <h5 style="margin:0px; padding:0px;font-size:12px; font-weight:bold;">T.Tiền</h5>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let it of incomeHeader.incomeTransactions">
+                        <td class="tableitem" style="margin:0px; padding:0px">
+                            <span class="itemtext">{{it.description}}</span>
+                        </td>
+                        <td class="tableitem" style="margin:0px; padding:0px">
+                            <span class="itemtext">{{it.quantity}}</span>
+                        </td>
+                        <td class="tableitem" style="margin:0px; padding:0px">
+                            <span class="itemtext">{{it.unitPrice | currencyformat:'trim'}}</span>
+                        </td>
+                        <td class="tableitem" style="margin:0px; padding:0px">
+                            <span class="itemtext">{{it.amount | currencyformat:'trim'}}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+        <div style="margin-top:10pt; margin-bottom:10pt;">
+            <h3>Tổng cộng: {{checkoutCash.moneyCake | currencyformat}}</h3>
+        </div>
+        <!--End Table-->
+        <p class="separator" style='white-space:pre-line; border:solid 1px;padding: 2px'></p>
+        <div style="text-align:center;">
+            <table *ngIf="checkoutCash.moneyCustomer" class="checkout-confirm-print-table">
+                <tr>
+                    <td>
+                        <h5 style="margin:2px; padding:2px;">Khách đưa:</h5>
+                    </td>
+                    <td>
+                        <h5 style="margin:2px; padding:2px;">{{checkoutCash.moneyCustomer * 1000 | currencyformat}}</h5>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h3 style="margin:2px; padding:2px;">Tiền thừa:</h3>
+                    </td>
+                    <td>
+                        <h3 style="margin:2px; padding:2px;">
+                            {{checkoutCash.moneyCustomer *1000 - checkoutCash.moneyCake| currencyformat}}</h3>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+        <hr class="style-seven">
+        <div id="legalcopy"  style="text-align: center;" [innerHtml]="shopService.getShopConfigByName('bill-footer')">
+
+        </div>
+    </div>
+    <!--End InvoiceBot-->
+</div>
+
+<!-- //
+//
+//
+// Order Print
+//
+// -->
+
+<div style="display: none;" id="order-POS-customer" #orderPOSCustomer>
+
+    <div *ngIf="!receipt4Customer && currentOrder" style="display: inline-flex;">
+        <div *ngIf="currentOrder.isUrgent">
+            <span style="color:white; background: black;font-size: 20px;">Gấp</span>
+        </div>
+            <div class="center-test">
+                    
+                    <div>
+                        <span></span><p>
+                            {{currentOrder.deliveryPickupTime | date:'dd/MM'}}
+                            {{currentOrder.deliveryPickupTime | date:'HH:mm a'}}
+                            {{currentOrder.deliveryPickupTime | date:'EEEE'}}
+                        </p>
+                    </div>
+                 
+                </div>
+
+                <div style="margin-left:10px; font-size:18px; font-weight: bolder;">
+                    <div>
+                            <span *ngIf="currentOrder.advanceInfo.address"><img width="32" height="32" src="https://mybakerystorage.blob.core.windows.net/static/delivery_receipt.png"> Đi Giao</span>
+                            <span *ngIf="!currentOrder.advanceInfo.address">Nhận Tại Tiệm</span>
+                    </div>    
+
+                   <div style="margin-top: 10px;">{{currentCustomer.name}}</div> 
+                   <div> {{currentCustomer.phoneNumber | vnphone}}</div> 
+                    
+                </div>
+    </div>
+
+    <div class="info-shop-name" *ngIf="receipt4Customer && shopService.currentShop">
+        <h2>{{shopService.currentShop.name}}</h2></div>
+    <div class="info-shop-address" *ngIf="receipt4Customer && shopService.getShopConfigByName('bill-header')">
+        {{shopService.getShopConfigByName('bill-header')}}</div>
+
+
+    <p class="separator" style='white-space:pre-line; border:solid 1px;padding: 2px'></p>
+
+     <div *ngIf="currentOrder && getShortIdNumber()" style="padding:0px; margin:0px" class="info-shop-name" style="text-align: center;">
+        <div style="text-align:center;display: inline-flex;">
+            <qrcode  [width]="96" [errorCorrectionLevel]="'M'" [elementType]="'svg'" [qrdata]="qrOrderValue"></qrcode>
+            <div>
+                <h3 style="margin:4px; padding:4px">Biên Nhận (<span >{{dateTimeService.now | date:'short'}}</span>)</h3>
+                <div *ngIf="currentOrder && currentOrder.memberId > 0">
+                        <span>N.Tạo: {{shopService.getMemberNameById(currentOrder.memberId)}}</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div style="text-align:center;display: inline-flex;" > 
+
+            <ngx-barcode6 [bc-width]="1.4" [bc-height]="35" id="barcode-content" [bc-element-type]="'svg'"
+                [bc-value]="barcodeOrderValue" [bc-display-value]="'true'" [bc-format]="'CODE128'"
+                [bc-background]="'#ffffff'"></ngx-barcode6>
+        </div>
+    </div>
+
+
+    <p class="separator" style='white-space:pre-line; border:solid 1px;padding: 2px'></p>
+
+    <div class="invoice-box" *ngIf="currentOrder">
+        <table class="table table-transactions">
+            <thead>
+                <tr>
+                    <th><h5 style="margin:0px; padding:0px;font-size:12px; font-weight:bold;">Tên</h5></th>
+                    <th><h5 style="margin:0px; padding:0px;font-size:12px; font-weight:bold;">SL</h5></th>
+                    <th><h5 style="margin:0px; padding:0px;font-size:12px; font-weight:bold;">Đ Giá</h5></th>
+                    <th><h5 style="margin:0px; padding:0px;font-size:12px; font-weight:bold;">T tiền</h5></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let it of currentOrder.orderDetails">
+                    <td class="tableitem" style="margin:0px; padding:0px">
+                        <span class="itemtext">{{it.description}}</span>
+                    </td>
+                    <td class="tableitem" style="margin:0px; padding:0px">
+                        <span class="itemtext">{{it.quantity}}</span>
+                    </td>
+                    <td class="tableitem" style="margin:0px; padding:0px">
+                        <span class="itemtext">{{it.unitPrice | currencyformat:'trim'}}</span>
+                    </td>
+                    <td class="tableitem" style="margin:0px; padding:0px">
+                        <span class="itemtext">{{it.quantity * it.unitPrice | currencyformat:'trim'}}</span>
+                    </td>
+                </tr>
+                <tr *ngIf="currentOrder.fee">
+                    <td><span>Phí</span></td>
+                    <td><span>1</span></td>
+                    <td><span>{{currentOrder.fee |  currencyformat:'trim'}}</span></td>
+                    <td><span>{{currentOrder.fee |  currencyformat:'trim'}}</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br>
+        <br>
+
+        <div [innerHtml]="currentOrder | orderCommentsDynamicPrint">
+           
+        </div> 
+        <br>
+
+        <div class="row" >
+            <table class="total-order-table ">
+                <tbody>
+                    <!-- <tr class="total">
+                        <td>SĐT Khách: </td>
+                        <td class="td-value">
+                            {{currentCustomer.phoneNumber | vnphone}}
+                        </td>
+                    </tr> -->
+                    <!-- <tr class="total">
+                        <td>Ngày Giao: </td>
+                        <td class="td-value">
+                                {{currentOrder.deliveryPickupTime | date:'HH:mm EEEE, d/MM'}}
+                        </td>
+                    </tr> -->
+                    <tr class="total">
+                        <td>T.Cộng: </td>
+                        <td class="td-value">
+                            {{currentOrder.amount | currencyformat}}
+                        </td>
+                    </tr>
+                    <tr class="total">
+                        <td>Đặt Cọc: </td>
+                        <td class="td-value">
+                            {{currentOrder.deposit | currencyformat}}
+                        </td>
+                    </tr>
+                    <tr class="total">
+                        <td>Còn Lại: </td>
+                        <td class="td-value">
+                            {{currentOrder.amount- currentOrder.deposit | currencyformat}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- <div id="qtest1" style="float: right;">
+                <qrcode [qrdata]="currentOrder.uniqueId" [size]="64"  [level]="'M'"></qrcode>
+            </div> -->
+        </div>
+    </div>
+
+    <hr class="style-seven">
+    <div  id="legalcopy" style="text-align: center; display: inline-flex;" class="row">
+
+        <small class="legal" style="vertical-align: middle;text-align: start;margin-left: 20px;">
+            Quý khách vui lòng không đổi trả hàng khi ra khỏi cửa hàng.
+        </small>
+    </div> 
+
+</div>
+
+<!-- <div id="qtest1">
+        <qrcode [qrdata]="qrCodeValue" [size]="64"  [level]="'M'"></qrcode>
+</div> -->

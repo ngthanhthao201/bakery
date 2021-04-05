@@ -1,0 +1,53 @@
+.customer-avatar{
+    border-radius: 50%;
+    width: 48px;
+    &.Male{
+
+        color: #aad9f1 !important;
+        border-color: #aad9f1 !important;
+        border: solid 2px;
+    };
+    &.Female{
+
+        color: #f2bfee !important;
+        border-color: #f2bfee !important;
+        border: solid 2px;
+    }
+}
+
+.userPhotoChangePanel {
+    opacity: 0;
+    background: #3e4144;
+    background: rgba(0,0,0,0.7);
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 500;
+    height: 124px;
+    margin: 2px;
+    outline: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 124px;
+    transition: opacity .25s ease-in-out;
+    .editPhoto {
+        cursor: pointer;
+        left: 53px;
+        outline: 0;
+        position: absolute;
+        top: 20px;
+        z-index: 2;
+    }
+    .editPhoto-Label {
+        line-height: 119px;
+        font-family: sans-serif;
+    }
+}
+
+.userPhotoChangePanel:hover {
+    opacity: 100; 
+    transition: opacity .25s ease-in-out
+}

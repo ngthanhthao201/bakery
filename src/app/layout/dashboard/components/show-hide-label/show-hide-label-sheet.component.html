@@ -1,0 +1,24 @@
+<div style="display: grid">
+    <mat-checkbox
+        *ngFor="let l of labels"
+        [(ngModel)]="barcodeService.labelsShowHideSettings[l]"
+        >{{ l }}</mat-checkbox
+    >
+
+
+</div>
+<hr />
+
+<div class="form-group" #tab>
+    <label> Tinh chỉnh kích cỡ chữ bánh nhỏ & phụ kiện </label>
+    <mat-slider
+        [(ngModel)]="settingsService.smallCakeTextLevel"
+        min="1"
+        max="4"
+        step="1"
+    ></mat-slider>
+
+    <span class="badge badge-primary">{{
+        settingsService.smallCakeTextLevel
+    }}</span>
+</div>

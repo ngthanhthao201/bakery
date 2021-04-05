@@ -1,0 +1,21 @@
+<div ngbDropdown (click)="$event.stopPropagation()">
+    <button class="btn btn-outline-primary" [matMenuTriggerFor]="menu" id="dropdownBasic1" ngbDropdownToggle> <i
+            class="fa fa-cog"></i></button>
+            <mat-menu #menu="matMenu">
+                    <button class="dropdown-item" (click)="editOrder()">
+                        <i class="fa fa-edit"></i> Sửa</button>
+                    <button class="dropdown-item" (click)="cancelOrder()">
+                        <i class="fa fa-remove"></i> Hủy Đơn</button>
+                    <button class="dropdown-item" (click)="printOrder()">
+                        <i class="fa fa-print"></i> In \ Phiếu Biên</button>
+                    <button class="dropdown-item" (click)="linkToChatOrder()">
+                        <i class="ft-message-circle"></i> Chat</button>
+                    <button class="dropdown-item" (click)="lalamove()">
+                        🚲 Giao qua Lalamove</button>
+                    <button class="dropdown-item" (click)="openCreateDriverRunDialog()">
+                        🚲 Chọn Tài Xế</button>
+                    <button class="dropdown-item" (click)="createNganLuongTransactionDialog()">
+                        💲 Tạo thanh Toán</button>
+            </mat-menu>
+
+</div>

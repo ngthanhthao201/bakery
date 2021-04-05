@@ -1,0 +1,158 @@
+<!-- Nav tabs -->
+<div [@routerTransition]>
+    <app-page-header heading="Bánh nhỏ - phụ kiện (mã vạch cứng)"></app-page-header>
+    <mat-tab-group style="margin-top: 5px" #stuffTabs>
+        <mat-tab active label="Tình Trạng Bánh">
+            <mat-form-field color="primary" style="min-width: 300px">
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Tìm kiếm bộ lọc" />
+                <mat-icon matSuffix>search</mat-icon>
+                <mat-hint>gõ tên không dấu, ngày/tháng. VD: 30/04</mat-hint>
+            </mat-form-field>
+
+            <ngx-datatable #table class="material no-shadow" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [scrollbarH]="true" [rowHeight]="'auto'" [limit]="100" [rows]="hardProductsRows">
+                <ngx-datatable-row-detail [rowHeight]="'auto'" #myDetailRow (toggle)="onDetailToggle($event)" class="datatable-row-detail bootstrap">
+                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+                        <div style="
+                                max-height: 50vh;
+                                overflow-y: auto;
+                                margin-left: 50px;
+                            ">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Thời Gian</th>
+                                        <th>Nhập</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="
+                                            let block of row.hardBlockProductBarcodes;
+                                            let index = index
+                                        ">
+                                        <th scope="row">{{ index + 1 }}</th>
+                                        <td>
+                                            <div style="display: -webkit-box">
+                                                {{ block.checkinDate | date: "short" }}
+                                            </div>
+                                        </td>
+                                        <td>{{ block.originalCount }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-row-detail>
+
+                <ngx-datatable-column [width]="50" [resizeable]="false" [sortable]="false" [draggable]="false" [canAutoResize]="false">
+                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                        <a href="javascript:void(0)" [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded" title="Expand/Collapse Row" (click)="toggleExpandRow(row)">
+                        </a>
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Loại Bánh" [sortable]="true" prop="productCategoryName">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div style="display: -webkit-inline-box">
+                            <!-- <img style="width: 48px; height:48px; margin-right: 10px;" src="{{barcodeService.getCategoryImage(row.productCategoryBarcodeId) || 'https://mybakerystorage.blob.core.windows.net/static/placeholder-image.jpg'}}"> -->
+                            <div>
+                                <div style="font-weight: bold">
+                                    {{ row.name }} ({{ row.price | currencyformat }})
+                                </div>
+                                <div>
+                                    <img src="../../../assets/images/barcode.png" /> {{ row.barcode }}
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Tổng còn" [sortable]="true" prop="checkinDate">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span> {{ row.total }}</span>
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Nhập / Hủy" [sortable]="true" prop="checkinDate">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <button style="margin: 8px 0px" class="btn btn-raised mr-1 ft-log-in" (click)="openSelectCountStuff(row)">
+                            Nhập hàng
+                        </button>
+                        <button style="margin: 8px 0px" class="btn btn-raised mr-1 btn-danger fa fa-times" (click)="destroyHardProduct(row)">
+                            Hủy
+                        </button>
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable>
+        </mat-tab>
+
+        <mat-tab label="Cài đặt bánh nhỏ - phụ kiện">
+            <mat-form-field color="primary" style="min-width: 300px">
+                <input matInput (keyup)="applyFilterSetting($event.target.value)" placeholder="Tìm kiếm bộ lọc" />
+                <mat-icon matSuffix>search</mat-icon>
+                <mat-hint>gõ tên không dấu, ngày/tháng. VD: 30/04</mat-hint>
+            </mat-form-field>
+
+            <button class="btn btn-raised mr-1 btn-info ft-plus" (click)="addNewStuff()" style="margin-left: 5%">
+                Thêm mới bánh
+            </button>
+
+            <button *ngIf="memberService.hasPermission('shop.setting')" class="btn btn-raised mr-1 btn-info" (click)="resetStuffs()" style="margin-left: 5%">
+                Reset tồn về 0
+            </button>
+
+            <ngx-datatable #table class="material" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="100" [rows]="hardProductsSettingRows" [scrollbarH]="true">
+                <ngx-datatable-column name="Loại Bánh" [sortable]="true" prop="productCategoryName">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div style="display: -webkit-inline-box">
+                            
+                            <div >
+                                <div style="height: 110px;width: 110px">
+                                    <img class="category-img"  src="{{ row.image || 'https://mybakerystorage.blob.core.windows.net/static/placeholder-image.jpg' }}" />
+                                    <div tabindex="0" class="userPhotoChangePanel">
+                                        <image-uploader-button (croppedImageDone)="croppedImageDone($event, row)"></image-uploader-button>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex;
+                                justify-content: space-between;">
+                                    <p>{{ row.name }}</p>
+                                </div>
+                                <div class="badge badge-danger">
+                                    {{ row.label }}
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Đơn giá" [sortable]="true" prop="price">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span> {{ row.price | currencyformat }}</span>
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Mã code" [sortable]="true" prop="barcode">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div>
+                            <img src="../../../assets/images/barcode.png" /> {{ row.barcode }}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Action" [sortable]="true" prop="checkinDate">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <button class="btn btn-raised mr-1 ft-arrow-down" (click)="downloadStuffBarCode(row)">
+                            Tải mã vạch
+                        </button>
+                        <button class="btn btn-raised mr-1 btn-info ft-edit" (click)="addNewStuff(row)">
+                            Sửa
+                        </button>
+                        <button class="btn btn-raised mr-1 btn-danger fa fa-times" (click)="deleteStuff(row)">
+                            Xóa
+                        </button>
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable>
+        </mat-tab>
+    </mat-tab-group>
+</div>

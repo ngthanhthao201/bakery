@@ -1,0 +1,75 @@
+
+    <div class="chat-name p-2 bg-white">
+      <div class="media">
+        <span class="chat-app-sidebar-toggle ft-align-justify font-large-1 mr-2 d-none d-block d-sm-block d-md-none"></span>
+        <div class="media-body">
+          <img [src]="[chatRoom.customer.image || '../../../../../../assets/images/avatar_placeholder.png']" width="37" class="rounded-circle mr-1 float-left"
+            alt="avatar" />
+          <span class="float-left">
+            {{ chatRoom.customer.name }}
+            <a (click)="openOrder(chatRoom.orderId)" class="success font-small-2" *ngIf="chatRoom.orderId">Xem đơn</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  <section class="chat-app-window" #scrollMe  [scrollTop]="scrollMe.scrollHeight" style="">
+    <div class="badge badge-dark mb-1">Chat History</div>
+    <div class="chats">
+      <div class="chats">
+        <div [ngClass]="[chat.chatClass]" *ngFor="let chat of chat">
+          <div class="chat-avatar" >
+            <a class="avatar" data-toggle="tooltip" data-placement="[chat.avatar]" title="" data-original-title="">
+              <img src="{{chat.imagePath  || '../../../../../../assets/images/avatar_placeholder.png'}}" class="width-50" alt="avatar" />
+            </a>
+            <h6 _ngcontent-c7="" class="list-group-item-heading" style="padding-top:10px;">{{chat.name}}
+              <span _ngcontent-c7="" class="time">{{ chat.createdDate }}</span></h6>
+          </div>
+          <div class="chat-body">
+            <div class="chat-content" *ngFor="let message of chat.messages">
+              <p *ngIf="chat.messageType === 'text'">{{ message }}</p>
+              <p *ngIf="chat.messageType === 'image'"><img [src]="message" alt="" width="200px"></p>
+            </div>
+          </div>
+          <p class="time" *ngIf="chat.time !='' ">{{chat.time}}</p>
+        </div>
+
+        <div class="chat" *ngIf="messages.length > 0">
+          <div class="chat-body">
+            <div class="chat-content" *ngFor="let message of messages">
+              <p>{{ message }}</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <section class="chat-app-form bg-blue-grey bg-lighten-5">
+
+        
+    <form class="chat-app-input bg-blue-grey bg-lighten-5 row" style="padding-top: 10px;">
+
+      <fieldset class="form-group position-relative has-icon-left col-xl-10 col-lg-8 col-8 m-0 mb-1">
+        <textarea type="text" class="form-control" id="iconLeft4" rows="1" placeholder="Nhập Tin Nhắn"
+          (keydown.enter)="onAddMessage('');$event.preventDefault()" #messageInput [(ngModel)]="messages" id="emojionearea"
+          name="currentMember"></textarea>
+        <div class="form-control-position control-position-right" style="margin-right: 3%;">
+          <!-- <a icon-only (click)="toggled = !toggled" [(emojiPickerIf)]="toggled" [emojiPickerDirection]="'top'"
+            (emojiPickerSelect)="handleSelection($event)">
+            <div class="icon-emoticon-smile" style="display: -webkit-inline-box;"></div>
+          </a> -->
+        </div>
+        <input style="display: none" type="file" (change)="getFiles($event)" #imageInput>
+        <div class="form-control-position control-position-right" (click)="imageInput.click()">
+          <i class="ft-image"></i>
+        </div>
+      </fieldset>
+
+      <fieldset class="form-group position-relative has-icon-left col-xl-2 col-lg-4 col-4 m-0 mb-1">
+        <button type="button" class="btn btn-raised btn-info" (click)="onAddMessage('')">
+          <i class="fa fa-paper-plane-o hidden-lg-up"></i> Gửi</button>
+      </fieldset>
+
+    </form>
+  </section>
+

@@ -1,0 +1,63 @@
+<div class="row">
+    <div style="position: relative; cursor: pointer; text-align: center; min-width:265px ">
+        <img class="category-img" src="{{image || currentCategory.image || 'https://mybakerystorage.blob.core.windows.net/static/placeholder-image.jpg'}}">
+
+        <div tabindex="0" class="userPhotoChangePanel">
+            <input style="display:none" type="file" ngModel (change)="getFiles($event)" accept="image/*" id="icon-input">
+            <label for="icon-input">
+                <div class="editPhoto-Label">Click vào để chọn hình</div>
+                <div class="editPhoto">
+                    <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+                </div>
+            </label>
+            <div tabindex="0" class="removePhoto">
+                <!-- <md-tooltip>
+                Remove Photo
+            </md-tooltip> -->
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+        <div style="margin: 20px">
+            <fieldset class="form-group">
+                <label>Tên album</label>
+                <input [(ngModel)]="currentCategory.name" class="form-control" style="border-color: darkgrey;">
+            </fieldset>
+        </div>
+
+        <div style="margin: 20px">
+            <fieldset class="form-group">
+                <label>Nhãn Dán</label>
+                <mat-select *ngIf="currentCategory.productLabel" [(ngModel)]="currentCategory.productLabel.name" class="form-control">
+                    <mat-option [value]="">
+                        None
+                    </mat-option>
+                    <mat-option *ngFor="let l of productLabels" [value]="l.name">
+                        <div *ngIf="(l==null)">
+                        </div>
+                        {{l.name}} ({{l.description}})
+                    </mat-option>
+                </mat-select>
+                <mat-select  *ngIf="(currentCategory.productLabel == null)" [(ngModel)]="currentCategory.productLabelId" class="form-control">
+                    <mat-option [value]="">
+                        None
+                    </mat-option>
+                    <mat-option *ngFor="let l of productLabels" [value]="l.id">
+                        {{l.name}} ({{l.description}})
+                    </mat-option>
+                </mat-select>
+            </fieldset>
+        </div>
+    </div>
+</div>
+
+<mat-dialog-actions>
+    <div style="float: right;  text-align: end; float: right; width: 100%;">
+        <button mat-button mat-dialog-close>Hủy</button>
+        <button [disabled]="!currentCategory.name" mat-raised-button color="primary" (click)="createOrUpdateCategory()">Đồng
+            ý</button>
+        <!-- <a class="btn btn-raised mr-1 btn-secondary" mat-dialog-close>Hủy</a>
+        <a class="btn btn-raised mr-1 btn-primary" [disabled]="!currentCategory.name" (click)="createOrUpdateCategory()">Lưu</a> -->
+    </div>
+</mat-dialog-actions>

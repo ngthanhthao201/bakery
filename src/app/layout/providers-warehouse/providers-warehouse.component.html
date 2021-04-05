@@ -1,0 +1,243 @@
+<div>
+    <app-page-header heading="Kho & Nhà cung cấp"></app-page-header>
+
+    <div style="float: right;">
+        <button style="z-index: 9; margin-right: 10px;" matTooltip="{{ 'NewProvider' | translate }}" (click)="createNewProvider()"
+            mat-raised-button color="primary">
+            <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+            Nhà Cung Cấp
+        </button>
+
+        <button style="z-index: 9" matTooltip="{{ 'NewExpense' | translate }}" (click)="createExpenses({})"
+            mat-raised-button color="warn">
+            <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+            Tạo mới
+        </button>
+    </div>
+
+    <!-- <mat-tab-group class="demo-tab-group">
+  <mat-tab label="Tab 1">
+    <ng-template mat-tab-label>
+      <mat-icon>store_mall_directory</mat-icon>
+      <span>Kho</span>
+    </ng-template>
+    <div class="demo-tab-content">
+        <mat-form-field>
+            <input matInput (keyup)="applyFilterMaterial($event.target.value)" placeholder="{{'Search' | translate}}">
+          </mat-form-field>
+      <ngx-datatable
+            
+              #tableMaterial
+              class='material'          
+              [columnMode]="'force'"
+              [headerHeight]="50"
+              [footerHeight]="50"
+              [rowHeight]="60"
+              [limit]="50"
+              [rows]='materialRows'
+              (activate)="onActivateMaterial($event)"
+              [loadingIndicator]="loadingIndicator"
+              [reorderable]="true"
+              >
+              <ngx-datatable-column name="Name">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                   Tên  (đơn vị)<br>
+                   Nhà cung cấp
+                  </ng-template>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <span style="font:bold">  {{value}} </span><span *ngIf="row.unit">({{row.unit}})</span>
+                    <div>
+                        <span style="color:#aaa" *ngIf="row.materialProvider"> {{row.materialProvider.name}} </span>
+                    </div>
+                   
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="UnitsInStock">
+              <ng-template let-column="column" ngx-datatable-header-template>
+                 Số lượng trong kho
+                </ng-template>
+              <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
+                  <div> {{value}}</div>
+                  <a style="color:#8BC34A" href="javascript:void()" (click)="$event.stopPropagation();editInStock(row)">Sửa số lượng</a>
+                   | 
+                  <a style="color:#f44336" href="javascript:void()" (click)="$event.stopPropagation();createExpenses(row)">Nhập thêm</a>
+              </ng-template>
+          </ngx-datatable-column>
+
+              <ngx-datatable-column name="Actions">
+                  <ng-template let-column="column" ngx-datatable-header-template>
+                     
+                    </ng-template>
+                  <ng-template  let-row="row" let-value="value" ngx-datatable-cell-template>
+                      <div class="actions-button" >
+                        <button matTooltip="{{ 'ClickToDelete' | translate }}" (click)="removeMaterial(row.id)" mat-icon-button color="warn">
+                            <mat-icon aria-label="Example icon-button with a heart icon">remove</mat-icon>
+                          </button>
+                        </div>
+                  </ng-template>
+              </ngx-datatable-column>
+            </ngx-datatable>
+    </div>
+  </mat-tab>
+  <mat-tab label="Tab 2">
+    <ng-template mat-tab-label>
+      <mat-icon>local_shipping</mat-icon>
+      <span>Nhà cung cấp</span>
+    </ng-template>
+    <div class="demo-tab-content">
+        <mat-form-field>
+            <input matInput (keyup)="applyFilterProvider($event.target.value)" placeholder="{{'Search' | translate}}">
+          </mat-form-field>
+        <ngx-datatable
+            
+        #tableProvider
+        class='material'          
+        [columnMode]="'force'"
+        [headerHeight]="50"
+        [footerHeight]="50"
+        [rowHeight]="60"
+        [limit]="50"
+        [rows]='materialProviderRows'
+        (activate)="onActivateProvider($event)"
+        [loadingIndicator]="loadingIndicator"
+        [reorderable]="true"
+        >
+
+
+        <ngx-datatable-column name="Name">
+          <ng-template let-column="column" ngx-datatable-header-template>
+             Tên nhà cung cấp
+            </ng-template>
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <span> {{value}} </span> 
+              <br>
+              <a style="color:#f44336" href="javascript:void()" (click)="$event.stopPropagation();createExpenses({materialProvider: row})">Nhập hàng</a>
+          </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Phone">
+        <ng-template let-column="column" ngx-datatable-header-template>
+           Phone
+          </ng-template>
+        <ng-template  let-value="value" ngx-datatable-cell-template>
+            <span> {{value}}</span>
+        </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Address">
+        <ng-template let-column="column" ngx-datatable-header-template>
+           Địa chỉ
+          </ng-template>
+        <ng-template  let-value="value" ngx-datatable-cell-template>
+            <span> {{value}}</span>
+        </ng-template>
+    </ngx-datatable-column>
+
+        <ngx-datatable-column name="Actions">
+            <ng-template let-column="column" ngx-datatable-header-template>
+               
+              </ng-template>
+            <ng-template  let-row="row" let-value="value" ngx-datatable-cell-template>
+                <div class="actions-button" >
+                  <button matTooltip="{{ 'ClickToEdit' | translate }}" (click)="$event.stopPropagation();editProviderInfo(row)" mat-icon-button color="primary">
+                      <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+                    </button>
+                  </div>
+            </ng-template>
+        </ngx-datatable-column>
+
+      </ngx-datatable>
+    </div>  
+  </mat-tab>
+  
+</mat-tab-group> -->
+
+
+    <div class="demo-tab-content">
+        <mat-form-field>
+            <input matInput (keyup)="applyFilterProvider($event.target.value)" placeholder="{{'Search' | translate}}">
+        </mat-form-field>
+
+
+        <mat-accordion multi="true">
+
+            <mat-expansion-panel expanded="true" *ngFor="let p of materialProviderRows">
+                <img src="{{p.image}}" style="width: 40px;margin-right: 9px;border-radius: 50%;">
+                <span style="font-weight: bold;">{{p.name}}</span>( <mat-icon color="primary" style="vertical-align: middle">smartphone</mat-icon>
+                <span>{{p.phone}}</span>)
+                <button matTooltip="{{ 'ClickToEdit' | translate }}" (click)="editProviderInfo(p)" mat-icon-button
+                    color="primary">
+                    <mat-icon aria-label="Example icon-button with a heart icon" style="vertical-align: middle;">edit</mat-icon>
+                </button>
+                <ul style="padding: 10px; margin-left: 25px;cursor: pointer;" *ngFor="let m of p.materials" class="material-item"
+                    (click)="onActivateMaterial(m)">{{m.name}}
+                </ul>
+
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <!-- <ngx-datatable
+      
+  #tableProvider
+  class='material'          
+  [columnMode]="'force'"
+  [headerHeight]="50"
+  [footerHeight]="50"
+  [rowHeight]="60"
+  [limit]="50"
+  [rows]='materialProviderRows'
+  (activate)="onActivateProvider($event)"
+  [loadingIndicator]="loadingIndicator"
+  [reorderable]="true"
+  >
+
+
+  <ngx-datatable-column name="Name">
+    <ng-template let-column="column" ngx-datatable-header-template>
+       Tên nhà cung cấp
+      </ng-template>
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <span style="font-weight: bold"> {{value}} </span> 
+    </ng-template>
+</ngx-datatable-column>
+
+<ngx-datatable-column name="Phone">
+  <ng-template let-column="column" ngx-datatable-header-template>
+     Phone
+    </ng-template>
+  <ng-template  let-value="value" ngx-datatable-cell-template>
+      <span> {{value}}</span>
+  </ng-template>
+</ngx-datatable-column>
+
+<ngx-datatable-column name="Address">
+  <ng-template let-column="column" ngx-datatable-header-template>
+     Địa chỉ
+    </ng-template>
+  <ng-template  let-value="value" ngx-datatable-cell-template>
+      <span> {{value}}</span>
+  </ng-template>
+</ngx-datatable-column>
+
+  <ngx-datatable-column name="Actions">
+      <ng-template let-column="column" ngx-datatable-header-template>
+         
+        </ng-template>
+      <ng-template  let-row="row" let-value="value" ngx-datatable-cell-template>
+          <div class="actions-button" >
+            <button matTooltip="{{ 'ClickToEdit' | translate }}" (click)="$event.stopPropagation();editProviderInfo(row)" mat-icon-button color="primary">
+                <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+              </button>
+              <button matTooltip="Nhập hàng" (click)="$event.stopPropagation();createExpenses({materialProvider: row})" mat-icon-button color="warn">
+                <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+              </button>
+            </div>
+      </ng-template>
+  </ngx-datatable-column>
+
+
+</ngx-datatable> -->
+    </div>
+
+</div>

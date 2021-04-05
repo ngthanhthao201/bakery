@@ -1,0 +1,72 @@
+<div>
+
+
+        <!-- <mat-table #table [dataSource]="dataSource">
+
+            <ng-container matColumnDef="description">
+              <mat-header-cell *matHeaderCellDef> {{'Description' | translate}} </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.description}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="amount">
+              <mat-header-cell *matHeaderCellDef> {{'Amount' | translate}} </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.amount | currencyformat}} </mat-cell>
+            </ng-container>
+        
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+          </mat-table> -->
+          <ngx-datatable
+                #table
+                class='material no-shadow'
+                [columns]="columns"
+                [columnMode]="'force'"
+                [headerHeight]="50"
+                [footerHeight]="50"
+                [rowHeight]="'auto'"
+                [limit]="10"
+                [rows]='rows'>
+
+                <ngx-datatable-column name="Description">
+                        <ng-template let-column="column" ngx-datatable-header-template>
+                           {{'Description'| translate}}
+                          </ng-template>
+                        <ng-template  let-row="row" ngx-datatable-cell-template>
+                            <span> {{row.incomeTransactions | descriptions: 'quantitydescription'}}</span>
+                        </ng-template>
+                    </ngx-datatable-column>
+                <ngx-datatable-column name="Amount">
+                        <ng-template let-column="column" ngx-datatable-header-template>
+                           {{'Amount'| translate}}
+                          </ng-template>
+                        <ng-template  let-value="value" ngx-datatable-cell-template>
+                            <span> {{value | currencyformat}}</span>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="DateCreated" [sortable]="true" prop='DateCreated'>
+                        <ng-template let-column="column" ngx-datatable-header-template>
+                           Thời gian
+                          </ng-template>
+                        <ng-template  let-row="row" ngx-datatable-cell-template >
+                            <span> {{row.dateCreated | date: 'short'}}</span>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="DateCreated" [sortable]="true" prop='DateCreated'>
+                      <ng-template let-column="column" ngx-datatable-header-template>
+                         Người Tạo
+                        </ng-template>
+                      <ng-template  let-row="row" ngx-datatable-cell-template >
+                        
+                          <span> {{shopService.getMemberNameById(row.memberId)}}</span>
+                      </ng-template>
+                  </ngx-datatable-column>
+
+      </ngx-datatable>
+
+    <mat-dialog-actions style="justify-content: flex-end;float: right;">
+        <button mat-button mat-dialog-close>Đóng</button>
+    </mat-dialog-actions>
+</div>

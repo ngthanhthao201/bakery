@@ -1,0 +1,59 @@
+<section [@routerTransition]>
+  <app-page-header heading="Quản lý vouchers"></app-page-header>
+<div>
+  <button matTooltip="{{ 'NewIncome' | translate }}" (click)="openDialog()" mat-raised-button color="primary">
+    <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon> 
+    Tạo mới vouchers
+  </button>
+</div>
+
+<div class="container">
+  <mat-accordion class="example-headers-align">
+    <mat-expansion-panel hideToggle="true" *ngFor="let group of voucherGroups">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{group[0].text}}
+        </mat-panel-title>
+        <mat-panel-description >
+          <span *ngIf="group[0].startDate && group[0].endDate"> {{group[0].startDate | date}} - {{group[0].endDate | date}} </span>
+          <span></span>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+        <div>
+            <mat-tab-group>
+                <mat-tab label="Mới ({{group.activeGroup.length}})">
+                   <div class="row col-md-12" style="margin-top: 15px">
+                    <div class="col-md-2" *ngFor="let i of group.activeGroup" style="padding: 5px">
+                      {{i.voucherCode}}
+                    </div>
+                   </div>
+                </mat-tab>
+                <mat-tab label="Đã Sử Dụng ({{group.usedGroup.length}})">
+                    <div class="row col-md-12" style="margin-top: 15px">
+                        <div class="col-md-2" *ngFor="let i of group.usedGroup" style="padding: 5px">
+                          {{i.voucherCode}}
+                        </div>
+                       </div>
+                </mat-tab>
+                <mat-tab label="Cài đặt & Xóa">
+                    <div class="row col-md-12" style="margin-top: 15px">
+                        <div class="col-md-6">
+                          <button>
+                            In
+                          </button>
+                        </div>
+                        <div class="col-md-6">
+                            <button mat-raised-button (click)="deleteVoucher(group[0].groupName)" color="warn">Xóa Voucher</button>
+                            <mat-hint align="end" style="margin-left:15px;"> Xóa voucher và tất cả mã trong voucher này</mat-hint>
+                        </div>
+                        
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </mat-expansion-panel>
+  
+  </mat-accordion>
+</div>
+
+</section>

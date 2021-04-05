@@ -1,0 +1,60 @@
+<div [@routerTransition]>
+    <app-page-header *ngIf="productCategory" heading="{{productCategory.name}}" [parents]="parentsLink"></app-page-header>
+    <mat-toolbar>
+        <span fxHide fxShow.gt-sm *ngIf="productCategory">Mẫu của {{productCategory.name}}</span>
+        <div>
+            <button (click)="createNewProduct()" style="margin-left: 50px;" matTooltip="{{ 'NewProduct' | translate }}" class="btn btn-raised mr-1 btn-info ft-plus"> Thêm Mẫu</button>
+            <button mat-button (click)="createSeriesProduct()" style="margin-left: 50px;" class="btn btn-raised mr-1 btn-info ft-plus" matTooltip="{{ 'NewProduct' | translate }}">Thêm Mẫu Hàng Loạt</button>
+            <button fxHide fxShow.gt-sm color="warn" style="float: right; position: absolute;right: 10%;" mat-raised-button
+                (click)="previewOnPhone()">
+                <mat-icon aria-label="Example icon-button with a heart icon">smartphone</mat-icon>
+                PREVIEW
+            </button>
+        </div>
+    </mat-toolbar>
+    <div>
+       <ngx-datatable
+            class="material"
+            [limit]="10" 
+            [rows]="products"
+            [columnMode]="'force'"
+            [headerHeight]="35"
+            [footerHeight]="30"
+            [rowHeight]="'auto'">
+            <ngx-datatable-column name="Hình">
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                  <div>
+                      <img class="product-img" src="{{row.image}}" width="15%"  />
+                  </div>  
+                 
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Tên">
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                <div style="text-transform: capitalize;">{{value}}</div>
+                <div style="font-size: 16px;">{{row.name}}</div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Kích Thước">
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                  <div style="text-transform: capitalize;">{{value}}</div>
+                  <div *ngIf="row.cakeSizeType" style="font-size: 16px;"> {{row.cakeSizeType.name}}</div>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Giá">
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                  <div style="text-transform: capitalize;">{{value}}</div>
+                  <div *ngIf="row.cakeSizeType" style="font-size: 16px;"> {{row.sellingPrice | currencyformat}}</div>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                  <span style=" color:#47a3da" (click)="updateProduct(row)"><mat-icon>edit</mat-icon></span>
+                </ng-template>
+              </ngx-datatable-column>
+          </ngx-datatable>
+    </div>
+</div>
+<!-- <div *ngFor="let url of imageurl">
+  <img src={{url}}  width="10%"/>
+</div> -->

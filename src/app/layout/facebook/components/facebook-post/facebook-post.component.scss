@@ -1,0 +1,58 @@
+
+.facebookpages-image {
+    background-image: url('../../../../../assets/images/fbpageslogo.jpg');
+    background-size: cover;
+  }
+  
+
+  .facebookpageslogo-image {
+    background-image: url('../../../../../assets/images/facebook_icon.png');
+    background-size: cover;
+  }
+  .facebookpagescake-image{
+    background-image: url('../../../../../assets/images/icon_76.png');
+    background-size: cover;
+  }
+
+  .facebook-page-container{
+    background: #ddd;
+    
+  }
+
+.dottedMain{
+  padding: 30px;
+  margin-right: 10px;
+  margin-left: 30px;
+  border: 2px dotted #111111;
+}
+.dotted{
+  border: 2px dotted #4949495c;
+}
+
+button{
+  font-size: 14px
+}
+button:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+  
+textarea {
+  min-height: 50px;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  overflow: hidden;
+}
+
+// .customClass .img-ul-clear {
+//   display: none !important;
+//   background-color: #B819BB !important;
+// }
+
+.video-drop-zone{
+  border: dotted 3px lightgray;
+  padding: 10px;background-color: #f8f8f8;
+  color: #9b9b9b;
+  font-family: sans-serif;
+  font-weight: 600;
+}
+

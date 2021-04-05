@@ -1,0 +1,60 @@
+<div>
+  <h5 style="text-align: center; padding-top: 50px;">Trang nhập bánh giúp theo dõi nhập bánh theo đợt. Xin mời nhập bằng tay.</h5>
+</div>
+<svg class="spinnerHidden" id="loading" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+    <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+ </svg>
+<div class="container_cake">
+  <div class="cake">
+      <div class="information-cake">
+          <h4 class="add-cake">Thêm Bánh</h4>
+          <p>Thông tin</p>
+      </div>
+      <form>
+        <div class="form-group row" style="position: relative; cursor: pointer; text-align: center; min-width:265px " >
+            <label class="col-md-4">Hình ảnh</label>
+            <div class="mat-form-field col-md-6" appearance="fill" style="min-width: 300px;"  >
+
+            <img class="category-img" src="{{image || newProductBarcodes.image  || 'https://mybakerystorage.blob.core.windows.net/static/placeholder-image.jpg'}}">
+
+            <div tabindex="0" class="userPhotoChangePanel">
+                <input style="display:none" type="file" ngModel (change)="getFiles($event)" accept="image/*" id="icon-input">
+                <label for="icon-input" style="margin-top: 22px;">
+                    <div class="editPhoto-Label">Click vào để chọn hình</div>
+                    <div class="editPhoto">
+                        <mat-icon aria-label="Example icon-button with a heart icon" style="margin-top: 22px;">edit</mat-icon>
+                    </div>
+                </label>
+                <div tabindex="0" class="removePhoto">
+                </div>
+            </div>
+            </div>
+        </div>
+
+          <div class="form-group row form-group_category" style="margin-right:-30px">
+              <label class="col-md-4">Nhóm Bánh<i *ngIf="a == 'k'" class="fa fa-exclamation-circle"></i></label>
+              <mat-form-field class="mat-form-field col-md-6" appearance="fill" style="min-width: 300px;"  >
+                  <mat-label>---Lựa chọn---</mat-label>
+                  <mat-select [formControl]="cakeGroup" [(ngModel)]="newProductBarcodes.productCategoryBarcodeId" (selectionChange)="onChangeCategory($event)">
+                      <mat-option   *ngFor="let cate of category; let index = index;" [value]="cate.idBarcode" (input)="onChangeEvent($event.target.value)"  >
+                          {{cate.name}}
+                          
+                      </mat-option>
+                  </mat-select>
+              </mat-form-field>
+          </div>
+          <div class="form-group row">
+              <label class="col-md-4">Giá nhập<i *ngIf="priceNumber == true" class="fa fa-exclamation-circle"></i></label>
+              <mat-form-field class="mat-form-field col-md-6" color="primary" style="min-width: 300px;">
+                  <input [formControl]="price" matInput type="number"  [(ngModel)]="newProductBarcodes.price" (input)="onChangeEvent($event.target.value)" >
+              </mat-form-field>
+          </div>
+          <div>
+            <input readonly [value]="barcode" style="text-align: center; margin-bottom: 5%;"/>
+          </div>
+                
+
+          <button (click)="addCategory()" [disabled] ="priceNumber" class="btn">Thêm</button>
+      </form>
+  </div>
+</div>

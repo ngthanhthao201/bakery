@@ -1,0 +1,480 @@
+<!-- <button class="col-md-3 btn-one btn"   (click)="hienBanhKem()" >Bánh kem</button> -->
+<div class="col-md-9" style="display: flex;">
+    <div class="row">
+
+
+
+        <div class="col-sm-2 tab {{curentTab == tab.tabCode ? 'active': ''}}" *ngFor="let tab of shopService.currentShop.shopTabs">
+            <a (click)="showTab(tab)" color="{{ curentTab != tab.tabCode ? 'primary' : 'accent'}}" mat-raised-button class="button button-tab">
+                <span color="primary" class="gradient"></span>{{tab.tabName}}
+                <i *ngIf="curentTab === tab.tabCode" class="down"></i></a>
+        </div>
+
+        <div class="col-sm-12" style="display: grid; margin-left: auto; margin-right: 0px;">
+            <mat-form-field class="custom-width-search-patients">
+                <mat-icon matSuffix>search</mat-icon>
+                <mat-icon matSuffix style="margin-right: 60px">
+                    <a class="" href="/input-product-barcode-handmade" target='_blank'>
+                        <i class="fa fa-plus-square" style="font-size: 30px; padding: 10px"></i>
+                    </a>
+                    <!-- <a (click)="openInputProduct()" class="" href="javascript:;" >
+                                <i class="fa fa-barcode" style="font-size:30px "></i>&nbsp;
+                            </a> -->
+
+                    <a href="/input-product-barcode" class="" target='_blank'>
+                        <i class="fa fa-barcode" style="font-size:30px "></i>&nbsp;
+                    </a>
+                </mat-icon>
+                <input placeholder="Tìm tên, phụ kiện, mã vạch.." matInput [matAutocomplete]="auto" #autoCompleteSearchInput (input)="searchProducts($event.target.value)" type="text" [(ngModel)]="selectedProduct" inputWithWordPad (keyWordPressedChanged)="keyWordPressedChanged($event)"
+                    [formControl]="searchsCtrl" [customControl]="searchsCtrl" />
+                <mat-autocomplete (optionSelected)="onSelectProduct($event)" #auto="matAutocomplete">
+                    <mat-option style="height: 64px;" *ngFor="let p of filteredProducts" [value]="p" (click)=" addQuickPrice(
+                                p.name == undefined ? p.productCategoryName : p.name,
+                                p.HardProduct,
+                                p.price,
+                                p.barcode
+                            )">
+                        <div style="display: inline-flex;width: 100%;">
+                            <img class="category-img" src="{{p.image}} " style="width:64px;height: auto;" />
+                            <div style="height: 64px;line-height: 23px;padding: 15px; width: 100%;">
+                                <span> {{ p.name == undefined ?  p.productCategoryName : p.name}} </span>
+                                <br/>
+                                <span>
+                                        {{p.price | currencyformat}}
+                                    </span>
+                                <span *ngIf="p.productCategoryName" style="font-size: 9px;" style="float: right;"> 
+                                        {{p.barcode}}
+                                    </span>
+                            </div>
+                        </div>
+
+                    </mat-option>
+                </mat-autocomplete>
+
+                <mat-hint>có thể tìm kiếm bằng kí tự đầu tiên</mat-hint>
+            </mat-form-field>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="row" *ngIf="curentTab === 'ProductBarcode'">
+    <div class="col-md-9" id="products-dashboard-container">
+        <!-- <button class="col-md-2" mat-raised-button (click)="addQuickPrice(100000);" >100.000</button> -->
+
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 col-12">
+                <div class="card">
+                    <!-- <mat-form-field color="primary" style="min-width: 300px;">
+                        <input matInput type="search" (keyup)="applySearchFilter($event.target.value, byName.open(), byPrice.open())"  placeholder="Tìm kiếm bộ lọc">
+                        <mat-icon matSuffix>search</mat-icon>
+                        <mat-hint>gõ tên không dấu, ngày/tháng. VD: 30/04</mat-hint>
+                    </mat-form-field> -->
+
+
+
+
+                    <mat-accordion style="margin-bottom: 20px;">
+                        <mat-expansion-panel [expanded]="isFirst" (click)="togglePanel()">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <h4 style="font-weight: bold; cursor: pointer;color:rgb(33, 150, 243); font-size:16px;">
+                                        Giá bánh kem</h4>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="card-header">
+                                <div class="card-title-wrap bar-success">
+                                    <h4 class="card-title">Giá Bánh Kem</h4>
+                                </div>
+                                <span style="margin-left: 5px"><a matTooltip="thêm giá" class="btn btn-outline-success"
+                                        (click)="addPrice(SaleType.Product)">+</a></span>
+                                <!-- <span style="margin-left:5px"><a matTooltip="lựa bánh" class="btn btn-outline-success"
+                                    [matMenuTriggerFor]="menu.childMenu">⚡</a></span> -->
+                                <!-- <app-menu-item #menu [items]="navItem.children"></app-menu-item>
+                            <span style="margin-left:5px"><a matTooltip="cài đặt" class="btn btn-outline-success"
+                                    (click)="openSellCakeSettings();">⚙</a></span> -->
+                            </div>
+                            <div class="card-block">
+                                <mat-chip-list>
+                                    <mat-chip *ngFor="let pc of priceChips4Cake" (mousedown)="mousedown(1, pc)" (mouseup)="mouseup()" class="price-chip" [ngStyle]="{
+                                        color: pc.color,
+                                        background: pc.background
+                                    }" (click)="
+                                        addQuickPrice(
+                                            'Bánh',
+                                            SaleType.Product,
+                                            pc.value
+                                        )
+                                    ">
+                                        {{ pc.value | currencyformat }}
+                                    </mat-chip>
+                                </mat-chip-list>
+
+
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+
+                    <div class="card-body">
+
+                        <div class="form-check form-check_item" style="margin-bottom: 15px;">
+                            <input class="form-check-input" value="true" [checked]="radioCheck" (change)="radioChange($event)" type="radio" name="exampleRadios" id="exampleRadiosName" class="btn-round m10">
+                            <label class="form-check-label" for="exampleRadiosName" style="font-size:20px; font-weight: bold; margin-left: 10px;">
+                                Theo Tên
+                            </label>
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadiosPrice" class="btn-round m10" value="false" [checked]="!radioCheck" (change)="radioChange($event)" style="margin-left: 20px;">
+
+                            <label class="form-check-label" for="exampleRadiosPrice" style="font-size:20px; font-weight: bold; margin-left: 10px;">
+                                Theo Giá
+                            </label>
+                        </div>
+                        <!-- <div id="addtocart">
+                            <span class="cart-item">Có bánh mới</span>
+                        </div> -->
+                        <div class="tabCard" *ngIf="tabForSaleName">
+                            <mat-tab-group (wheel)="scrollTabs($event)" #tabGroup animationDuration="0ms" *ngIf="radioCheck">
+
+                                <ng-container *ngFor="let tabName of tabForSaleName; let i = index ">
+                                    <mat-tab *ngIf="tabName.price > 1000">
+                                        <ng-template mat-tab-label class="mat-tab-labell sendtocart" id="test">
+                                            <img class="bow" src="../../../assets/images/bow.png" alt="" style="width:14px">
+
+                                            <div class="price" style="margin-left: 4px;margin-right: 4px;">
+                                                <p style="margin-top:14px; font-size: 10px; font-weight: bold;">
+                                                    {{tabName.productCategoryName }}</p>
+                                                <p style="margin-top: -22px; font-size: 12px; font-weight: bold">SL: {{tabName.categoryName.length}}
+                                                </p>
+                                            </div>
+                                        </ng-template>
+
+                                        <p class="reverse" (click)="reverse()">Sắp xếp theo ngày</p>
+                                        <div class="col-12 col-md-12" id="recent-sales" style="margin-top: 30px;">
+                                            <div class="row mb-2" style="align-items: center; display: flex;justify-content: center;">
+                                                <pagination-controls (pageChange)="p[i] = $event" [id]="tabName"></pagination-controls>
+                                            </div>
+                                            <div class="row mb-2" style="display: flex;justify-content: flex-start;flex-wrap: wrap;align-content: center;">
+                                                <!-- <div class=" col-3 col-md-3"
+                                                    *ngFor="let cardName of tabName.categoryName; ">
+                                                    <div *ngIf="cardName.price > 1000">
+                                                        <img class="cupcake"
+                                                            src="../../../assets/images/cupcake__2_.png" alt="">
+                                                        <mat-card (click)=" addQuickPrice(
+                                                            cardName.productCategoryName,
+                                                            cardName.HardProduct,
+                                                            cardName.price,
+                                                            cardName.barcode
+                                                        )" class="example-card"
+                                                            style="margin-top: 12px; margin-bottom: 22px;">
+                                                            <div class="card_header">
+                                                                <div class="card_img">
+                                                                    <p
+                                                                        style="font-weight: bold; text-align: center; margin-top: 14px; width: 90px">
+                                                                        <img class="category-img"
+                                                                            src="{{cardName.image}} " />
+                                                                    </p>
+                                                                </div>
+                                                                <div class="card-title">
+                                                                    <p
+                                                                        style="font-weight: bold; text-align: center; margin-top: 14px;">
+                                                                        {{cardName.productCategoryName}} </p>
+                                                                    <p style="margin-left:18px; font-weight: bold;">
+                                                                        Giá: {{+cardName.price/1000}}k </p>
+                                                                    <p style="margin-left:18px; font-style: 8px;"> <i
+                                                                            class="fa fa-barcode"
+                                                                            style="font-size:20px "></i>&nbsp;
+                                                                        {{cardName.barcode}}</p>
+                                                                    <p style="margin-left:18px; font-size:16px">
+                                                                        {{cardName.checkinDate | date: 'medium'}}</p>
+                                                                    <br />
+                                                                    <span style=" font-size: inherit;
+                                                                                  position: absolute;
+                                                                                  position: sticky;
+                                                                                  float: left;"
+                                                                        class="badge badge-danger"
+                                                                        *ngIf="quickOrderService.getQuantityByBarcode(cardName.barcode)">
+                                                                        {{
+                                                                        quickOrderService.getQuantityByBarcode(cardName.barcode)}}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </mat-card>
+                                                    </div>
+
+                                                </div> -->
+                                                <div class="col" *ngFor="let cardName of tabName.categoryName | paginate: { itemsPerPage: 6, currentPage: p[i], id: tabName }">
+                                                    <div *ngIf="cardName.price > 1000">
+                                                        <!-- <img class="cupcake" src="../../../assets/images/cupcake__2_.png"
+                                                    alt=""> -->
+                                                        <div class="productCard" (click)=" addQuickPrice(
+                                                    cardName.productCategoryName,
+                                                    cardName.HardProduct,
+                                                    cardName.price,
+                                                    cardName.barcode
+                                                )">
+                                                            <div class="left">
+                                                                <img class="category-img" src="{{cardName.image}} " />
+                                                            </div>
+                                                            <div class="right">
+                                                                <p style="font-weight: bold; text-align: center; margin-top: 14px;" data-bs-toggle="tooltip" data-bs-placement="top" title="{{cardName.productCategoryName}}">
+                                                                    {{cardName.productCategoryName}} </p>
+                                                                <p style="margin-left:18px; font-weight: bold;">
+                                                                    Giá: {{+cardName.price/1000}}k </p>
+                                                                <p style="margin-left:18px; font-style: 8px;"> <i class="fa fa-barcode" style="font-size:20px "></i>&nbsp; {{cardName.barcode}}
+                                                                </p>
+                                                                <p style="margin-left:18px; font-size:16px" data-bs-toggle="tooltip" data-bs-placement="top" title="{{cardName.checkinDate | date: 'medium'}}">
+                                                                    {{cardName.checkinDate | date: 'medium'}}</p>
+                                                                <br />
+                                                                <span style=" font-size: inherit;top:-5%;right:-5%;border-radius: 50%;position: absolute;" class="badge badge-danger" *ngIf="quickOrderService.getQuantityByBarcode(cardName.barcode)">
+                                                            {{
+                                                            quickOrderService.getQuantityByBarcode(cardName.barcode)}}
+                                                        </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-tab>
+                                </ng-container>
+                            </mat-tab-group>
+                        </div>
+
+                        <div class="tabCard" *ngIf="tabForSalePrice">
+                            <mat-tab-group (wheel)="scrollTabs($event)" #tabGroup animationDuration="0ms" *ngIf="!radioCheck">
+                                <ng-container *ngFor="let tabPrice of tabForSalePrice; let a = index ">
+                                    <mat-tab *ngIf="tabPrice.price > 1000">
+                                        <ng-template mat-tab-label class="mat-tab-labell">
+                                            <img class="bow" src="../../../assets/images/bow.png" alt="" style="width:16px">
+                                            <div class="price" style="margin-left: 20px; margin-right: 12px;">
+                                                <p style="margin-top:14px">{{+tabPrice.price / 1000}}k</p>
+                                                <p style="margin-top: -22px;">SL: {{tabPrice.categoryName.length}}</p>
+                                            </div>
+                                        </ng-template>
+                                        <p class="reverse" (click)="reverse()">Sắp xếp theo ngày</p>
+                                        <div class="col-12 col-md-12" id="recent-sales" style="margin-top: 30px;">
+                                            <div class="row mb-2" style="align-items: center; display: flex;justify-content: center;">
+                                                <pagination-controls (pageChange)="q[a] = $event" [id]="tabPrice"></pagination-controls>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <!-- <div class=" col-3 col-xl-3"
+                                                    *ngFor="let cardPrice of tabPrice.categoryName; ">
+                                                    <img class="cupcake" src="../../../assets/images/cupcake__2_.png"
+                                                        alt="">
+                                                    <mat-card (click)=" addQuickPrice(
+                                                                cardPrice.productCategoryName,
+                                                                cardPrice.HardProduct,
+                                                                cardPrice.price,
+                                                                cardPrice.barcode
+                                                                )" class="example-card"
+                                                        style="margin-top: 12px; margin-bottom: 22px;">
+                                                        <mat-card-title class="card_header" style="border:5px solid blue">
+                                                            <div class="card_img">
+                                                                <p
+                                                                    style="font-weight: bold; text-align: center; margin-top: 14px; width: 90px">
+                                                                    <img class="category-img"
+                                                                        src="{{cardPrice.image}} "
+                                                                        style="text-align: center" />
+                                                                </p>
+                                                            </div>
+                                                        </mat-card-title>
+                                                        <mat-card-content style="border:5px solid green">
+                                                            <div class="card-title">
+                                                                <p
+                                                                    style="font-weight: bold; text-align: center; margin-top: 14px;">
+                                                                    {{cardPrice.productCategoryName}} </p>
+                                                                <p style="margin-left:18px; font-weight: bold;"> Giá:
+                                                                    {{+cardPrice.price/1000}}k </p>
+                                                                <p
+                                                                    style="margin-left:18px; font-weight: bold; font-style: 8px;">
+                                                                    <i class="fa fa-barcode"
+                                                                        style="font-size:20px "></i>&nbsp;
+                                                                    {{cardPrice.barcode}}</p>
+                                                                <p
+                                                                    style="margin-left:18px; font-weight: bold; font-size:16px">
+                                                                    {{cardPrice.checkinDate | date: 'medium' }}</p>
+                                                                <br />
+                                                                <span style=" font-size: inherit;
+                                                                                  position: absolute;
+                                                                                  position: sticky;
+                                                                                  float: left;"
+                                                                    class="badge badge-danger"
+                                                                    *ngIf="quickOrderService.getQuantityByBarcode(cardPrice.barcode)">
+                                                                    {{
+                                                                    quickOrderService.getQuantityByBarcode(cardPrice.barcode)}}
+                                                                </span>
+                                                            </div>
+                                                        </mat-card-content>
+                                                    </mat-card>
+                                                </div> -->
+                                                <div class="col" *ngFor="let cardPrice of tabPrice.categoryName | paginate: { itemsPerPage: 6, currentPage: q[a], id: tabPrice}">
+                                                    <!-- <img class="cupcake" src="../../../assets/images/cupcake__2_.png"
+                                                        alt=""> -->
+                                                    <div class="productCard" (click)=" addQuickPrice(
+                                                        cardPrice.productCategoryName,
+                                                        cardPrice.HardProduct,
+                                                        cardPrice.price,
+                                                        cardPrice.barcode
+                                                        )">
+                                                        <div class="left">
+                                                            <img class="category-img" src="{{cardPrice.image}} " style="text-align: center" />
+                                                        </div>
+                                                        <div class="right">
+                                                            <p style="text-align: center;margin-top: 15px;" data-bs-toggle="tooltip" data-bs-placement="top" title="{{cardPrice.productCategoryName}}">
+                                                                {{cardPrice.productCategoryName}} </p>
+
+                                                            <p style="font-weight: bold;"> Giá: {{+cardPrice.price/1000}}k </p>
+                                                            <p style="font-size: 16px;">
+                                                                <i class="fa fa-barcode" style="font-size:20px "></i>&nbsp; {{cardPrice.barcode}}
+                                                            </p>
+                                                            <p style="font-size:16px" data-bs-placement="top" title=" {{cardPrice.checkinDate | date: 'medium' }}">
+                                                                {{cardPrice.checkinDate | date: 'medium' }}</p>
+                                                            <br />
+                                                            <span style=" font-size: inherit;top:-5%;right:-5%;border-radius: 50%;position: absolute;" class="badge badge-danger" *ngIf="quickOrderService.getQuantityByBarcode(cardPrice.barcode)">
+                                                                {{
+                                                                quickOrderService.getQuantityByBarcode(cardPrice.barcode)}}
+                                                            </span>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-tab>
+                                </ng-container>
+                            </mat-tab-group>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- <mat-card class="example-card">
+                <mat-card-header>
+
+                    <mat-card-title>
+                        <mat-icon id="change-ico" aria-label="Example icon-button with a heart icon">cake</mat-icon> Bánh
+                        <button mat-raised-button [matMenuTriggerFor]="menu.childMenu" style="min-width: 121px; margin-left: 10px;">
+                            <mat-icon>add</mat-icon> Đặt Bánh Nhanh
+                        </button>
+                        <app-menu-item #menu [items]="navItem.children"></app-menu-item>
+
+                        <a (click)="openSellCakeSettings()">
+                            <i style="font-size:28px" class="fa fa-cog" matTooltip="cài đặt thêm bánh lớn" style="position: absolute;right: 20px;"></i>
+                        </a>
+
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <mat-chip-list>
+                        <mat-chip *ngFor="let pc of priceChips4Cake" (mousedown)="mousedown(1, pc)" (mouseup)="mouseup();"
+                            class="price-chip" [ngStyle]="{'color': pc.color, 'background': pc.background}" (click)="addQuickPrice('Bánh', pc.value);">{{pc.value
+                            | currencyformat}}</mat-chip>
+                        <mat-chip style="color:#fff; background: #39b2ee;" (click)="addPrice(1);">+</mat-chip>
+                    </mat-chip-list>
+                </mat-card-content>
+
+            </mat-card> -->
+
+
+
+
+
+        <!-- <mat-card class="example-card">
+                <mat-card-header>
+
+                    <mat-card-title>
+                        <mat-icon id="change-ico">card_giftcard</mat-icon> Khuyến mãi
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <mat-chip-list>
+                        <mat-chip *ngFor="let pc of priceChips4Discount" (mousedown)="mousedown(3, pc)" (mouseup)="mouseup();"
+                            class="price-chip" [ngStyle]="{'color': pc.color, 'background': pc.background}" (click)="addQuickPrice('Khuyến mãi', pc.value);">{{pc.value
+                            | currencyformat}}</mat-chip>
+                        <mat-chip style="color:#fff; background: #39b2ee;" (click)="addPrice(3);">+</mat-chip>
+                    </mat-chip-list>
+                </mat-card-content>
+
+            </mat-card> -->
+    </div>
+</div>
+<div class="col-md-9">
+    <div *ngIf="curentTab === 'HardProductBarcode'">
+        <app-hard-product-barcodes></app-hard-product-barcodes>
+    </div>
+</div>
+<div *ngIf="curentTab === 'Discount'">
+    <div class="row">
+        <div class="col-xl-12 col-lg-12">
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title-wrap bar-warning">
+                        <h4 class="card-title">Các Khuyến Mãi</h4>
+                    </div>
+                    <span style="margin-left: 5px">
+                        <a matTooltip="thêm khuyến mãi (đ)" class="btn btn-outline-success"
+                            (click)="addPrice(SaleType.DiscountMoney)">đ
+                        </a>
+                    </span>
+                    <span style="margin-left: 5px">
+                        <a matTooltip="thêm khuyến mãi (%)" class="btn btn-outline-success"
+                            (click)="addPrice(SaleType.DiscountPercent)">%
+                        </a>
+                    </span>
+                </div>
+                <div class="card-body">
+                    <mat-chip-list>
+                        <mat-chip *ngFor="let pc of priceChips4Discount" (mousedown)="
+                                mousedown(SaleType.DiscountMoney, pc)
+                            " (mouseup)="mouseup()" class="price-chip" [ngStyle]="{
+                                color: pc.color,
+                                background: pc.background
+                            }" (click)="
+                                addQuickPrice(
+                                    'Khuyến mãi',
+                                    SaleType.DiscountMoney,
+                                    pc.value
+                                )
+                            ">
+                            {{ pc.value | currencyformat }}
+                        </mat-chip>
+                    </mat-chip-list>
+                    <mat-chip-list>
+                        <mat-chip *ngFor="let pc of priceChips4PercentDiscount" (mousedown)="
+                                mousedown(SaleType.DiscountPercent, pc)
+                            " (mouseup)="mouseup()" class="price-chip" [ngStyle]="{
+                                color: pc.color,
+                                background: pc.background
+                            }" (click)="
+                                addQuickPrice(
+                                    'Khuyến mãi ' + '(' + pc.value + '%)',
+                                    SaleType.DiscountPercent,
+                                    pc.value
+                                )
+                            ">
+                            {{ pc.value }}%
+                        </mat-chip>
+                    </mat-chip-list>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div>
+    <div class="col-md-9">
+        <div class="row">
+            <button  class="btn btn-raised btn-danger mr-1">
+                <mat-icon style="vertical-align: bottom">attach_money</mat-icon>
+                Nhập hóa đơn
+            </button>
+            <button  class="btn btn-raised mr-1">
+                <mat-icon style="vertical-align: bottom">attach_money</mat-icon>
+                Nhập CHI
+            </button>
+        </div>
+    </div>
+</div> -->

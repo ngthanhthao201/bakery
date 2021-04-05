@@ -1,0 +1,29 @@
+<div mat-dialog-title >
+    <span>{{'CakeSizeSetting' |  translate}}</span>
+</div>
+<table mat-dialog-content class="example-full-width" cellspacing="0">
+  <tr *ngFor="let t of cakeSizeTypes" style="margin-top:25px">
+      <td >
+          <fieldset style="margin-top:10px">
+            <label>{{'Name' | translate}}</label>
+            <input [(ngModel)]="t.name" class="form-control">
+        </fieldset>
+      </td>
+      <td >
+        <fieldset style="margin-top:10px">
+            <label>{{'Description' | translate}}</label>
+            <input [(ngModel)]="t.description" class="form-control">
+        </fieldset>
+    </td>
+  </tr>
+</table>
+<button  (click)="addType()" mat-mini-fab>
+  <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+</button>
+
+<mat-dialog-actions>
+  <div style="justify-content: flex-end;float: right;">
+      <button mat-button mat-dialog-close>Hủy</button>
+      <button  mat-raised-button color="primary" (click)="saveCakeSizeTypes()">Lưu</button>
+  </div>
+</mat-dialog-actions>

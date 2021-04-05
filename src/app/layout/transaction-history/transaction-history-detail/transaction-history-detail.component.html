@@ -1,0 +1,80 @@
+<section *ngIf="incomeContainer">
+
+    <div>
+        <label>Người tạo:</label>
+        <span style="font-size:16px; font-weight: bold"> {{shopService.getMemberNameById(incomeContainer.memberId)}}</span>
+        <br/>
+        <label>Vào lúc:</label>
+        <span style="font-size:16px; font-weight: bold"> {{incomeContainer.date | date:'short'}}</span>
+        <br/>
+        <label>Tổng giao dịch:</label>
+        <span style="font-size:16px; font-weight: bold"> {{incomeContainer.amount | currencyformat}}</span>
+        <br/>
+        <label>Id giao dịch:</label>
+        <span> {{incomeContainer.idNumber}}</span>
+    </div>
+
+    <hr/>
+    <mat-dialog-content>
+        <mat-tab-group>
+            <mat-tab label="Xem">             
+                <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Tên</th> 
+                            <th>SL</th>
+                            <th>Giá</th>
+                            <th>T.Tiền</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let t of incomeContainer.incomeTransactions">
+                            <td>
+                                {{t.description}}
+                            </td>
+                            <td>
+                                {{t.quantity}}
+                            </td>
+                            <td>
+                                {{t.unitPrice | currencyformat}}
+                            </td>
+                            <td>
+                                {{t.unitPrice * t.quantity | currencyformat}}
+                            </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div>
+
+                    </div>
+
+            </mat-tab>
+            <mat-tab label="Hủy">
+                <section class="container">
+                    <div  class="row">
+                        <div col-md-6>
+                            <!-- <mat-form-field>
+                                    <input placeholder="Lý do hủy giao dịch" matInput [(ngModel)]="destroyedReason">
+                            </mat-form-field> -->
+                            <fieldset>
+                                <label>Lý do hủy giao dịch</label>
+                                <input [(ngModel)]="destroyedReason" class="form-control">
+                            </fieldset>
+                            
+                        </div>
+                    </div>
+                    <div class="row">
+                            <button color="warn" mat-raised-button (click)="removeIncomeTransactions()">Hủy GD</button>
+                    </div>
+
+                </section>
+                
+
+            </mat-tab>
+          </mat-tab-group>
+    </mat-dialog-content>
+
+
+
+</section>

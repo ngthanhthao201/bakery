@@ -1,0 +1,42 @@
+<div *ngIf="expenseHeader">
+    <div mat-dialog-title color="warn">
+        CHI Khác
+    </div>
+
+    <mat-dialog-content>
+
+        <mat-list style="margin-left:40px">
+            <mat-list-item *ngFor="let element of expenseHeader.expenseTransactions;  let $index = index" style="margin-top:30px">
+
+                <fieldset class="col-md-4">
+                    <label>{{'Amount' | translate}}</label>
+                    <input currencyMask [options]="currencyMaskOptions" [(ngModel)]="element.amount" name="amount" class="form-control">
+                </fieldset>
+
+                <fieldset class="col-md-4">
+                    <label>{{'Description' | translate}}</label>
+                    <input [(ngModel)]="element.description" name="description" class="form-control">
+                </fieldset>
+
+                <mat-icon *ngIf="expenseHeader.expenseTransactions.length > 1" style="left: -34px; position: absolute;color:red;"
+                    (click)="removeTransaction($index)">remove</mat-icon>
+            </mat-list-item>
+
+        </mat-list>
+        <div class="row">
+            <button style="background-color: #ffffff;margin-left: 70px;" mat-mini-fab (click)="addTransaction()">
+                <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+            </button>
+
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <label>Tổng cộng: {{getTotalHeaderAmount() | currencyformat}}</label>
+        <div style="justify-content: flex-end;float: right;">
+            <button mat-button mat-dialog-close>Hủy</button>
+            <button [disabled]="getTotalHeaderAmount() < 1" mat-raised-button color="primary" (click)="save()">Đồng
+                ý</button>
+        </div>
+
+    </mat-dialog-actions>
+</div>

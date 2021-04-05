@@ -1,0 +1,31 @@
+<mat-dialog-content style="overflow-y: auto;min-height: 200px;">
+    <div class="row col-md-12">
+        <h3>
+            {{currentProduct.name}}<span> - SL hiện có: {{currentProduct.total}}</span>
+        </h3>
+        <br />
+    </div>
+    <div class="row col-md-12">
+        <fieldset>
+            <label>Nhập Số Lượng Hủy</label>
+            <input type="number" [(ngModel)]="newHardBlockProductBarcode.destroyedCount" class="form-control">
+        </fieldset>
+    </div>
+    <div class="row col-md-12">
+        <fieldset>
+            <label>Lý do</label>
+            <input [(ngModel)]="newHardBlockProductBarcode.destroyedReason" class="form-control">
+        </fieldset>
+    </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions style="padding: 15px;float: right;">
+    <button *ngIf="!isLoading" class="btn btn-raised mr-1 shadow-z-1" mat-dialog-close>Hủy</button>
+    <button *ngIf="!isLoading" class="btn btn-raised mr-1 shadow-z-1 btn-success" [disabled]="!newHardBlockProductBarcode.destroyedReason || newHardBlockProductBarcode.destroyedCount < 1"
+        (click)="createOrUpdateProduct()">Đồng ý</button>
+
+    <span *ngIf="isLoading" style="display: -webkit-inline-box;">
+        <mat-spinner [diameter]=20></mat-spinner> {{loadingMessage}}
+    </span>
+</mat-dialog-actions>

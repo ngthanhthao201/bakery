@@ -1,0 +1,106 @@
+<label class="panel-label">Chi tiết đơn</label>
+<div class="panel-detail">
+    <table class="table table-striped" style="margin-bottom: 10px;">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Tên</th>
+                <th>SL</th>
+                <th>Tổng</th>
+                <th>Mã bánh</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let od of order.orderDetails; let index = index">
+                <th scope="row">{{index + 1}}</th>
+                <td>
+                    <div style="display: -webkit-box;">
+                        <div *ngIf="od.product" fxHide.xs>
+                            <img src="{{getImage(od.product.image)}}" height="120">
+                        </div>
+                        <div>
+                            <p *ngIf="od.product">{{od.product.name}}</p>
+                            <p *ngIf="od.description">{{od.description}}</p>
+                            <a *ngIf="od.product" target="_blank"
+                                [routerLink]="['/showcase/' + od.product.productCategoryId]"
+                                [queryParams]="{focus: od.product.idNumber}">{{od.product.idNumber}}</a>
+                            <p *ngIf="od.cakeSizeType">{{od.cakeSizeType.name}}</p>
+                            <!-- <p *ngIf="od.barcode && od.barcode.length > 1">{{od.barcode}}</p> -->
+                        </div>
+                    </div>
+                </td>
+                <td><span>x {{od.quantity}}</span></td>
+                <td>{{od.quantity * od.unitPrice | currencyformat}}</td>
+                <td>
+                    <div *ngIf="od.barcode && od.barcode.length > 1">{{od.barcode}}</div>
+                    <div *ngIf="!od.barcode && (od.description === 'Bánh' || (od.product && od.product.name === 'Bánh') )"
+                        class="bgaddnew">
+                        <p>{{od.barcode}}</p>
+                        <span class="dashing" style="bottom: 0;"><i></i></span>
+                        <span class="dashing" style="top: 0;"><i></i></span>
+                    </div>
+                </td>
+            </tr>
+            <!-- FEE here -->
+            <tr *ngIf="order.fee">
+                <th scope="row"></th>
+                <td>Phí</td>
+                <td></td>
+                <td>{{order.fee | currencyformat}}</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div>
+        <table style="width:100%">
+            <tbody>
+                <tr>
+                    <td class="panel-label">Tổng Cộng:</td>
+                    <td class="panel-value"> {{order.netAmount + order.fee | currencyformat}}</td>
+                </tr>
+                <tr>
+                    <td class="panel-label">Đặt Cọc:</td>
+                    <td class="panel-value"> {{order.deposit | currencyformat}}</td>
+                </tr>
+                <tr>
+                    <td class="panel-label">Còn Lại:</td>
+                    <td class="panel-value"> {{order.netAmount + order.fee - order.deposit | currencyformat}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div *ngIf="order.cakeImage">
+    <img style="width:60%; height: auto" src="{{order.cakeImage}}">
+</div>
+<div *ngIf="order.advanceComments">
+    <br />
+    <label class="panel-label">Ghi Chú</label>
+    <div class="panel-detail">
+        <table style="width:100%">
+            <tr>
+                <td class="panel-label">Loại Bánh:</td>
+                <td class="panel-value"> {{order.advanceComments.size}}</td>
+            </tr>
+            <tr>
+                <td class="panel-label">Nhân:</td>
+                <td class="panel-value"> {{order.advanceComments.filling}}</td>
+            </tr>
+            <tr>
+                <td class="panel-label">Nội Dung:</td>
+                <td class="panel-value"> {{order.advanceComments.note}}</td>
+            </tr>
+            <tr>
+                <td class="panel-label">Đ/C Giao:</td>
+                <td class="panel-value"> {{order.advanceComments.address}}</td>
+            </tr>
+            <tr>
+                <td class="panel-label">Giờ Giao:</td>
+                <td class="panel-value"> {{order.deliveryPickupTime| date :'short'}}</td>
+            </tr>
+        </table>
+    </div>
+</div>

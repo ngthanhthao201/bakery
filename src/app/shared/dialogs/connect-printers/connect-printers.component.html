@@ -1,0 +1,33 @@
+<mat-dialog-content>
+  <div class="row col-md-12">
+    <div class="col-md-6">
+        <div >
+            <mat-slide-toggle (change)="isPrinterChanged()" [(ngModel)]="isPrinter">Chấp nhận in hóa đơn từ thiết bị di động</mat-slide-toggle>
+        
+            
+            <div >
+                <label>SL Hóa đơn: </label>
+                <button class="button btn" mat-button (click)="minusReceiptCount()">-</button>
+                <label style="margin: 5px">{{receiptCount}}</label>
+                <button class="button btn" mat-button (click)="plusReceiptCount()">+</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6" id="test">
+        <h3>
+            Chọn Máy In Hóa Đơn 
+          </h3> <span>(<a href="https://mybakerystorage.blob.core.windows.net/static/NETSPrinter.zip">Tải Driver kết nối máy in</a>)</span>
+          
+      <ul>
+        <li *ngFor="let p of printers">
+             <a [ngClass]="{'selected': p==connectedPrinter}" (click)="select(p)" style="font-size: x-large;">{{p}}</a> 
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+
+
+</mat-dialog-content>

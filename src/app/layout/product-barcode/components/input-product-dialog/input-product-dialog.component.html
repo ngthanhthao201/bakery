@@ -1,0 +1,57 @@
+<div id="barCode">
+<div *ngIf="products.length < 1" style="text-align: -webkit-center; padding: 50px;">
+
+    <h5>
+        Trang nhập bánh giúp theo dõi nhập bánh theo đợt. Quét mã vạch để nhập bánh.
+    </h5>
+
+    <img src="../../../../../assets/images/BarcodeScanning.gif" />
+</div>
+
+<div style="max-height: 87vh; overflow-y: auto;" *ngIf="products.length > 0">
+    <div  class="row " style="padding-left:70%;">
+        <a href="javascript:void()" (click)="linkToProductBarcode()">Về Trang Bánh Kem</a>
+        <a  href="javascript:void()" (click)="ok()" style="padding-left: 12%;">Làm Mới</a>
+    </div>
+    <div class="col-md-12">
+        <div style="padding: 10px">
+            <h3 class="text-info">Tổng Đã Nhập: {{products.length}}</h3>
+            <table class="table table-hover">
+                <tbody>
+                    <tr *ngFor="let n of objectKeys(productsGrByNameId)">
+                        <td *ngIf="productsGrByNameId[n]">
+                            <span style="font-size:20px">{{barcodeService.getCategoryName(n)}}</span>
+                            <ul *ngFor="let p of objectKeys(productsGrByNameId[n])">
+                                <li>{{p | currencyformat}} : <span
+                                        style="font-weight: bold;">{{productsGrByNameId[n][p].length}}</span>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <label>
+            Bảng Chi Tiết
+        </label>
+        <table class="table table-striped">
+            <thead>
+                <th style="border-bottom: unset">#</th>
+                <th style="border-bottom: unset">Tên</th>
+                <th style="border-bottom: unset">Giá</th>
+                <!-- <th style="border-bottom: unset">SL</th> -->
+            </thead>
+            <tbody>
+                <tr *ngFor="let pd of products;  let index = index;">
+                    <th scope="row">{{index + 1}}</th>
+                    <td>{{pd.productCategoryName }}</td>
+                    <td>{{pd.price | currencyformat}}</td>
+                    <td *ngIf="products.length == index+1" class="text-danger" style="font-size: 20px;" [@fadeInOut]>
+                        Mới Nhập</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</div>

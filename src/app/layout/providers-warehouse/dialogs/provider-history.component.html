@@ -1,0 +1,53 @@
+<div >
+        
+          <ngx-datatable
+                #table
+                class='material no-shadow'
+                [columns]="columns"
+                [columnMode]="'force'"
+                [headerHeight]="50"
+                [footerHeight]="50"
+                [rowHeight]="'auto'"
+                [limit]="10"
+                [rows]='rows'>
+
+                <ngx-datatable-column name="Description">
+                        <ng-template let-column="column" ngx-datatable-header-template>
+                           Ngày nhập
+                          </ng-template>
+                        <ng-template  let-row="row" ngx-datatable-cell-template>
+                            <div> {{row.createdDate | date}}</div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                <ngx-datatable-column name="Description">
+                        <ng-template let-column="column" ngx-datatable-header-template>
+                           {{'Tên'| translate}}
+                          </ng-template>
+                        <ng-template  let-row="row" ngx-datatable-cell-template>
+                            <span> {{row.material.name}}</span>
+                        </ng-template>
+                    </ngx-datatable-column>
+                <ngx-datatable-column name="unitPrice">
+                        <ng-template let-column="column" ngx-datatable-header-template>
+                           {{'Detail'| translate}}
+                          </ng-template>
+                        <ng-template  let-row="row" ngx-datatable-cell-template>
+                            <span> {{row.unitPrice | currencyformat}} x {{row.quantity}}</span>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Tổng">
+                            <ng-template let-column="column" ngx-datatable-header-template>
+                               {{'Amount'| translate}}
+                              </ng-template>
+                            <ng-template  let-row="row" ngx-datatable-cell-template>
+                                <span> {{row.unitPrice * row.quantity | currencyformat}}</span>
+                            </ng-template>
+                        </ngx-datatable-column>
+      </ngx-datatable>
+
+    <mat-dialog-actions style="justify-content: flex-end;float: right;">
+        <button mat-button mat-dialog-close>Đóng</button>
+    </mat-dialog-actions>
+</div>

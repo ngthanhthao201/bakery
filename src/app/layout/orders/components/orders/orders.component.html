@@ -1,0 +1,239 @@
+<div [@routerTransition]>
+
+    <h1>
+        <div class="content-header">
+            <i class="fa fa-road font-large-2"></i>Đơn Bánh Trong Tuần
+            <!-- <button [routerLink]="['done']" class="btn btn-success btn-raised btn-round mr-1">Đơn Hoàn Thành</button> -->
+            <!-- <button [routerLink]="['over']" class="btn btn-warning btn-raised btn-round mr-1">Đơn Quá Hạn Giao</button> -->
+            <button [routerLink]="['skip']" class="btn btn-error btn-raised btn-round mr-1">Đơn Hủy</button>
+        </div>
+    </h1>
+    <div class="row">
+        <div class="col-md-4"> </div>
+        <div class="col-md-8">
+            <div style="display: -webkit-box; text-align: center; ">
+                <a class="ft-arrow-left btn btn-raised btn-round btn-info mt-2" (click)="changeWeek(-1)"></a>
+
+                <div class="form-group" style="padding: 0 25px">
+                    <h5 class="mb-2">{{week.startWeek  | date: 'MMMM, yyyy'}}</h5>
+                    <div style="display: inline-flex;">
+                        <span *ngFor="let day of dayNames" style="display: grid; margin-right: 10px;">
+                            <span>{{day.nameVN}}</span>
+                            <a class="border-style {{(day.date | date : 'shortDate') == (now | date: 'shortDate') ? 'today' : ''}}"
+                                (click)="day.isCollapsed = !day.isCollapsed">{{day.date | date : 'dd'}}</a>
+                        </span>
+                    </div>
+                </div>
+
+                <a class="ft-arrow-right btn btn-raised btn-round btn-info mt-2" (click)="changeWeek(1)"></a>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div *ngFor="let d of dayNames">
+        <div *ngIf="groupedByDay[d.name]">
+            <a class="content-header btn btn-outline-info mr-1" (click)="d.isCollapsed = !d.isCollapsed"
+                [attr.aria-expanded]="!isCollapsed">{{dayNamesVN[d.name]}}
+                <span *ngIf="d.name == nowName && week.startWeek  <= now && now <= week.endWeek"> (Hôm nay:
+                    {{now | date }}) </span>:
+                <span class="text-danger">{{groupedByDay[d.name].length}} đơn</span></a>
+        </div>
+
+        <div class="row p-4 col-md-12" matchHeight="card" [ngbCollapse]="d.isCollapsed" *ngIf="groupedByDay[d.name]">
+            <!-- <order-card class="col-lg-4 col-md-6" *ngFor="let o of groupedByDay[d.name]" [order]="o"></order-card> -->
+              <ngx-datatable class="bootstrap col-md-12"   [rows]="groupedByDay[d.name]" [loadingIndicator]="loading"
+              id="orders-table-id" (activate)="onActivate($event)"
+              [rowClass]="getRowClass" [columnMode]="'force'" [headerHeight]="50" [summaryRow]="false" [summaryHeight]="'auto'"
+              [footerHeight]="50" [rowHeight]="'auto'"      
+              >
+
+              <ngx-datatable-column  [canAutoResize]="true" [width]="tableIdNameResizer.width('member')" prop="member">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                  <span>Người tiếp nhận</span>
+                </ng-template>
+                <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex='rowIndex' >
+                                   
+                    <div class="user-avatar"  style="display: inline-flex;">
+                      <div *ngIf="row.isUrgent">
+                        <span class="isUrgent"></span>
+                      </div>
+
+                      <img alt=""  class="img" src={{row.member.image}} >
+                      <div>
+                        <span>{{row.member.name}}</span> <br>
+                        <span>{{row.createdDate | date : 'HH:mm, d MMM'}}</span> 
+  
+                      </div>
+                    </div>
+                    <br>
+                    <span class="badge {{row.status == 2 ? 'badge-success': ''}}">{{orderService.orderStatusMap[row.status]}}</span>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column [canAutoResize]="true"  [width]="tableIdNameResizer.width('customer')" prop="customer">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                  <span>Khách hàng</span>
+                </ng-template>
+                <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex='rowIndex' >
+                  <div class="user-avatar" style="display: inline-flex;">
+                  <img alt=""  class="img" src="{{row.customer.image || '../../../../../../assets/images/avatar_placeholder.png'}}" >
+                    <div class="user-name">
+                        <span>{{row.customer.name}}</span>
+                        <p>{{row.customer.phoneNumber}}</p>
+                    </div>
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+
+
+
+              <ngx-datatable-column  [canAutoResize]="true" [width]="tableIdNameResizer.width('delivery')">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                  <span>Giờ giao</span>
+                </ng-template>
+                <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex='rowIndex' >
+                    <div class="user-day">
+                      <span>{{row.deliveryPickupTime | date: 'h:mm a, d MMMM'}}</span>
+                      <p style="font-size: 14px;white-space: normal"> {{row.advanceComments.address}}</p>
+                    </div>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column [canAutoResize]="true" [width]="tableIdNameResizer.width('info')" prop="info">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                  <span>Loại Bánh</span><br><span>Nhân</span><br><span>Nội Dung</span>
+                </ng-template>
+                <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex='rowIndex' >
+
+                  <div class="info">
+                    <div class="panel-value">  {{row.advanceComments.size}}</div>
+                    <div *ngIf="row.advanceComments.filling" class="panel-value">  {{row.advanceComments.filling}} </div>
+                    <div class="panel-value none-border">  {{row.advanceComments.note}}</div> 
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column  [canAutoResize]="true" [width]="tableIdNameResizer.width('money')">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                  <span>Tiền</span>
+                </ng-template>
+                <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex='rowIndex' >
+                    <div class="user-money">
+                      <label class="font-small-4" style="width: 100%">Tổng cộng:
+                        <span *ngIf="row.fee" class="font-small-2 warning" style="display: inline-block;">
+                            ({{row.netAmount | currencyformat}} + phí {{row.fee | currencyformat}})
+                        </span>
+                        <span
+                            style="float: right;">{{row.netAmount + row.fee | currencyformat}}</span></label>
+                    <label class="font-small-4" style="width: 100%;">Đặt cọc:<span
+                            style="float: right;">{{row.deposit | currencyformat}}</span></label>
+                    <label class="font-small-4" style="width: 100%; ">Còn lại:
+                        <span class="badge badge-warning" style="float: right; font-weight: bold;">{{row.netAmount + row.fee - row.deposit
+                            | currencyformat}}</span></label>
+              
+                    </div>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column [minWidth]="10" [width]="tableIdNameResizer.width('action')">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                  <span>Hành động</span>
+                </ng-template>
+                <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex='rowIndex' >
+                    <div class="user-action" style="margin-left: 20px;">
+                      <order-button [order]="row"></order-button>
+                    </div>
+                </ng-template>
+              </ngx-datatable-column>
+            </ngx-datatable>
+        </div>
+    </div>
+
+
+    <!-- old code -->
+    <!-- <app-page-header [heading]="'Quản Lý Đơn Bánh'" [icon]="'fa-bar-chart-o'"></app-page-header>  
+    <div>
+
+
+              <div class="col-md-12 row">
+
+                  <fieldset class="form-group" style="min-width: 25%; padding-top: 10px">
+                    <label>{{'Search' | translate}}</label>
+                    <input (keyup)="onKeyUp($event.target.value)" class="form-control" placeholder="gõ tên không dấu, ngày/tháng. VD: 30/04">
+                </fieldset>
+              </div>
+              
+              
+                <ngx-datatable
+                class="material"
+                [rows]="waitingOrders"
+                [columnMode]="'force'"
+                [headerHeight]="50"
+                [footerHeight]="50"
+                (activate)="onActivate($event)"
+                [loadingIndicator]="loadingIndicator"
+                [rowHeight]="'auto'">
+                
+                <ngx-datatable-column name="Thông tin">
+                  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                   <div>Mã #{{row.idNumber}}</div>
+                    
+                    <div>Ngày tạo: {{row.createdDate | date:'short'}}</div>
+                    <div> {{'OrderType' | translate}} : <span  *ngIf="row.orderType === 0">{{'Pickup' | translate}}</span><span *ngIf="row.orderType === 1">{{'Delivery' | translate}}</span></div>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Mô tả">
+                  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div *ngIf="row.comments" [innerHtml]="row.comments | orderCommentsPrint :'describe'">
+                       
+                        <div>
+                          {{row.comments}}
+                        </div>
+                    </div>
+                      
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Tên KH/ Ngày giờ lấy" [sortable]="true" prop='deliveryPickupTime'>
+                  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div *ngIf="row.customer">
+                        <img class="customer-avatar {{row.customer.gender}}" src="{{row.customer.image}}"/>
+                        <div>
+                          {{row.customer.name}}
+                        </div>
+                        
+                    </div>
+                    <div>
+                      <div style="font-weight:bold">{{(row.deliveryPickupTime) | date:'short'}}</div>
+                    </div>
+                      
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Bánh">
+                  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div class="product-name" *ngFor="let od of row.orderDetails"><span *ngIf="od.product">{{od.product.name}}</span> </div>
+                    <div style="margin-bottom: 15px;">
+                      {{row.amount | currencyformat}}
+                    </div>
+                    <div id="cake-order-status-container">
+                        <section >
+                            <div class="cake-order-status-item" (click)="$event.stopPropagation();">
+                              <input (click)="$event.stopPropagation();row.orderCakeStatus.cakeStatus = 0;updateCakeStatus(row.orderCakeStatus); " class="new" type="radio" id="control_New{{row.idNumber}}" name="select{{row.idNumber}}" [checked]="row.orderCakeStatus.cakeStatus == 0 || row.orderCakeStatus.cakeStatus == 1">
+                              <label for="control_New{{row.idNumber}}">
+                                  <span style="margin-top: 18px;display: -webkit-box;white-space: nowrap;  overflow: hidden;text-overflow: ellipsis;">Chưa Làm</span>
+                              </label>
+                            </div>
+                            <div matTooltip="Chuyển qua xong" class="cake-order-status-item" (click)="$event.stopPropagation();">
+                              <input (click)="$event.stopPropagation();row.orderCakeStatus.cakeStatus = 2;updateCakeStatus(row.orderCakeStatus); " class="done" type="radio" id="control_Done{{row.idNumber}}" name="select{{row.idNumber}}" [checked]="row.orderCakeStatus.cakeStatus == 2">
+                              <label for="control_Done{{row.idNumber}}">
+                                <span style="margin-top: 18px;display: -webkit-box;">Xong</span>
+                              </label>
+                            </div>
+                        </section>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+              </ngx-datatable>
+    </div> -->
+</div>

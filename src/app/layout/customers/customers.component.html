@@ -1,0 +1,268 @@
+<div [@routerTransition]>
+  <app-page-header heading="{{'Customers' | translate}}"></app-page-header>
+
+
+  <section _ngcontent-c11="" id="card-deck">
+    <div _ngcontent-c11="" class="row">
+      <div _ngcontent-c11="" class="col-12 mt-3 mb-1">
+        <div _ngcontent-c11="" class="content-header">Biểu đồ khách hàng</div>
+        <p _ngcontent-c11="" class="content-sub-header">Hiển thị báo cáo khách mới và khách quay lại theo tháng.</p>
+      </div>
+    </div>
+    <div _ngcontent-c11="" class="row">
+      <div _ngcontent-c11="" class="col-12" style="background-color: white">
+        <canvas baseChart height="500" width="1200" [datasets]="lineChartData" [labels]="lineChartLabels"
+          [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend"
+          [chartType]="lineChartType">
+        </canvas>
+      </div>
+    </div>
+  </section>
+
+  <section _ngcontent-c11="" id="card-deck">
+    <div _ngcontent-c11="" class="row">
+      <div _ngcontent-c11="" class="col-12 mt-3 mb-1">
+        <div _ngcontent-c11="" class="content-header">Khách hàng tiềm năng</div>
+        <p _ngcontent-c11="" class="content-sub-header">Hiển thị các khách hàng đã đặt bánh, mua bánh vào ngày này năm
+          trước.</p>
+      </div>
+    </div>
+    <div _ngcontent-c11="" class="row">
+      <div _ngcontent-c11="" class="col-12" style="background-color: white">
+        <div _ngcontent-c27="" class="card">
+          <div _ngcontent-c27="" class="card-header">
+            <div _ngcontent-c27="" class="card-title-wrap bar-success">
+              <h4 _ngcontent-c27="" class="card-title">Danh sách đơn. Hãy gửi tin nhắn, điện thoại nhắc khách  trở lại đặt bánh.</h4>
+            </div>
+          </div>
+          <div _ngcontent-c27="" class="card-body">
+            <div _ngcontent-c27="" class="card-block">
+              <table _ngcontent-c27="" class="table table-responsive-md text-center">
+                <thead _ngcontent-c27="">
+                  <tr _ngcontent-c27="">
+                    <th _ngcontent-c27="">#</th>
+                    <th _ngcontent-c27="">Lần đặt trước</th>
+                    <th _ngcontent-c27="">Tên</th>
+                    <th _ngcontent-c27="">Sđt</th>
+                    <th _ngcontent-c27="">Đã Trở Lại?</th>
+                    <th _ngcontent-c27="">Tiện ích</th>
+                  </tr>
+                </thead>
+                <tbody _ngcontent-c27="">
+                  <tr *ngFor=" let co of candidateOrders; let i = index" _ngcontent-c27="">
+                    <td _ngcontent-c27="">{{i + 1}}</td>
+                    <td _ngcontent-c27="">
+                      <div>
+                        {{co.candidateOrder.deliveryPickupTime | date}}
+                        <br/>
+                        <a href="javascript:void()" (click)="viewOrder(co.candidateOrder.id)">Xem chi tiết</a>
+                      </div>
+                    </td>
+                    <td _ngcontent-c27="">{{co.name}}</td>
+                    <td _ngcontent-c27="">{{co.phoneNumber}}</td>
+                    <td _ngcontent-c27="">
+                      <div *ngIf="co.isReturned"> 
+                         <i style="color:green" class="fa fa-check"></i>
+                         <br/>
+                         <a *ngIf="co.returnedOrderId" href="javascript:void()" (click)="viewOrder(co.returnedOrderId)">Xem chi tiết</a>
+                         
+                      </div>
+
+                    </td>
+                    <td  align="left">
+                      <div   _ngcontent-c27="" class="custom-control custom-checkbox m-0">
+                        <input [disabled]="co.customerCandidateAudit && co.customerCandidateAudit.isMessageSent" [checked]="co.customerCandidateAudit && co.customerCandidateAudit.isMessageSent" class="custom-control-input" id="itemsms{{co.candidateOrder.id}}" type="checkbox" (change)="smsToggled($event, co)">
+                        <label _ngcontent-c27="" class="custom-control-label" for="itemsms{{co.candidateOrder.id}}">Gửi tin nhắn</label>
+                        <span *ngIf="co.customerCandidateAudit && co.customerCandidateAudit.isMessageSent"> | {{co.customerCandidateAudit.messageSentTime | date}} | {{shopService.getMemberNameById(co.customerCandidateAudit.messageSentMemberId)}}</span>
+                      </div>
+                      <!-- <div _ngcontent-c27="" class="custom-control custom-checkbox m-0">
+                          <input _ngcontent-c27="" class="custom-control-input" id="itemapp{{co.candidateOrder.id}}" type="checkbox">
+                          <label _ngcontent-c27="" class="custom-control-label" for="itemapp{{co.candidateOrder.id}}">Gửi tin nhắn qua app</label>
+                        </div> -->
+                        <div _ngcontent-c27="" class="custom-control custom-checkbox m-0">
+                            <input [disabled]="co.customerCandidateAudit && co.customerCandidateAudit.isPhoneCalled" [checked]="co.customerCandidateAudit && co.customerCandidateAudit.isPhoneCalled" class="custom-control-input" id="itemphone{{co.candidateOrder.id}}" type="checkbox" (change)="callToggled($event, co)">
+                            <label _ngcontent-c27="" class="custom-control-label" for="itemphone{{co.candidateOrder.id}}">Gọi điện thoại</label>
+                            <span *ngIf="co.customerCandidateAudit && co.customerCandidateAudit.isPhoneCalled"> | {{co.customerCandidateAudit.phoneCalledTime | date}} | {{shopService.getMemberNameById(co.customerCandidateAudit.phoneCalledMemberId)}}</span>
+                        </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div _ngcontent-c11="" class="row">
+        <div _ngcontent-c11="" class="col-12" style="background-color: white">
+          <div _ngcontent-c27="" class="card">
+            <div _ngcontent-c27="" class="card-header">
+              <div _ngcontent-c27="" class="card-title-wrap bar-success">
+                <h4 _ngcontent-c27="" class="card-title">Danh sách mua. Hãy gửi tin nhắn, điện thoại nhắc khách  trở lại mua bánh.</h4>
+              </div>
+            </div>
+            <div _ngcontent-c27="" class="card-body">
+              <div _ngcontent-c27="" class="card-block">
+                <table _ngcontent-c27="" class="table table-responsive-md text-center">
+                  <thead _ngcontent-c27="">
+                    <tr _ngcontent-c27="">
+                      <th _ngcontent-c27="">#</th>
+                      <th _ngcontent-c27="">Lần mua trước</th>
+                      <th _ngcontent-c27="">Tên</th>
+                      <th _ngcontent-c27="">Sđt</th>
+                      <th _ngcontent-c27="">Đã Trở Lại?</th>
+                      <th _ngcontent-c27="">Tiện ích</th>
+                    </tr>
+                  </thead>
+                  <tbody _ngcontent-c27="">
+                    <tr *ngFor=" let ci of candidateIncomeHeaders; let i = index" _ngcontent-c27="">
+                      <td _ngcontent-c27="">{{i + 1}}</td>
+                      <td _ngcontent-c27="">
+                        <div>
+                          {{ci.candidateIncomeHeader.dateCreated | date}}
+                          <br/>
+                          <a href="javascript:void()" (click)="viewOrder(co.candidateIncomeHeader.id)">Xem chi tiết</a>
+                        </div>
+                      </td>
+                      <td _ngcontent-c27="">{{ci.name}}</td>
+                      <td _ngcontent-c27="">{{ci.phoneNumber}}</td>
+                      <td _ngcontent-c27="">
+                        <div *ngIf="ci.isReturned"> 
+                           <i style="color:green" class="fa fa-check"></i>
+                           <br/>
+                           <a *ngIf="ci.returnedIncomeHeaderId" href="javascript:void()" (click)="viewIncome(co.returnedIncomeHeaderId)">Xem chi tiết</a>
+                           
+                        </div>
+  
+                      </td>
+                      <td  align="left">
+                        <div   _ngcontent-c27="" class="custom-control custom-checkbox m-0">
+                          <input [disabled]="ci.customerCandidateAudit && ci.customerCandidateAudit.isMessageSent" [checked]="ci.customerCandidateAudit && ci.customerCandidateAudit.isMessageSent" class="custom-control-input" id="itemsms{{ci.candidateIncomeHeader.id}}" type="checkbox" (change)="smsToggled($event, ci)">
+                          <label _ngcontent-c27="" class="custom-control-label" for="itemsms{{ci.candidateIncomeHeader.id}}">Gửi tin nhắn</label>
+                          <span *ngIf="ci.customerCandidateAudit && co.customerCandidateAudit.isMessageSent"> | {{ci.customerCandidateAudit.messageSentTime | date}} | {{shopService.getMemberNameById(ci.customerCandidateAudit.messageSentMemberId)}}</span>
+                        </div>
+                        <!-- <div _ngcontent-c27="" class="custom-control custom-checkbox m-0">
+                            <input _ngcontent-c27="" class="custom-control-input" id="itemapp{{co.candidateOrder.id}}" type="checkbox">
+                            <label _ngcontent-c27="" class="custom-control-label" for="itemapp{{co.candidateOrder.id}}">Gửi tin nhắn qua app</label>
+                          </div> -->
+                          <div _ngcontent-c27="" class="custom-control custom-checkbox m-0">
+                              <input [disabled]="ci.customerCandidateAudit && ci.customerCandidateAudit.isPhoneCalled" [checked]="ci.customerCandidateAudit && ci.customerCandidateAudit.isPhoneCalled" class="custom-control-input" id="itemphone{{ci.candidateIncomeHeader.id}}" type="checkbox" (change)="callToggled($event, ci)">
+                              <label _ngcontent-c27="" class="custom-control-label" for="itemphone{{ci.candidateIncomeHeader.id}}">Gọi điện thoại</label>
+                              <span *ngIf="ci.customerCandidateAudit && ci.customerCandidateAudit.isPhoneCalled"> | {{ci.customerCandidateAudit.phoneCalledTime | date}} | {{shopService.getMemberNameById(ci.customerCandidateAudit.phoneCalledMemberId)}}</span>
+                          </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+  </section>
+
+  <section _ngcontent-c11="" id="card-deck">
+    <div _ngcontent-c11="" class="row">
+      <div _ngcontent-c11="" class="col-12 mt-3 mb-1">
+        <div _ngcontent-c11="" class="content-header">Danh sách</div>
+        <p _ngcontent-c11="" class="content-sub-header">Hiển thị tất cả khách hàng.</p>
+      </div>
+    </div>
+    <div _ngcontent-c11="" class="row">
+      <div _ngcontent-c11="" class="col-12">
+        <div class="row col-md-12" style="display: flex; margin-bottom: 20px">
+          <div class="col-md-12 row">
+            <input class="form-control" style="width: 30%;" [formControl]="searchCtrl" placeholder="nhập sđt"
+              id="searchCustomers">
+            <span class="ft-search blue-grey darken-4"
+              style="margin: auto; font-size: x-large; margin-left: 5px;position: absolute; right: 22px; top: 7px;"></span>
+
+            <div>
+              <!-- <button (click)="filterCustomersByType(0)" class="ml-2" color="primary" mat-raised-button>{{statistics.vipCount}} Khách VIP </button>
+      
+                <button (click)="filterCustomersByType(1)" class="ml-2" color="primary" mat-raised-button>{{statistics.normalCount}} Khách Thường</button>
+      
+                <button (click)="filterCustomersByType(2)" class="ml-2" color="accent" mat-raised-button>{{statistics.checkinCount}} Lần Check-in</button> -->
+
+
+              <mat-radio-group class="ml-3 filter-radio-group" (change)="filterCustomersByType($event)"
+                aria-label="Select an option">
+                <mat-radio-button [checked]="true" value="0">{{statistics.vipCount + statistics.normalCount}} Tất Cả
+                </mat-radio-button>
+                <mat-radio-button value="1">{{statistics.vipCount}} Khách VIP </mat-radio-button>
+                <mat-radio-button value="2">{{statistics.normalCount}} Khách Thường</mat-radio-button>
+                <mat-radio-button value="3">{{statistics.checkinCount}} Lần Check-in</mat-radio-button>
+              </mat-radio-group>
+
+            </div>
+
+          </div>
+          <button mat-raised-button (click)="createNewCustomer()">Tạo Mới</button>
+        </div>
+
+        <div>
+          <ngx-datatable class="material" [rows]="filteredCustomersRows" [columnMode]="'force'" [headerHeight]="50"
+            [footerHeight]="50" [limit]="10" [rowHeight]="70">
+
+            <ngx-datatable-column name="Ngày Tạo">
+              <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+                <a target="_blank" (click)="openCustomerDetailDialog(row.customer)"
+                  class="a-style">{{row.customer.createdDate | date :'short'}}</a>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Khách hàng">
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                <div style="display: inline-flex;">
+                  <img class="customer-avatar" src="{{row.customer.image}}">
+                  <div class="ml-2">
+                    <div>{{row.customer.name}} <img *ngIf="row.customerType && row.customerType.icon" width="32"
+                        height="32" src="{{row.customerType.icon}}"></div>
+                    <div> sdt: {{row.customer.phoneNumber || ''}}</div>
+                  </div>
+                </div>
+              </ng-template>
+
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Email & Ngày sinh">
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                <div> Email: {{row.customer.email || ''}}</div>
+                <div> Sinh nhật: {{row.customer.dob | date}}</div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Status">
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                <span> L.Mua: {{row.buyCount}}</span>
+                <span> L.Đặt: {{row.orderCount}}</span> <br>
+                <span> L.Check-In: {{row.checkinCount}}</span>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Actions">
+              <ng-template let-column="column" ngx-datatable-header-template>
+              </ng-template>
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                <div class="actions-button">
+                  <button matTooltip="{{ 'ClickToEdit' | translate }}" (click)="openDialog4Update(row.customer)"
+                    mat-icon-button color="primary">
+                    <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+                  </button>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+
+
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+</div>

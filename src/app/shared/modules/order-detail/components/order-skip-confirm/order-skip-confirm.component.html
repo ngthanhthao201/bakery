@@ -1,0 +1,24 @@
+<div>
+    <div mat-dialog-title>
+        <label>Bạn có chắc chắn muốn hủy đơn này?</label>
+    </div>
+
+    <mat-dialog-content style="min-height:200px; padding: 20px;">
+        <fieldset class="form-group">
+            <label>Vui lòng cho khách hàng biết lý do</label>
+            <input [(ngModel)]="order.skippedComment" type="text" class="form-control">
+        </fieldset>
+    </mat-dialog-content>
+
+    <div class="row">
+        <mat-chip-list>
+            <mat-chip class="btn btn-raised mr-1 btn-round btn-info" style="height: auto; text-align: start;"
+             selected *ngFor="let tc  of chips" (click)="order.skippedComment = tc">{{tc}}</mat-chip>
+        </mat-chip-list>
+    </div>
+
+    <mat-dialog-actions style="justify-content: flex-end;float: right;">
+        <button mat-button mat-dialog-close>Không</button>
+        <button mat-button color="warn" [disabled]="!order.skippedComment" (click)="ok()">Có</button>
+    </mat-dialog-actions>
+</div>

@@ -1,0 +1,39 @@
+<div>
+    <div class="col-md-12 " style="display: -webkit-box;">
+        <div mat-card-avatar style="width: 90px; border: 1px solid #39b2ee; border-radius: 50%; position: relative;">
+            <img src="{{image || materialProvider.image}}" style="border-radius: 50%; width: 90px;">
+            <div tabindex="0" class="userPhotoChangePanel">
+                <input style="display:none" type="file" ngModel (change)="getFiles($event)" accept="image/*" id="icon-input">
+                <label for="icon-input">
+                    <div class="editPhoto-Label">Đổi ảnh</div>
+                    <div class="editPhoto">
+                        <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <fieldset class="col-md-4">
+            <label>Tên nhà cung cấp</label>
+            <input [(ngModel)]="materialProvider.name" class="form-control">
+        </fieldset>
+
+        <fieldset class="col-md-4">
+            <label>Số điện thoại</label>
+            <input [(ngModel)]="materialProvider.phone" class="form-control">
+        </fieldset>
+
+    </div>
+
+    <fieldset class="col-md-12">
+        <label>Địa chỉ</label>
+        <input [(ngModel)]="materialProvider.address" class="form-control">
+    </fieldset>
+
+    <mat-dialog-actions style="justify-content: flex-end;float: right;">
+        <button mat-button mat-dialog-close>Hủy</button>
+        <button *ngIf="materialProvider.id" (click)="ok()" [disabled]="!materialProvider.name || !materialProvider.phone"
+            mat-raised-button color="primary" [mat-dialog-close]="materialProvider">Cập nhật</button>
+        <button *ngIf="!materialProvider.id || materialProvider.id == null" (click)="ok()" mat-raised-button color="primary" [mat-dialog-close]="materialProvider">Tạo Mới</button>
+    </mat-dialog-actions>
+</div>

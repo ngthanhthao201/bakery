@@ -1,0 +1,101 @@
+<div>
+    <div class="row col-md-12">
+        <div class="col-md-3">
+            <mat-card class="example-card">
+                <mat-card-header>
+                    <div mat-card-avatar class="zalo_official_account_pages-image"></div>
+                    <mat-card-title>Các trang zalo bạn đang quản lý</mat-card-title>
+                    <mat-card-subtitle>Vui lòng đăng nhập zalo để lấy danh sách</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <button (click)="loginZlOA()" class="loginBtn loginBtn--zalo">
+                        Login with Zalo
+                    </button>
+
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="col-md-9">
+
+
+            <mat-card class="example-card">
+                <mat-card-header>
+                    <div mat-card-avatar class="zalo_official_account_pages-image"></div>
+                    <mat-card-title>Các trang đang hoạt động</mat-card-title>
+                    <mat-card-subtitle>tự động post bài (lấy hình ảnh từ tủ bánh - không post giá)</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content *ngFor="let zlPageShop of zaloOAPages">
+                    <div class="zalo-page-container" style="padding: 10px">
+                        <img style="width: 64px; height: 64px; border-radius:32px ; float: left; margin-right: 15px;"
+                            src="{{zlPageShop.image}}" />
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div>
+                                    {{zlPageShop.name}} <br />
+                                    <mat-hint>{{zlPageShop.description}}</mat-hint>
+                                    <!-- <mat-icon (click)="removeZaloPage(zlPageShop)" style="cursor: pointer;"
+                                      matTooltip="Xóa" color="warn">remove</mat-icon> -->
+                                </div>
+                                <div style="color:#3f67ff">
+                                    Ngày hết hạn khoảng {{zlPageShop.expiredTime | date}}
+                                </div>
+                            </div>
+                            <div class="col-sm-6" style="display: flex;">
+                                <fieldset class="form-group">
+                                    <label>Thời gian post</label>
+                                    <mat-select [(ngModel)]="zlPageShop.postTime3" (selectionChange)="zaloPostTimeChange(zlPageShop)" class="form-control" style="width: 145px; margin-left: 10px">
+                                        <!-- <mat-option value="none">none</mat-option> -->
+                                        <mat-option value="07:00:00">7:00 Sáng</mat-option>
+                                        <mat-option value="08:00:00">8:00 Sáng</mat-option>
+                                        <mat-option value="09:00:00">9:00 Sáng</mat-option>
+                                        <mat-option value="10:00:00">10:00 Sáng</mat-option>
+                                        <mat-option value="11:00:00">11:00 Trưa</mat-option>
+                                        <mat-option value="12:00:00">12:00 Trưa</mat-option>
+                                        <mat-option value="13:00:00">13:00 Chiều</mat-option>
+                                        <mat-option value="14:00:00">14:00 Chiều</mat-option>
+                                        <mat-option value="15:00:00">15:00 Chiều</mat-option>
+                                        <mat-option value="16:00:00">16:00 Chiều</mat-option>
+                                        <mat-option value="17:00:00">17:00 Chiều</mat-option>
+                                        <mat-option value="18:00:00">18:00 Tối</mat-option>
+                                        <mat-option value="19:00:00">19:00 Tối</mat-option>
+                                        <mat-option value="20:00:00">20:00 Tối</mat-option>
+                                        <mat-option value="21:00:00">21:00 Tối</mat-option>
+                                    </mat-select>
+                                </fieldset>
+                            </div>
+                            <div class="col-sm-2" style="top: 10px">
+                                <button (click)="openCreateZaloPost(zlPageShop)" mat-raised-button color="primary"
+                                    style="float:right;top: 6px">Thêm post mới</button>
+                            </div>
+                        </div>
+
+                        <div class="row container" style="margin-top: 50px">
+                            <div *ngFor="let p of zlPageShop.zaloOAPosts">
+                                <div>
+
+                                    <img (click)="editZaloPost(p, zlPageShop)" matTooltip="{{p.message}}" style="width: 80px;height: 80px;"
+                                        src="{{p.image1}}">
+                                    <button (click)="deleteFacebookPost(p)" class="mat-icon material-icons text-block-delete"
+                                        mat-mini-fab color="warn" matTooltip="Xóa">
+                                        <mat-icon style="font-size: 12px; margin-top: -16px;">remove</mat-icon>
+                                    </button>
+                                    <button (click)="editZaloPost(p, zlPageShop)" class="mat-icon material-icons text-block-update"
+                                        mat-mini-fab color="primary" matTooltip="Sửa">
+                                        <mat-icon style="font-size: 12px; margin-top: -16px;">edit</mat-icon>
+                                    </button>
+                                </div>
+                                <button mat-raised-button style="margin-left: -5px;margin-right: -4px;" (click)="postNow(p)">Post
+                                    Ngay</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </mat-card-content>
+                <!-- <mat-card-footer>
+                      <textarea *ngModel= style="width: 100%;" rows="3" placeholder="liên hệ & chữ ký"></textarea>
+                  </mat-card-footer> -->
+            </mat-card>
+        </div>
+    </div>
+
+</div>

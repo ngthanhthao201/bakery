@@ -1,0 +1,52 @@
+mat-dialog-content{
+  min-height: 390px;
+}
+
+.mat-dialog-title{
+  background: #263238;
+  color: rgba(255,255,255,0.87);
+  padding: 18px;
+  margin: -24px;
+  margin-bottom: 46px;
+}
+
+mat-dialog-actions{
+  border-top: 1px solid #ddd;
+  display: block;
+}
+
+::ng-deep .mat-grid-tile .mat-figure {
+  justify-content: end !important;  /*horizontal alignment*/
+  padding: 20px!important;
+}
+
+mat-grid-list{
+  background: whitesmoke;
+}
+
+
+.dateCreate {
+  border-radius: 0.25rem;
+  border: 1px solid #ced4da;
+  width: 70%;
+  text-align: center;
+  line-height: 0.9cm;
+}
+
+@media only screen and (min-width:1280px){
+   .cdk-overlay-pane .MaterialName{
+    min-width: 660px !important;
+  }
+}
+
+@media only screen and (min-width:1281px) and(min-width: 1600px){
+  .cdk-overlay-pane .MaterialName{
+   min-width: 860px !important;
+ }
+}
+
+@media only screen and (min-width:1880px){
+  .cdk-overlay-pane .MaterialName{
+    min-width: 1052px !important;
+  }
+}

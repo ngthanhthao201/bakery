@@ -1,0 +1,134 @@
+<div [@routerTransition]>
+    <app-page-header heading="{{'Showcase' | translate}}"></app-page-header>
+    <div style="margin-bottom: 20px;">
+        <button style="margin-left: 50px;" (click)="createNew()" id="albumBanh" mat-raised-button color="primary">
+            <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+            Tạo Album bánh
+        </button>
+
+        <button fxHide fxShow.gt-sm color="warn" style="float: right; position: absolute;right: 10%;" mat-raised-button
+            (click)="previewOnPhone()">
+            <mat-icon aria-label="Example icon-button with a heart icon">smartphone</mat-icon>
+            PREVIEW
+        </button>
+
+        <button style="margin-left: 50px; float: right;right: 5%;position: absolute;font-size: xx-large;" mat-mini-fab
+            class="icon-question" (click)="startTourAgain()"></button>
+    </div>
+
+    <!-- <ngx-datatable
+            class="material"
+            [rows]="productCategories"
+            [columnMode]="'force'"
+            [headerHeight]="50"
+            [footerHeight]="50"
+            (activate)="onActivate($event)"
+            [rowHeight]="'auto'">
+            <ngx-datatable-column name="Image">
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <img class="category-img" src="{{value || 'https://mybakerystorage.blob.core.windows.net/static/placeholder-image.jpg'}}"/>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Name">
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                <div style="text-transform: capitalize;">{{value}}</div>
+                <div *ngIf="row.productLabel"><img src="{{row.productLabel.image}}"></div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Actions">
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <button matTooltip="Copy link website" (click)="copyLink(row); $event.stopPropagation();" mat-icon-button
+                        color="primary">
+                        <mat-icon aria-label="Example icon-button with a heart icon">content_copy</mat-icon>
+                    </button>
+                    <button matTooltip="{{ 'ClickToEdit' | translate }}" (click)="editProductCategory(row); $event.stopPropagation();" mat-icon-button
+                        color="primary">
+                        <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+                    </button>
+                    <button  matTooltip="{{ 'ClickToRemove' | translate }}" (click)="deleteProductCategory(row.id); $event.stopPropagation();" mat-icon-button
+                            color="warn">
+                            <mat-icon aria-label="Example icon-button with a heart icon">remove</mat-icon>
+                    </button>
+                </ng-template>
+              </ngx-datatable-column>
+          </ngx-datatable> -->
+
+    <ul class="list-group" >
+        <li matTooltip="Kéo và thả để sắp xếp album" style="cursor: pointer;" (click)="goToProducts(item.id)" class="list-group-item"
+            *ngFor="let item of productCategories">
+            <div class="row col-md-12">
+                <div class="col-md-3">
+                    <img class="category-img" src="{{item.image || 'https://mybakerystorage.blob.core.windows.net/static/placeholder-image.jpg'}}" />
+                </div>
+                <div class="col-md-6" id="loaiBanh">
+                    <div style="text-transform: capitalize;">{{item.name}}</div>
+                    <div class="badge" *ngIf="item.productLabel" style="text-transform: capitalize;">{{item.productLabel.name}}</div>
+                </div>
+                <div class="col-md-3">
+                    <button matTooltip="Copy link website" (click)="copyLink(item); $event.stopPropagation();"
+                        mat-icon-button color="primary">
+                        <mat-icon aria-label="Example icon-button with a heart icon">content_copy</mat-icon>
+                    </button>
+                    <button matTooltip="{{ 'ClickToEdit' | translate }}" (click)="editProductCategory(item); $event.stopPropagation();"
+                        mat-icon-button color="primary">
+                        <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+                    </button>
+                    <button matTooltip="{{ 'ClickToRemove' | translate }}" (click)="deleteProductCategory(item.id); $event.stopPropagation();"
+                        mat-icon-button color="warn">
+                        <mat-icon aria-label="Example icon-button with a heart icon">remove</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+
+    <!-- <div style="margin-top: 25px;">
+        <mat-toolbar color="primary">
+            <span>{{ 'Accessories' | translate}}</span>
+    
+            <button (click)="createNewAccesssory()" style="margin-left: 50px;" matTooltip="{{ 'NewProduct' | translate }}" mat-mini-fab>
+                <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+            </button>
+            <span class="example-spacer"></span>
+            
+        </mat-toolbar>
+        <ngx-datatable *ngIf="accessoriesCategory"
+            class="material clickable"
+            [rows]="accessoriesCategory.products"
+            [columnMode]="'force'"
+            [headerHeight]="50"
+            [footerHeight]="50"
+
+            [rowHeight]="'auto'">
+            <ngx-datatable-column name="Image">
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <img class="accessory-img" src="{{value || 'https://mybakerystorage.blob.core.windows.net/static/placeholder-image.jpg'}}"/>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Name">
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                <div>{{value}}</div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="{{'SellingPrice'| translate}} / {{'Unit' | translate}}">
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                  <div>{{row.sellingPrice | currencyformat}}</div>
+                  <div style="color:#aaa">{{row.unit}}</div>
+                </ng-template>
+              </ngx-datatable-column>
+            <ngx-datatable-column name="Actions">
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <button matTooltip="{{ 'ClickToEdit' | translate }}" (click)="editAccesssory(row); $event.stopPropagation();" mat-icon-button
+                        color="primary">
+                        <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+                    </button>
+                    <button  matTooltip="{{ 'ClickToRemove' | translate }}" (click)="deleteAccesssory(row.id); $event.stopPropagation();" mat-icon-button
+                            color="warn">
+                            <mat-icon aria-label="Example icon-button with a heart icon">remove</mat-icon>
+                    </button>
+                </ng-template>
+              </ngx-datatable-column>
+          </ngx-datatable>
+    </div> -->
+</div>

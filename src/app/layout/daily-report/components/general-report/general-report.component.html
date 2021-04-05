@@ -1,0 +1,50 @@
+
+    <div>
+
+        <div>
+            <!-- <mat-form-field style=" width: 200px; margin-left: 10px;">
+                        <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" placeholder="Chọn ngày" [matDatepickerFilter]="myFilter" (dateChange)="dateChange('change', $event)">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field> -->
+                <div class="form-group" style="margin-left: 10px; padding: 20px; display: flex">
+                    <label style="padding: 10px;">Chọn ngày</label><br>
+                    <input style=" width:auto " [matDatepicker]="picker" [(ngModel)]="selectedDate" [matDatepickerFilter]="myFilter"
+                        (dateChange)="dateChange($event)" class="dateCreate form-control" readonly>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </div>
+
+        </div>
+
+        <div class="col-md-12 stats-item-container row">
+            <div class="md-padding col-md-3 stats-item">
+                <div style="border-bottom: 3px solid #39b2ee; text-transform: uppercase;">Bánh Kem</div>
+                <div class="b-main" style="text-align: center; font-family: 'Open Sans Condensed'; font-size: 2em; line-height: 2em;">{{totalProductBarcodeIncome
+                    | currencyformat}}</div>
+            </div>
+            <div class="md-padding col-md-3 stats-item">
+                <div style="border-bottom: 3px solid #f9a825; text-transform: uppercase;">Bánh Món & Phụ Kiện</div>
+                <div style="color: #f9a825; text-align: center; font-family: 'Open Sans Condensed'; font-size: 2em; line-height: 2em;">{{totalHardProductBarcodeIncome
+                    | currencyformat}}</div>
+            </div>
+            <div class="md-padding col-md-3 stats-item">
+                <div style="border-bottom: 3px solid #8BC34A; text-transform: uppercase;">Đặt Cọc - THU khác</div>
+                <div>
+                    <span class="g-main" style="text-align: center; font-family: 'Open Sans Condensed'; font-size: 2em; line-height: 2em;">
+                        {{totalOther | currencyformat}}
+                    </span>
+                    <a style="margin-left: 15px;" href="javascript:void()" (click)="viewDetailTransaction(otherTransactions)">Xem
+                        chi tiết</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <label>Tổng Cộng: </label> <span style="padding: 10px" class="badge-info">{{totalProductBarcodeIncome + totalHardProductBarcodeIncome + totalOther | currencyformat}}</span>
+            </div>
+        </div>
+
+    </div>
+

@@ -1,0 +1,62 @@
+<h3 mat-dialog-title>Đơn bánh {{order.idNumber}}</h3>
+
+<div [@routerTransition] style=" max-height: 70vh;" id="order-detail.component">
+    <button style="float:right;z-index: 9;margin-top: -82px;" color="warn" *ngIf="isPopup" mat-fab mat-dialog-close>
+        <mat-icon color="white">close</mat-icon>
+    </button>
+    <app-page-header *ngIf="order && !isPopup" heading="{{order.idNumber}}" [parents]="parentsLink"></app-page-header>
+
+    <div class="row">
+        <div class="col-md-6" *ngIf="order.memberId" style="font-size: x-large;">Người tạo:
+            {{shopService.getMemberNameById(order.memberId)}}
+        </div>
+        <div class="d-flex col-md-6" *ngIf="order.customer">
+            <!-- <label style="font-weight: bold; border-bottom: 3px solid #39b2ee; text-transform: uppercase;">
+                    Khách Hàng</label> -->
+            <div style="font-size: x-large;border-bottom: 3px solid #39b2ee;display: inline-table;">Khách Hàng: </div>
+            <div class="d-flex">
+                <img src="{{order.customer.image || '../../../../../../assets/images/avatar_placeholder.png'}}"
+                    class="align-self-center mr-2 ml-2 img-circle {{order.customer.gender}}">
+                <div>
+                    <span>Tên: {{order.customer.name}}</span><br>
+                    <span>Sđt: {{order.customer.phoneNumber}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-12 row" style="padding: 20px;border-bottom: 1px dotted; margin-bottom: 20px;">
+        <app-progress-tracker style="width: 100%" [steps]="steps"></app-progress-tracker>
+    </div>
+
+    <div class="col-md-12 ">
+        <div class="row">
+            <div  class="mr-4 col-md-3">
+                <label style="font-weight: bold;border-bottom: 3px solid #39b2ee; text-transform: uppercase;vertical-align: middle;">
+                    Chi Tiết </label>
+                <order-button [order]="order" class="float-right"></order-button>
+            </div>
+            <!-- <button class="btn btn-outline-primary mr-1 ft-printer" (click)="printOrder()"> In Hóa Đơn</button>
+            <button class="btn btn-raised mr-1 btn-info ft-edit" (click)="openBottomSheet(order)"> Sửa</button> -->
+
+            <div *ngIf="pdWithoutBarcode && pdWithoutBarcode.length > 0" class="text-danger col-md-7" style="text-align: end;">
+                Có {{pdWithoutBarcode.length}} bánh gả chưa quét mã</div>
+        </div>
+  
+        <!-- Attachments -->
+        <div class="row" style="padding: 10px;">
+            <div class="col-md-3" *ngFor="let a of order.attachments">
+                <ngx-floating-img imgSrc="{{a.url}}" [imgWidth]="1920" [imgHeight]="1280" [vpPadding]="100"
+                    [imgAnimationSpeed]="100" overlayColor="#080e24" [order]="order">
+                    <img alt="Cake_Image" src="{{a.url}}" style="max-height: -webkit-fill-available;">
+                </ngx-floating-img>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-md-12">
+
+    <app-order-details-info [order]="order"></app-order-details-info>
+</div>

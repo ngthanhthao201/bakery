@@ -1,0 +1,40 @@
+<div class="login-page" [@routerTransition]>
+    <div class="row justify-content-md-center">
+        <div *ngIf="!state.hasSocialUser" [@routerTransition] class="login-container">
+            <div>
+                <div class="login-logo-circle"><i class="fa fa-users" aria-hidden="true"></i></div>
+                <h2 color="accent" class="login-color accent">Quản Lý Tiệm Bánh</h2>
+                <br />
+
+            </div>
+
+            <fieldset class="col-md-12">
+                <label>Số điện thoại</label>
+                <input [(ngModel)]="localVM.username" class="form-control">
+            </fieldset>
+
+            <fieldset class="col-md-12" style="margin-top: 10px">
+                <label>Mật khẩu</label>
+                <input autocomplete="new-password" (keyup.enter)="loginLocal()" type="password" [(ngModel)]="localVM.password"
+                    class="form-control">
+            </fieldset>
+
+            <div style="margin:20px">
+                <button color="accent" mat-raised-button style=" color: white;" (click)="loginLocal()" mat-raised-button>Đăng nhập</button>
+            </div>
+    
+            
+            <div style="margin:20px">
+                <label>Hoặc đăng nhập bằng quét mã QR từ app điện thoại</label>
+                <qrcode style="display: inline-flex;" [size]="150" [qrdata]="groupLoginId"></qrcode>      
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+
+</div>
+

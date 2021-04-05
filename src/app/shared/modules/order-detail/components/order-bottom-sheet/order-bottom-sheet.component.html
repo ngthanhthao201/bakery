@@ -1,0 +1,98 @@
+<div>
+
+    <div>
+        <div class="row" *ngIf="currentOrder.advanceInfo">
+            <div class="col-md-3">
+                <fieldset class="form-group">
+                    <label>Loại Bánh - Kích Thước</label>
+                    <input class="form-control" style="text-align: left;" [(ngModel)]="currentOrder.advanceInfo.size">
+                </fieldset>
+            </div>
+            <div class="col-md-12">
+                <fieldset class="form-group">
+                    <label>Nội dung</label>
+                    <textarea class="form-control" style="background: white !important;text-align: left;" rows="3"
+                        [(ngModel)]="currentOrder.advanceInfo.note"></textarea>
+                </fieldset>
+            </div>
+            <div class="col-md-12">
+                <fieldset class="form-group">
+                    <label>Địa Chỉ Giao Bánh</label>
+                    <input class="form-control" style="text-align: left;" [(ngModel)]="currentOrder.advanceInfo.address" ngx-google-places-autocomplete [options]="{types: [],componentRestrictions: { country: 'VN' }}"
+                    style="text-align: left;   width: 100%;" #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event)">
+                </fieldset>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12" *ngIf="!currentOrder.advanceInfo">
+            <fieldset class="form-group">
+                <label>Nội dung</label>
+                <textarea class="form-control" style="background: white !important;text-align: left;" rows="3"
+                    [(ngModel)]="currentOrder.comments"></textarea>
+            </fieldset>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <fieldset class="form-group">
+            <label for="delivery-datetime-picker-editor">Ngày Giao</label><br>
+            <div class="row" style="margin-left: 10px;">
+                <input readonly [ngModelOptions]="{standalone: true}" class="form-control" name="date" [(ngModel)]="dateStruct"
+                    (ngModelChange)="updateDate()" ngbDatepicker #datePicker="ngbDatepicker" style="width: 50%">
+                <div class="input-group-append" >
+                    <div class="input-group-text">
+                        <i class="fa fa-calendar" (click)="datePicker.toggle()"></i>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>Giờ Giao</label>
+            <div class="col-md-9">
+                <ngb-timepicker name="time" [ngModelOptions]="{standalone: true}" [(ngModel)]="timeStruct"
+                    (ngModelChange)="updateTime()" [meridian]="true">
+                </ngb-timepicker>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="email">Tổng Tiền</label>
+            <input currencyMask [options]="currencyMaskOptions" class="form-control" readonly [(ngModel)]="currentOrder.amount + currentOrder.fee">
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="email">Đặt Cọc</label>
+            <input currencyMask [options]="currencyMaskOptions" class="form-control" [(ngModel)]="currentOrder.deposit">
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="email">Còn Lại</label>
+            <input currencyMask [options]="currencyMaskOptions" class="form-control" readonly [(ngModel)]="currentOrder.amount - currentOrder.deposit">
+        </div>
+    </div>
+</div>
+
+
+<!-- sửa -->
+<div style="float: right">
+    <!-- <button mat-raised-button (click)="cancel()">Hủy</button>
+    <button mat-raised-button color="primary" (click)="save()">Lưu</button> -->
+    <a class="btn btn-raised mr-1 shadow-z-1" (click)="cancel()" style="font-size: large">Đóng</a>
+    <a class="btn btn-raised mr-1 shadow-z-1 btn-success" (click)="save()" style="font-size: large; padding-left: 22px;padding-right: 22px; margin-left: 10px;">Lưu</a>
+</div>
+

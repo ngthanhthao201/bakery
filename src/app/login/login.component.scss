@@ -1,0 +1,142 @@
+$topnav-background-color: #222;
+:host {
+    display: block;
+}
+
+label {
+    float: left;
+}
+.login-page {
+    background-image: url("../../assets/images/Background_user_1080.jpg");
+
+    /* Full height */
+
+    height: 100vh;
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    background-color:White;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    text-align: center;
+    padding: 3em;
+    .col-lg-4 {
+        padding: 0;
+    }
+    
+
+
+
+
+    .form-content {
+        padding: 40px 0;
+    }
+    .user-avatar {
+        -webkit-border-radius: 50%;
+        border-radius: 50%;
+        border: 2px solid #fff;
+    }    
+
+
+    .login-container {
+        background-color: white;
+        background-size: cover;
+        box-shadow: 0 0 18px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        line-height: 1.6em;
+        padding: 25px 15px 35px 15px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        font-size: 13px;
+        font-family: Lato, Arial, Georgia, Serif;
+        font-weight: 400;
+        letter-spacing: 0;
+        border-radius: 8px;
+        min-height: 480px;
+        margin-top: -266px;
+        width: 400px;
+        left: 50%;
+        top: 50%;
+        position: absolute;
+        transform: translateX(-50%);
+    }
+
+    .login-color {
+        
+        //.text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
+        font-size: 36px;
+    }
+
+
+    .facebook {
+        background: #3b5998;
+        overflow: hidden;
+        position: relative;
+        height: 62px;
+        line-height: 62px;
+        text-decoration: none;
+        cursor: pointer;
+        width: 75%;
+        border-radius: 10px;
+        display: inline-block;
+        color:white;
+    }
+
+    .googleplus {
+        background: #dd4b39;
+        overflow: hidden;
+        position: relative;
+        margin-top: 15px;
+        height: 62px;
+        line-height: 62px;
+        text-decoration: none;
+        cursor: pointer;
+        width: 75%;
+        border-radius: 10px;
+        display: inline-block;
+        color:white;
+    }
+
+    .connect-icon-facebook {
+        background: #283d68;
+        vertical-align: middle;
+        float: left;
+        width: 70px;
+        text-align: center;
+        font-size: 22px;
+    }
+
+    .fa-google-plus, .fa-facebook {
+        font-size: 22px;
+        color: white;
+    }
+
+    .connect-icon-goolge {
+        background: #b52f1f;
+        vertical-align: middle;
+        float: left;
+        width: 70px;
+        text-align: center;
+        font-size: 22px;
+    }
+
+    .line-select-login {
+        font-size: 18px;
+        color: rgba(255, 255, 255, 0.5019607843137255);
+        padding-top: 15px;
+    }
+    
+}

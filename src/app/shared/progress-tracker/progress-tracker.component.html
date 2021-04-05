@@ -1,0 +1,29 @@
+<div class="container">
+    <ol class="progress-meter">
+        <!-- <li class="progress-point done">05:20 mins</li>
+    <li class="progress-point done">05:10 mins</li>
+    <li class="progress-point done">Link</li>
+    <li class="progress-point todo">Connect</li> -->
+        <li *ngFor="let s of steps" class="progress-point {{s.isDone ? 'done' : 'todo'}} ">{{s.name}}
+            <div style="margin-top: 10px ;font-size: 10px;color: #aaa;" >
+                <div *ngIf="s.isDone">
+                    {{s.date | date : 'HH:mm, d MMM'}} <br>
+                    <img matTooltip="{{s.byName}}" [ngStyle]="{'visibility': s.byImage ? 'inherit' : 'collapse' }"
+                        style="width: 35px; height: 35px; border-radius: 20px" src="{{s.byImage}}">
+                </div>
+                <!-- <div style="height: 80px" *ngIf="!s.isDone && s.buttonReplace">
+                    <br >
+                    <button mat-raised-button color="primary"
+                        (click)="s.buttonReplace.command()">{{s.buttonReplace.text}}</button>
+                </div> -->
+                <div *ngIf="!s.isDone && s.buttonReplace">
+                    <br>
+                    <a><img matTooltip="{{s.buttonReplace.text}}" (click)="s.buttonReplace.command()"
+                            style=" width: 35px; height: 35px; border-radius: 20px"
+                            src="../../../assets/icons/ic_checked.png">
+                    </a>
+                </div>
+            </div>
+        </li>
+    </ol>
+</div>

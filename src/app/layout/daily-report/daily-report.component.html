@@ -1,0 +1,62 @@
+<!-- <div>
+      <div class="row col-md-12">
+        <a class="col-md-4 badge" [routerLinkActive]="'badge-primary'" [routerLink]="['big']">
+          <p >
+            Bánh Kem
+          </p>
+        </a>
+        <a class="col-md-4 badge" [routerLinkActive]="'badge-primary'" [routerLink]="['small']">
+          <p >
+            Bánh Món & Phụ Kiện
+          </p>
+        </a>
+        <a class="col-md-4 badge" [routerLinkActive]="'badge-primary'" [routerLink]="['general']">
+          <p >
+            Tổng Quan
+          </p>
+        </a>
+      </div>
+
+      <router-outlet></router-outlet>
+</div> -->
+
+<div class="col-md-12 col-lg-12">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title-wrap bar-warning">
+
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-block">
+        <ul ngbNav #nav="ngbNav" class="nav-tabs">
+          <li ngbNavItem> 
+            <a ngbNavLink>Bánh Kem</a>
+            <ng-template ngbNavContent>
+              <product-barcode-report></product-barcode-report>
+            </ng-template>
+          </li>
+
+          <li ngbNavItem> 
+            <a ngbNavLink>Bánh Món & Phụ Kiện</a>
+            <ng-template ngbNavContent>
+              <stuff-barcode-report></stuff-barcode-report>
+            </ng-template>
+          </li>
+
+          <li ngbNavItem> 
+            <a ngbNavLink>Tổng Quan</a>
+            <ng-template ngbNavContent>
+              <app-general-report></app-general-report>
+            </ng-template>
+          </li>
+ 
+
+        </ul>
+
+        <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+      </div>
+    </div>
+  </div>
+</div>

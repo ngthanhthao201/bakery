@@ -1,0 +1,145 @@
+<div mat-dialog-title color="warn">
+    Tạo Vouchers
+</div>
+<section style="min-height:350px;">
+
+
+    <div class="row col-md-12">
+        <div class="col-md-4">
+            <!-- <mat-form-field>
+            <input required matInput [(ngModel)]="newVouchersRequest.text" placeholder="Tên voucher">
+            <mat-hint align="end">VD: Giảm ngay 10% mừng ngày quốc tế phụ nữ</mat-hint>
+          </mat-form-field> -->
+            <fieldset>
+                <label>Tên voucher</label>
+                <input required [(ngModel)]="newVouchersRequest.text" class="form-control">
+                <mat-hint align="end" style="font-size: 14px; float: right;font-weight: 400;">VD: Giảm ngay 10% mừng ngày quốc tế phụ nữ</mat-hint>
+            </fieldset>
+        </div>
+        <div class="col-md-4">
+            <!-- <mat-form-field>
+            <mat-select required placeholder="Loại voucher" [(ngModel)]="newVouchersRequest.voucherType" (ngModelChange)="resetVoucher()">
+              <mat-option [value]="0">
+                Tiền
+              </mat-option>
+              <mat-option [value]="1">
+                Tặng quà, bánh ..
+              </mat-option>
+              <mat-option [value]="2">
+                Giảm giá theo % đơn bánh
+              </mat-option>
+            </mat-select>
+          </mat-form-field> -->
+            <fieldset>
+                <label>Loại voucher</label>
+                <mat-select required [(ngModel)]="newVouchersRequest.voucherType" (ngModelChange)="resetVoucher()"
+                    class="form-control">
+                    <mat-option [value]="0">
+                        Tiền
+                    </mat-option>
+                    <mat-option [value]="1">
+                        Tặng quà, bánh ..
+                    </mat-option>
+                    <mat-option [value]="2">
+                        Giảm giá theo % đơn bánh
+                    </mat-option>
+                </mat-select>
+            </fieldset>
+        </div>
+        <div class="col-md-4">
+            <!-- <mat-form-field *ngIf="newVouchersRequest.voucherType === 0">
+                    <input required matInput currencyMask [options]="currencyMaskOptions" [(ngModel)]="newVouchersRequest.cash"
+                        placeholder="Số tiền">
+                </mat-form-field> -->
+            <fieldset *ngIf="newVouchersRequest.voucherType === 0">
+                <label>Số tiền</label>
+                <input required currencyMask [options]="currencyMaskOptions" [(ngModel)]="newVouchersRequest.cash"
+                    class="form-control">
+            </fieldset>
+            <!-- <mat-form-field *ngIf="newVouchersRequest.voucherType === 1">
+                    <input required matInput [(ngModel)]="newVouchersRequest.gift" placeholder="Tên món quà">
+                </mat-form-field> -->
+            <fieldset *ngIf="newVouchersRequest.voucherType === 1">
+                <label>Tên món quà</label>
+                <input required [(ngModel)]="newVouchersRequest.gift" class="form-control">
+            </fieldset>
+            <!-- <mat-form-field *ngIf="newVouchersRequest.voucherType === 2">
+                    <input required matInput [(ngModel)]="newVouchersRequest.orderPercent" placeholder="phần trăm đơn bánh">
+                </mat-form-field> -->
+            <fieldset *ngIf="newVouchersRequest.voucherType === 2">
+                <label>Phần trăm đơn bánh</label>
+                <input type="number" required [(ngModel)]="newVouchersRequest.orderPercent" class="form-control">
+            </fieldset>
+        </div>
+    </div>
+
+    <div class="row col-md-12" style="margin-top:10px">
+        <div class="col-md-6">
+            <!-- <mat-form-field>
+                <input required matInput [(ngModel)]="newVouchersRequest.groupName" placeholder="Mã tiền tố">
+                <mat-hint align="end">VD: tiền tố PHUNU : PHUNU7YCA, PHUNUABCD, .. không khoảng trắng</mat-hint>
+            </mat-form-field> -->
+            <fieldset>
+                <label>Mã tiền tố</label>
+                <input required [(ngModel)]="newVouchersRequest.groupName" class="form-control">
+                <mat-hint align="end" style="font-size: 14px; float: right;font-weight: 400;">VD: tiền tố PHUNU : PHUNU7YCA, PHUNUABCD, .. không khoảng trắng</mat-hint>
+            </fieldset>
+        </div>
+        <div class="col-md-6">
+            <!-- <mat-form-field>
+                <input required type="number" matInput [(ngModel)]="newVouchersRequest.capacity" placeholder="Số lượng voucher phát hành">
+            </mat-form-field> -->
+            <fieldset>
+                <label>Số lượng voucher phát hành</label>
+                <input type="number" required [(ngModel)]="newVouchersRequest.capacity" class="form-control">
+            </fieldset>
+        </div>
+    </div>
+
+    <div class="row col-md-12" style="margin-top: 77px;">
+        <mat-expansion-panel hideToggle="true" style="width: 50%;">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Nâng cao
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- <mat-form-field>
+                        <input matInput placeholder="Ngày áp dụng" [matDatepicker]="picker" (focus)="picker.open()"
+                            [(ngModel)]="newVouchersRequest.startDate">
+                    </mat-form-field>-->
+
+                    <fieldset class="form-group">
+                        <label>Ngày áp dụng</label>
+                        <input [matDatepicker]="picker" (focus)="picker.open()" [(ngModel)]="newVouchersRequest.startDate"
+                            class="form-control">
+                    </fieldset>
+                    <mat-datepicker #picker></mat-datepicker>
+                </div>
+
+                <div class="col-md-6">
+                    <!-- <mat-form-field>
+                        <input matInput placeholder="Ngày kết thúc" [matDatepicker]="picker2" (focus)="picker2.open()"
+                            [(ngModel)]="newVouchersRequest.endDate">
+                    </mat-form-field> -->
+                    <fieldset class="form-group">
+                        <label>Ngày kết thúc</label>
+                        <input [matDatepicker]="picker2" (focus)="picker2.open()" [(ngModel)]="newVouchersRequest.endDate"
+                            class="form-control">
+                    </fieldset>
+                    <mat-datepicker #picker2></mat-datepicker>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </div>
+</section>
+
+<mat-dialog-actions style="float:right">
+    <mat-action-row>
+        <button mat-button mat-dialog-close>Hủy</button>
+        <button [disabled]="!newVouchersRequest.text || !(newVouchersRequest.voucherType > -1) || !newVouchersRequest.groupName || !newVouchersRequest.capacity
+        || newVouchersRequest.groupName.indexOf(' ') > -1 || (!newVouchersRequest.cash && !newVouchersRequest.gift && !newVouchersRequest.orderPercent)"
+            mat-raised-button color="primary" [mat-dialog-close]="newVouchersRequest">Đồng ý</button>
+    </mat-action-row>
+</mat-dialog-actions>

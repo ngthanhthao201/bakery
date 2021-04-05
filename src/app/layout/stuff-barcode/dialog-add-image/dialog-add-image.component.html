@@ -1,0 +1,41 @@
+<h3 mat-dialog-title>Hình ảnh của bánh</h3>
+<div class="container">
+    <div class="row">
+        <div class="col" appearance="fill">
+            <img
+                class="category-img"
+                src="{{ image || currentProduct.image || 'https://mybakerystorage.blob.core.windows.net/static/placeholder-image.jpg'}}"
+            />
+
+            <div tabindex="0" class="userPhotoChangePanel">
+                <input
+                    style="display: none"
+                    type="file"
+                    ngModel
+                    (change)="getFiles($event)"
+                    accept="image/*"
+                    id="icon-input"
+                />
+                <label for="icon-input" style="margin-top: 22px">
+                    <div class="editPhoto-Label">Click vào để chọn hình</div>
+                    <div class="editPhoto">
+                        <!-- <mat-icon
+                            aria-label="Example icon-button with a heart icon"
+                            style="margin-top: 22px"
+                            >edit</mat-icon
+                        > -->
+                        <!-- <button class="btn" style="color:white"><i class="fa fa-camera-retro fa-lg"></i></button> -->
+                    </div>
+                </label>
+
+                <div tabindex="0" class="removePhoto"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="display:flex;justify-content: center; align-items: center   ;">
+        <button (click)="loadImageProduct()" type="button" class="btn btn-outline-primary mt-3">Lưu Ảnh</button>
+    </div>
+</div>
+<svg class="spinnerHidden" id="loading" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+    <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+ </svg>

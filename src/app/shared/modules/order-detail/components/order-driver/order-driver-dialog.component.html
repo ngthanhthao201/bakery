@@ -1,0 +1,88 @@
+<div>
+    <div mat-dialog-title>
+        <label>Chọn tài xế giao đơn hàng #{{order.idNumber}}</label>
+    </div>
+
+    <mat-dialog-content style="min-height:200px; padding: 15px;">
+        <div class="row">
+            <div class="col-md-8">
+                <div>Tên: {{order.customer.name}}
+                    <span> / {{order.customer.phoneNumber}}</span>
+                </div>
+                <div>Địa Chỉ:
+                    <span *ngIf="order.advanceInfo">
+                        {{order.advanceInfo.address}}</span>
+                    <span *ngIf="!order.advanceInfo && order.address && order.address.description">
+                        {{order.address.description}}</span>
+                    <span
+                        *ngIf="order.advanceInfo && !order.advanceInfo.address && order.address && order.address.description">
+                        {{order.address.description}}</span>
+                </div>
+                <div>Giờ giao: {{order.deliveryPickupTime | date: 'h:mm a, d MMMM'}}</div>
+
+                <div class="currentformat" style="display:flex">
+                    <div class="font-small-4">
+                        Tổng: {{order.amount + order.fee | currencyformat}}
+                    </div>
+                    <span style="margin-left: 5px; margin-right: 5px; color: #ddd;">|</span>
+                    <div class="font-small-4">Cọc: {{order.deposit | currencyformat}}</div>
+                    <span style="margin-left: 5px; margin-right: 5px; color: #ddd;">|</span>
+                    <div class="text-warning font-small-4">
+                        Còn : {{order.amount + order.fee  - order.deposit| currencyformat}}</div>
+                </div>
+                <div *ngIf="(order.amount+ order.fee  - order.deposit) > 0" class="row">
+                    <span>
+                        <mat-slide-toggle class="dropdown-item py-1" [(ngModel)]="newDriverRun.isCod">
+                            Thu hộ </mat-slide-toggle>
+                    </span>
+                    <!-- <span *ngIf="newDriverRun.isCod">{{order.amount+ order.fee  - order.deposit| currencyformat}}</span> -->
+                </div>
+            </div>
+            <div class="col-md-4">
+                <fieldset>
+                    <!-- <button class="btn btn-outline-info dropdown-toggle dropdown-toggle" type="button"
+                        aria-haspopup="true" aria-expanded="false" [matMenuTriggerFor]="menu"> Chọn tài xế <span
+                            class="caret"></span>
+                    </button>
+                    <div style="color: none; background-color: none;">
+                         <mat-menu #menu="matMenu">
+                            <a mat-menu-item *ngFor="let d of drivers" (click)="choseDriver(d)">
+                                {{d.name}} / {{d.phoneNumber}}
+                            </a>
+                        </mat-menu>
+                        
+                    </div> -->
+                        <div ngbDropdown class="d-inline-block">
+                            <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle> Chọn tài xế</button>
+                            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                             <button *ngFor="let d of drivers" (click)="choseDriver(d)" class="dropdown-item">{{d.name}} / {{d.phoneNumber}}</button>
+                            </div>
+                          </div>
+
+                    <div *ngIf="currentDriver">
+                        <div>Tên tài xế: {{currentDriver.name}}</div>
+                        <div>Số điện thoại: {{currentDriver.phoneNumber}}</div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+        <hr>
+
+        <fieldset class="form-group">
+            <label class="label-control">Cước phí</label>
+            <input [(ngModel)]="newDriverRun.price"  currencyMask [options]="currencyMaskOptions" class="form-control " style="width: 15%;">
+        </fieldset>
+
+        <fieldset class="form-group">
+            <label>Ghi chú</label>
+            <input [(ngModel)]="newDriverRun.note" type="text" class="form-control">
+        </fieldset>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions style="justify-content: flex-end;float: right;">
+        <button mat-button mat-dialog-close>Huỷ</button>
+        <button mat-button color="primary" [disabled]="!currentDriver" (click)="ok()">Gửi yêu cầu</button>
+    </mat-dialog-actions>
+</div>

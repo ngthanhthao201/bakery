@@ -1,0 +1,53 @@
+<div class="container">
+  <h2>Lịch sử giao dịch</h2>
+
+  <div class="form-group" style="margin-left: 10px; padding: 20px; display: flex">
+   <label style="padding: 10px;">Chọn ngày</label><br>
+   <input style=" width:auto " [matDatepicker]="picker" [(ngModel)]="selectedDate" 
+       (dateChange)="dateChange($event)" class="dateCreate form-control" [matDatepickerFilter]="myFilter" readonly>
+   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+   <mat-datepicker #picker></mat-datepicker>
+</div>
+
+
+
+ <div class="row">
+    <div class="col-md-6">
+       <button (click)="orderByTime()" class="btn btn-raised mr-1 btn-secondary icon-graph">  Sắp xếp theo giờ</button>
+      
+       <button (click)="orderByTotal()" class="btn btn-raised mr-1 btn-secondary icon-graph">  Sắp xếp theo tổng tiền</button>
+    </div>
+    <div class="col-md-12 col-lg-12">
+       <div id="tracking-pre"></div>
+       <div id="tracking">
+          <div class="tracking-list" *ngFor="let c of incomeHeaders">
+              <div  class="tracking-item" (click)="openTransactionDetail(c)">
+                  <div class="tracking-icon status-intransit">
+                     <!-- <svg class="svg-inline--fa fa-circle fa-w-16" aria-hidden="true" data-prefix="fas" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+                        <path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path>
+                     </svg> -->
+                     <!-- <i class="fas fa-circle"></i> -->
+                     <img  src="{{shopService.getMemberImageById(c.memberId) || '../../../../../assets/images/avatar_placeholder.png'}}">
+                  </div>
+                  <div class="tracking-date">{{c.dateCreated| date:'dd-MM-yyyy'}}
+                     <span>{{c.dateCreated| date :'HH:mm'}}</span>
+                     <span>{{shopService.getMemberNameById(c.memberId)}}</span>
+                  </div>
+                  <div class="tracking-content">
+                     <div style="display:flex">
+                           <span>Tổng giao dịch:&nbsp; </span> &nbsp;<span style="font-weight:bold">{{c.amount| currencyformat}}</span>
+                     </div>
+                     <span>{{c.incomeTransactions | descriptions: 'quantitydescription'}}</span>
+                  </div>
+
+                  <div *ngIf="!c.incomeTransactions[0] || !c.incomeTransactions[0].isActive" class="w3-panel w3-red tracking-actions" style="padding: 30px">
+                        <h4 class="text-remove">Đã hủy</h4><br>
+                        <p *ngIf="c.incomeTransactions[0]" style="float: right;">{{c.incomeTransactions[0].destroyedReason}}</p>
+                      </div> 
+
+               </div>
+          </div>
+       </div>
+    </div>
+ </div>
+</div>

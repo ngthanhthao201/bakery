@@ -1,0 +1,81 @@
+.product-img{
+    max-height: 200px !important;
+  }
+.userPhotoChangePanel {
+
+    opacity: 0;
+    background: #3e4144;
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    text-align: center;
+    font-size: 41px;
+    font-weight: 500;
+    height: 100%;
+    margin: 2px;
+    outline: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    transition: opacity .25s ease-in-out;
+    .editPhoto {
+        cursor: pointer;
+        left: 123px;
+        outline: 0;
+        position: absolute;
+        top: 20px;
+        z-index: 2;
+    }
+    .editPhoto-Label {
+        line-height: 119px;
+        font-family: sans-serif;
+    }
+}
+
+.userPhotoChangePanel:hover {
+    opacity: 100;
+    transition: opacity .25s ease-in-out
+}
+
+.accessory-img{
+    max-height: 85%;
+    max-width: 85%;
+    text-align: center;
+    margin-top: 35px;
+
+}
+
+mat-form-field{
+    width: 100%;
+}
+
+.title-table{
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+mat-spinner{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    margin: auto;
+    z-index: 999;
+}
+
+.overlay-frame{
+    position: relative;
+    margin-bottom: -1000px;
+    padding-bottom: 1000px;
+    background: rgba(255,255,255,0.5);
+    z-index: 99;
+}
+
+.dateCreate {
+    border-radius: 0.25rem;
+    border: 1px solid #ced4da;
+    width: 70%;
+    text-align: center;
+    line-height: 0.9cm;
+  }

@@ -1,0 +1,138 @@
+<div>
+    <div class="row col-md-12">
+        <div class="col-md-3">
+
+
+            <mat-card class="example-card">
+                <mat-card-header>
+                    <div mat-card-avatar class="facebookpageslogo-image"></div>
+                    <mat-card-title>Các trang facebook bạn đang quản lý</mat-card-title>
+                    <mat-card-subtitle>Vui lòng đăng nhập facebook để lấy danh sách</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <button (click)="loginFb()" *ngIf="facebookPages.length < 1" class="loginBtn loginBtn--facebook">
+                        Login with Facebook
+                    </button>
+                    <div style="padding:10px;" *ngFor="let fbPage of facebookPages">
+                        <img src="{{fbPage.image}}" /> {{fbPage.name}}
+
+                        <mat-icon (click)="getLongLiveToken(fbPage)" style="cursor: pointer;" matTooltip="Thêm"
+                            color="primary">add</mat-icon>
+                    </div>
+                </mat-card-content>
+
+            </mat-card>
+        
+            <div *ngFor="let p of facebookPageShops">
+                    <canvas baseChart
+                    style="display: block; width: 200px; height: 200px;"
+                    [data]="p.chartData.values"
+                    [labels]="p.chartData.labels"
+                    chartType="pie"
+                    (chartHover)="chartHovered($event)"
+                    (chartClick)="chartClicked($event)"></canvas>
+            </div>
+
+            <mat-hint>Bấm vào biểu đồ chỉ hiển thị theo mùa</mat-hint>
+
+            <div>
+                <button mat-raised-button (click)="showAll()">
+                    Hiển Thị Tất Cả
+                </button>
+                <button mat-raised-button (click)="showEmptySeasons()">
+                    Hiển Thị Post Chưa Có Mùa
+                </button>
+            </div>
+
+        </div>
+        <div class="col-md-9">
+
+
+            <mat-card class="example-card">
+                <mat-card-header>
+                    <div mat-card-avatar class="facebookpages-image"></div>
+                    <mat-card-title>Các trang đang hoạt động</mat-card-title>
+                    <mat-card-subtitle>Mùa/Lễ đang post <span class="badge badge-primary" matTooltip="{{activeSeason.description}}">{{activeSeason.name}}</span></mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content *ngFor="let fbPageShop of facebookPageShops">
+                    <div class="facebook-page-container">
+                        <img style="float: left; margin-right: 15px;" src="{{fbPageShop.image}}" />
+                        <div style="margin-bottom: -30px;" class="row">
+                            <div class="col-sm-4" style="margin-left: inherit;">
+                                <div>
+                                    {{fbPageShop.name}}
+                                    <mat-icon (click)="refreshPage(fbPageShop)" style="cursor: pointer;"
+                                        matTooltip="Làm Mới" color="primary">refresh</mat-icon>
+                                </div>
+                                <div style="color:#3f67ff"  class="{{fbPageShop.expireDaysYet <= 14 ? 'badge badge-danger text-color-white' : ''}}">
+                                    Ngày hết hạn {{fbPageShop.expiredTime | date}}
+                                </div>
+                                <div *ngIf="fbPageShop.expireDaysYet <= 14" class="text-danger" 
+                                style="font-size: 20px;padding-top: 10px;">Cần làm mới</div>
+                            </div>
+
+                            <div class="col-sm-6" style="top: 10px; display: flex;">
+
+                                <fieldset style="margin-right: 12px;" class="form-group">
+                                    <label>Thời gian post buổi sáng</label>
+                                    <mat-select [(ngModel)]="fbPageShop.postTime1" (selectionChange)="facebookPostTimeChange(fbPageShop)"
+                                        class="form-control" style="width: 145px;">
+                                        <mat-option value="07:00:00">7:00 Sáng</mat-option>
+                                        <mat-option value="08:00:00">8:00 Sáng</mat-option>
+                                        <mat-option value="09:00:00">9:00 Sáng</mat-option>
+                                        <mat-option value="10:00:00">10:00 Sáng</mat-option>
+                                        <mat-option value="11:00:00">11:00 Trưa</mat-option>
+                                        <mat-option value="12:00:00">12:00 Trưa</mat-option>
+                                        <mat-option value="01:11:00">Không post</mat-option>
+                                    </mat-select>
+                                </fieldset>
+                                <fieldset>
+                                    <label>Thời gian post buổi chiều</label>
+                                    <mat-select [(ngModel)]="fbPageShop.postTime2" (selectionChange)="facebookPostTimeChange(fbPageShop)"
+                                        class="form-control" style="width: 145px;">
+                                        <mat-option value="13:00:00">13:00 Chiều</mat-option>
+                                        <mat-option value="14:00:00">14:00 Chiều</mat-option>
+                                        <mat-option value="15:00:00">15:00 Chiều</mat-option>
+                                        <mat-option value="16:00:00">16:00 Chiều</mat-option>
+                                        <mat-option value="17:00:00">17:00 Chiều</mat-option>
+                                        <mat-option value="18:00:00">18:00 Tối</mat-option>
+                                        <mat-option value="19:00:00">19:00 Tối</mat-option>
+                                        <mat-option value="20:00:00">20:00 Tối</mat-option>
+                                        <mat-option value="21:00:00">21:00 Tối</mat-option>
+                                        <mat-option value="01:11:00">Không post</mat-option>
+                                    </mat-select>
+                                </fieldset>
+                            </div>
+                            <div class="col-sm-2" style="top: 10px">
+                                <button (click)="openCreateFacebookPost(fbPageShop)" mat-raised-button
+                                    color="primary" style="float:right;top: 6px">
+                                    <mat-icon>add</mat-icon>
+                                    Thêm post mới</button>
+                            </div>
+
+                        </div>
+                        <div class="row container" style="margin-top: 50px">
+                            <div *ngFor="let p of fbPageShop.facebookPostsTemp" style="padding:10px">
+                                <div>
+
+                                    <img (click)="editFacebookPost(p, fbPageShop)" matTooltip="{{p.message}}"
+                                        style="width: 80px;height: 80px;" src="{{p.image1}}">
+                                     <button (click)="deleteFacebookPost(p)" class="mat-icon material-icons text-block-delete"
+                                        mat-mini-fab color="warn" matTooltip="Xóa">
+                                        <mat-icon style="font-size: 12px; margin-top: -16px;">remove</mat-icon>
+                                    </button>
+                                    <button (click)="editFacebookPost(p, fbPageShop)" class="mat-icon material-icons text-block-update"
+                                        mat-mini-fab color="primary" matTooltip="Sửa">
+                                        <mat-icon style="font-size: 12px; margin-top: -16px;">edit</mat-icon>
+                                    </button> 
+                                </div>
+                                <button color="secondary" mat-raised-button 
+                                    (click)="postFacebookNow(p)">Post Ngay</button>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

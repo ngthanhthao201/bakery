@@ -1,0 +1,72 @@
+.bg-padding{
+    font-weight: bold;
+    padding: 10px;
+}
+
+.categoryName-style{
+    display: -webkit-inline-box;
+    font-size: small;
+}
+
+.group-header{
+    width: 25%;   
+    display: -webkit-box;
+}
+.text-color-white{
+    color: white !important;
+}
+
+.cell-text{
+    word-wrap: break-word;      /* IE 5.5-7 */
+      white-space: -moz-pre-wrap; /* Firefox 1.0-2.0 */
+      white-space: pre-wrap;   
+      font-size: 12px; 
+}
+
+.category-img{
+    height: 70px;
+    margin-left: 2%;
+
+}
+
+
+.image{
+    opacity: 0;
+    width: 0px;
+    height: 0px;
+    z-index: 1;
+}
+.userPhotoChangePanel {
+
+    opacity: 0;
+    background: #3e4144;
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    height: 100%;
+    margin-left: 11%;
+    outline: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 7%;
+    transition: opacity .25s ease-in-out;
+    .editPhoto {
+        cursor: pointer;
+        left: 50px;
+        outline: 0;
+        position: absolute;
+        top: 20px;
+        z-index: 2;
+    }
+    .editPhoto-Label {
+        line-height: 119px;
+        font-family: sans-serif;
+    }
+}
+
+.userPhotoChangePanel:hover {
+    opacity: 100;
+    transition: opacity .25s ease-in-out
+}

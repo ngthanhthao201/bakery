@@ -1,0 +1,34 @@
+<div class="file-upload" >
+  <div class="image-upload-wrap" style="height: 450px;opacity: 0.5;" >
+    <input multiple class="file-upload-input" type='file' (change)="onFileChanged($event)" accept="image/*" />
+    <div class="drag-text">
+      <h3><img src="./assets/icons/icon_addImage.png" width="15%" style="margin-top: 12%; "/></h3>
+    </div>
+  </div>
+</div>
+<div class="row" *ngFor="let urls of imageurl">
+  <div class="col-md-6">
+    <div>
+      <img src={{urls}}  width="7%"/>
+    </div>
+  </div>
+  <div class="col-md-6" style="float: right;">
+    <div >
+      <img src={{loadingImages}} width="3%"/> 
+    </div>
+  </div>
+</div>
+<div>
+  <footer>
+    <div style=" position: absolute; bottom: 10%; ;left: 48%; right: 0;">
+      <button class="btn btn-raised mr-1 shadow-z-1 btn-success" *ngIf="!isLoading" [disabled]="!files" mat-button (click)="upLoad()">Upload</button>
+      <span *ngIf="isLoading" style="display: -webkit-inline-box;"><mat-spinner [diameter]=20></mat-spinner> {{loadingMessage}}</span>
+    </div>
+  </footer>
+
+
+
+
+
+
+

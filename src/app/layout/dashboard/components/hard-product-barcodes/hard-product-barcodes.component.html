@@ -1,0 +1,250 @@
+<div class="row">
+    <div class="col-xl-12 col-lg-12">
+        <div class="card">
+            <span style="
+                    margin-left: auto;
+                    margin-right: 0px;
+                    position: absolute;
+                    float: right;
+                    right: 0;
+                    z-index: 99;
+                "><a
+                    matTooltip="cài đặt"
+                    class="btn btn-outline-success"
+                    (click)="openBottomSheet()"
+                    >⚙</a
+                ></span
+            >
+
+            <div class="card-body">
+                <div class="label label-warning" *ngIf="isInputCake">
+                    <span class="badge badge-warning">
+                        Đang trong trạng thái nhập bánh(Ctrl + Shift +
+                        Alt)</span
+                    >
+                </div>
+
+                <!-- tab -->
+                <tabset>
+                    <tab
+                        *ngFor="
+                            let l of barcodeService.hardProductBarcodeLabels
+                        "
+                        heading="{{ l }}"
+                        id="tab"
+                    >
+                        <div class="row">
+                            <div
+                                *ngFor="
+                                    let pc of barcodeService.getHardProductBarcodesByLabel(
+                                        l
+                                    )
+                                "
+                            >
+                                <div
+                                    ngSwitch="{{
+                                        pc.hardSetProductBarcodes.length
+                                    }}"
+                                >
+                                    <div *ngSwitchCase="'0'">
+                                        <div class="col">
+                                            <div
+                                                class="card"
+                                                (click)="
+                                                    addQuickPrice(
+                                                        pc.name,
+                                                        SaleType.HardProduct,
+                                                        pc.price,
+                                                        pc.barcode
+                                                    )
+                                                "
+                                                style="
+                                                    width: 9rem;
+                                                    background-color: #ffeb3b;
+                                                    padding: 5px;
+                                                "
+                                            >
+                                                <img
+                                                    src="{{
+                                                        pc.image ||
+                                                            'https://mybakerystorage.blob.core.windows.net/static/placeholder-image.jpg'
+                                                    }} "
+                                                    class="card-img-top category-img"
+                                                    alt="..."
+                                                />
+                                                <div class="card-body mt-1">
+                                                    <div class="card-body-content">
+                                                        <h5 class="card-title" data-toggle="tooltip"
+                                                            data-placement="bottom" title="{{ pc.name }}">
+                                                            {{ pc.name }}
+                                                        </h5>
+                                                        <p class="card-text">
+                                                            {{ pc.price / 1000 }}k
+                                                        </p>
+                                                    </div>
+                                                    <span
+                                                        style="
+                                                            font-size: inherit;
+                                                            top: -5%;
+                                                            right: -5%;
+                                                            border-radius: 50%;
+                                                            position: absolute;
+                                                        "
+                                                        class="badge badge-danger"
+                                                        *ngIf="
+                                                            quickOrderService.getQuantityByBarcode(
+                                                                pc.barcode
+                                                            )
+                                                        "
+                                                        >{{
+                                                            quickOrderService.getQuantityByBarcode(
+                                                                pc.barcode
+                                                            )
+                                                        }}</span
+                                                    >
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        *ngSwitchDefault
+                                        style="
+                                            display: -webkit-box;
+                                            background: #ddd;
+                                            margin: 5px;
+                                            display: flex;
+                                        "
+                                    >
+                                        <div class="col" style="display:flex">
+                                            <div
+                                                class="card"
+                                                style="
+                                                    width: 9rem;
+                                                    background-color: #ffeb3b;
+                                                    padding: 5px;
+                                                    margin-right: 8px;
+                                                "
+                                                (click)="
+                                                    addQuickPrice(
+                                                        pc.name,
+                                                        SaleType.HardProduct,
+                                                        pc.price,
+                                                        pc.barcode
+                                                    )
+                                                "
+                                            >
+                                                <img
+                                                    src="{{
+                                                        pc.image ||
+                                                            'https://mybakerystorage.blob.core.windows.net/static/placeholder-image.jpg'
+                                                    }} "
+                                                    class="card-img-top category-img"
+                                                    alt="..."
+                                                />
+                                                <div class="card-body mt-1">
+                                                    <div class="card-body-content">
+                                                        <h5 class="card-title" data-toggle="tooltip"
+                                                            data-placement="bottom" title="{{ pc.name }}">
+                                                            {{ pc.name }}
+                                                        </h5>
+                                                        <p class="card-text">
+                                                            {{ pc.price / 1000 }}k
+                                                        </p>
+                                                    </div>
+                                                    <span
+                                                        style="
+                                                            font-size: inherit;
+                                                            top: -5%;
+                                                            right: -5%;
+                                                            border-radius: 50%;
+                                                            position: absolute;
+                                                        "
+                                                        class="badge badge-danger"
+                                                        *ngIf="
+                                                            quickOrderService.getQuantityByBarcode(
+                                                                pc.barcode
+                                                            )
+                                                        "
+                                                        >{{
+                                                            quickOrderService.getQuantityByBarcode(
+                                                                pc.barcode
+                                                            )
+                                                        }}</span
+                                                    >
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="card"
+                                                style="
+                                                    width: 9rem;
+                                                    background-color: #ffeb3b;
+                                                    padding: 5px;
+                                                    margin-right: 8px
+                                                "
+                                                *ngFor="
+                                                    let pcChild of pc.hardSetProductBarcodes
+                                                "
+                                                (click)="
+                                                    addQuickPrice(
+                                                        pcChild.name,
+                                                        SaleType.HardProduct,
+                                                        pcChild.price,
+                                                        pcChild.barcode
+                                                    )
+                                                "
+                                            >
+                                                <img
+                                                    src="{{
+                                                        pcChild.image ||
+                                                            'https://mybakerystorage.blob.core.windows.net/static/placeholder-image.jpg'
+                                                    }} "
+                                                    class="card-img-top category-img"
+                                                    alt="..."
+                                                />
+                                                <div class="card-body mt-1">
+                                                   <div class="card-body-content">
+                                                       <h5 class="card-title" data-toggle="tooltip"
+                                                           data-placement="bottom" title="{{ pc.name }}">
+                                                           {{ pcChild.name }}
+                                                       </h5>
+                                                       <p class="card-text">
+                                                           {{
+                                                        pcChild.price /
+                                                            1000
+                                                    }}k
+                                                       </p>
+                                                   </div>
+                                                    <span
+                                                        style="
+                                                            font-size: inherit;
+                                                            top: -5%;
+                                                            right: -5%;
+                                                            border-radius: 50%;
+                                                            position: absolute;
+                                                        "
+                                                        class="badge badge-danger"
+                                                        *ngIf="
+                                                            quickOrderService.getQuantityByBarcode(
+                                                                pcChild.barcode
+                                                            )
+                                                        "
+                                                        >{{
+                                                            quickOrderService.getQuantityByBarcode(
+                                                                pcChild.barcode
+                                                            )
+                                                        }}</span
+                                                    >
+                                                    <span class="fa fa-star iconChecked ng-tns-c210-13" style="position: absolute; color: #ff6e40; z-index: 99999; top: -8px; left: 43%; font-size: 18px;"></span>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</tab>
+</tabset>
+</div>
+</div>
+</div>
+</div>

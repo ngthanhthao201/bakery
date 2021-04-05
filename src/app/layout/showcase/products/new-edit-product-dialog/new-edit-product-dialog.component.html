@@ -1,0 +1,101 @@
+<section style="overflow-y: auto;height: 500px;">
+
+
+        <div class="row col-md-12">
+                <div class="col-md-6" style="max-height: 200px; ">
+                        <img style="width: 100%;" class="product-img" src="{{image || currentProduct.image || 'https://mybakerystorage.blob.core.windows.net/static/placeholder-image.jpg'}}">
+
+                        <div tabindex="0" class="userPhotoChangePanel">
+
+
+                                <image-uploader-button (croppedImageDone)="croppedImageDone($event)"></image-uploader-button>
+
+                                <div tabindex="0" class="removePhoto">
+                                </div>
+                        </div>
+                </div>
+                <div class="col-md-6">
+
+                        <fieldset class="form-group">
+                                <label>Tên bánh</label>
+                                <input [(ngModel)]="currentProduct.name" class="form-control">
+                        </fieldset>
+
+                        <fieldset class="form-group">
+                                <label>{{'IdNumber' | translate}}</label>
+                                <input readonly [(ngModel)]="currentProduct.idNumber" class="form-control">
+                        </fieldset>
+
+                        <fieldset class="form-group">
+                                <label>{{'Description' | translate}}</label>
+                                <input [(ngModel)]="currentProduct.description" class="form-control">
+                        </fieldset>
+                </div>
+
+        </div>
+        <div class="row col-md-12" style="padding:15px; margin-top:15px">
+                <mat-hint>Cài đặt giá bán theo kích cỡ.</mat-hint>
+        </div>
+
+        <div class="row col-md-12">
+                <div class="col-md-6">
+
+                        <fieldset class="form-group">
+                                <label>Kích cỡ</label>
+                                <mat-select [(ngModel)]="currentProduct.cakeSizeTypeId" class="form-control">
+                                        <mat-option *ngFor="let t of cakeSizeTypes" [value]="t.id">
+                                                {{t.name}} ({{t.description}})
+                                        </mat-option>
+                                </mat-select>
+                        </fieldset>
+                </div>
+                <div class="col-md-6">
+
+                        <fieldset class="form-group">
+                                <label>{{'SellingPrice' | translate}}</label>
+                                <input currencyMask [options]="currencyMaskOptions" [(ngModel)]="currentProduct.sellingPrice"
+                                        class="form-control">
+                        </fieldset>
+                </div>
+        </div>
+
+        <div class="row col-md-12" *ngFor="let cp of currentProduct.cakeSizePrices">
+                <div class="col-md-6">
+
+                        <fieldset class="form-group">
+                                <label>Kích cỡ</label>
+                                <mat-select [(ngModel)]="cp.cakeSizeTypeId" class="form-control">
+                                        <mat-option *ngFor="let t of cakeSizeTypes" [value]="t.id">
+                                                {{t.name}} ({{t.description}})
+                                        </mat-option>
+                                </mat-select>
+                        </fieldset>
+                </div>
+                <div class="col-md-6">
+
+                        <fieldset class="form-group">
+                                <label>{{'SellingPrice' | translate}}</label>
+                                <input currencyMask [options]="currencyMaskOptions" [(ngModel)]="cp.price" class="form-control">
+                        </fieldset>
+                </div>
+        </div>
+
+        <button (click)="addNewCakeSizePrice(currentProduct)">+</button>
+
+</section>
+
+<mat-dialog-actions style="padding: 15px;">
+        <div style="text-align: end; float: right; width: 100%;">
+                <span *ngIf="currentProduct.id" style="float: left;" class="btn btn-raised mr-1 shadow-z-1 btn-danger"
+                        (click)="deleteProduct(currentProduct.id)">Xóa</span>
+                <button *ngIf="!isLoading" class="btn btn-raised mr-1 shadow-z-1" mat-dialog-close>Hủy</button>
+                <button *ngIf="!isLoading" [disabled]="!currentProduct.name || !currentProduct.sellingPrice" class="btn btn-raised mr-1 shadow-z-1 btn-success"
+                        (click)="createOrUpdateProduct()">Đồng ý</button>
+
+                <span *ngIf="isLoading" style="display: -webkit-inline-box;">
+                        <mat-spinner [diameter]=20></mat-spinner> {{loadingMessage}}
+                </span>
+
+
+        </div>
+</mat-dialog-actions>

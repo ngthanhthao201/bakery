@@ -1,0 +1,45 @@
+<div mat-dialog-title >
+    <span>{{'AdvSlideSetting' |  translate}}</span>
+</div>
+<div mat-dialog-content class="example-full-width" style="min-height: 200px;">
+    <div style="float:left">
+        
+        <fieldset>
+            <label>Title</label>
+            <input type="text" [(ngModel)]="currentAdvSlide.value.title" class="form-control">
+        </fieldset>
+
+        <fieldset>
+            <label>Miêu tả</label>
+            <textarea [(ngModel)]="currentAdvSlide.value.description" class="form-control" style="width:300px;"></textarea>
+        </fieldset>
+        
+    </div>
+    <div style="float:right">
+            <div style="position: relative; cursor: pointer; text-align: center; min-width:265px ">
+                    <img  class="category-img" src="{{image || currentAdvSlide.value.image || 'https://mybakerystorage.blob.core.windows.net/static/placeholder-image.jpg'}}" >
+              
+                    <div  tabindex="0" class="userPhotoChangePanel"  >
+                      <input style="display:none" type="file" ngModel (change)="getFiles($event)" accept="image/*" id="icon-input">
+                      <label for="icon-input">
+                          <div class="editPhoto-Label">Click vào để chọn hình</div>
+                          <div class="editPhoto">
+                              <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+                          </div>
+                      </label>
+                      <div   tabindex="0" class="removePhoto" >
+                          <!-- <md-tooltip>
+                              Remove Photo
+                          </md-tooltip> -->
+                      </div>
+                    </div>
+                </div>
+    </div>
+</div>
+
+<mat-dialog-actions>
+  <div style="justify-content: flex-end;float: right;">
+      <button mat-button mat-dialog-close>Hủy</button>
+      <button  mat-raised-button color="primary" (click)="createOrUpdateAdv()">Lưu</button>
+  </div>
+</mat-dialog-actions>

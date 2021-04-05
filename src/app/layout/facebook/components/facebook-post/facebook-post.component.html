@@ -1,0 +1,173 @@
+<div class="container">
+
+
+    <div>
+        <span>Tạo bài tự động đăng trên facebook</span>
+    </div>
+    <div class="example-full-width" style="min-height: 200px;">
+
+        <h5>Chọn Mùa/Lễ</h5>
+        <span>
+            <mat-form-field style="width: 70%">
+                <mat-select (selectionChange)="selectionChange($event)" multiple [(ngModel)]="facebookPost.seasonIds">
+                    <mat-option (click)="selectionChangeClicked(s.id)" *ngFor="let s of seasons" [value]="s.id">
+                        {{s.name}} <br>
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </span>
+
+        <mat-card class="example-card">
+
+
+
+
+            <label for="subject">Bài Viết</label>
+            <textarea rows="10" id="content" class="form-control" placeholder="..."
+                [(ngModel)]="facebookPost.message"></textarea>
+            <image-upload (uploadFinished)="onUploadFinished($event)" *ngIf="savedImages"
+                (uploadStateChanged)="onUploadStateChanged($event)" (removed)="onRemoved($event)"
+                buttonCaption="Chọn các ảnh" dropBoxMessage="Hoặc kéo thả ảnh" clearButtonCaption="Xóa"
+                [uploadedFiles]="savedImages">
+            </image-upload>
+
+            <div class="row">
+
+                <div class="container">
+                    <input style="display: none" type="file" ng2FileSelect [uploader]="uploader" multiple #videoInput>
+                    <div [ngClass]="{'nv-file-over': hasBaseDropZoneOver}" (fileOver)="fileOverBase($event)" class="video-drop-zone">
+                        <a (click)="videoInput.click()" class="btn btn-raised mr-1 btn-success" style="font-size:20px">CHỌN VIDEO</a>
+                        Hoặc kéo thả video
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 40px" *ngIf="uploader?.queue?.length > 0">
+                    <p style="padding: 10px;font-weight:600">Số lượng video: {{ uploader?.queue?.length }}</p>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th width="100%">Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of uploader.queue">
+                                <td><strong>{{ item?.file?.name }}</strong></td>
+                                <td *ngIf="uploader.isHTML5" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB
+                                </td>
+                                <td *ngIf="uploader.isHTML5">
+                                    <div class="progress" style="margin-bottom: 0;">
+                                        <div class="progress-bar" role="progressbar"
+                                            [ngStyle]="{ 'width': item.progress + '%' }"></div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <span *ngIf="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                    <span *ngIf="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                    <span *ngIf="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                                </td>
+
+                                <!-- upload current vid -->
+                                <td nowrap> 
+                                    <button type="button" class="btn btn-raised mr-1 btn-success"
+                                        (click)="onUploadVideo($event)" *ngIf="savedVideos"
+                                        [disabled]="item.isReady || item.isUploading || item.isSuccess">
+                                        <span class="glyphicon glyphicon-upload"></span> Upload
+                                    </button>
+                                    <button type="button" class="btn btn-raised mr-1 btn-warning"
+                                        (click)="item.cancel()" [disabled]="!item.isUploading">
+                                        <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                                    </button>
+                                    <button type="button" class="btn btn-raised mr-1 btn-danger"
+                                        (click)="item.remove()">
+                                        <span class="glyphicon glyphicon-trash"></span> Remove
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div>
+                        <div>
+                            Tình trạng tải:
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar"
+                                    [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
+                            </div>
+                        </div>
+
+                        <!-- upload all vid -->
+                        <div *ngIf="uploader?.queue?.length > 1">
+                            <button type="button" class="btn btn-raised mr-1 btn-successs"
+                                (click)="onUploadVideo($event)" [disabled]="!uploader.getNotUploadedItems().length">
+                                <span class="glyphicon glyphicon-upload"></span> Upload all
+                            </button>
+                            <button type="button" class="btn btn-raised mr-1 btn-warning" (click)="uploader.cancelAll()"
+                                [disabled]="!uploader.isUploading">
+                                <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
+                            </button>
+                            <button type="button" class="btn btn-raised mr-1 btn-danger" (click)="uploader.clearQueue()"
+                                [disabled]="!uploader.queue.length">
+                                <span class="glyphicon glyphicon-trash"></span> Remove all
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </mat-card>
+        <br><br>
+
+        <!-- <h6>Xem trang ví dụ</h6>
+    <mat-card>
+        <mat-card-header>
+            <div mat-card-avatar class="facebookpageslogo-image"></div>
+            <mat-card-title>Test</mat-card-title>
+            <mat-card-subtitle>1 phút trước</mat-card-subtitle>
+        </mat-card-header>
+        <hr>
+        <mat-card-content>
+            <textarea rows="4" readonly id="clone-textarea" class="form-control" placeholder="..." [(ngModel)]="facebookPost.message"></textarea>
+            <div class="row">
+                <div class="col-md-6">
+                    <div style="text-align: center"> <img style="width: 100%; padding-bottom: 10px" src="{{facebookPost.image1}}"></div>
+                </div>
+                <div class="col-md-6">
+                    <div style="text-align: center"> <img style="width: 100%;" src="{{facebookPost.image2}}"></div>
+                </div>
+                <div class="col-md-6">
+                    <div style="text-align: center"> <img style="width: 100%;" src="{{facebookPost.image3}}"></div>
+                </div>
+                <div class="col-md-6">
+                    <div style="text-align: center"> <img style="width: 100%;" src="{{facebookPost.image4}}"></div>
+                </div>
+            </div>
+            <mat-card style="color:rgb(53, 103, 160); font-size: 12px;line-height: 0; padding: 10px" class="facebook-page-container">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <mat-icon class="mat-icon material-icons" style="font-size: 15px">thumb_up</mat-icon>Thích
+                    </div>
+                    <div class="col-sm-4">
+                        <mat-icon class="mat-icon material-icons" style="font-size: 15px">chat_bubble_outline</mat-icon>Bình
+                        Luận
+                    </div>
+                    <div class="col-sm-4">
+                        <mat-icon class="mat-icon material-icons" style="font-size: 15px">screen_share</mat-icon>Chia
+                        Sẽ
+                    </div>
+                </div>
+            </mat-card>
+        </mat-card-content>
+
+    </mat-card> -->
+
+    </div>
+
+
+    <div style="text-align: center;">
+        <button color="primary" style="padding: 10px; width: 150px; margin-bottom: 20px" mat-raised-button
+            (click)="ok()">Lưu</button>
+    </div>
+</div>

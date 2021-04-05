@@ -1,0 +1,53 @@
+<div mat-dialog-title color="warn">
+
+</div>
+<mat-dialog-content>
+
+    <div class="row">
+
+        <fieldset class="col-md-3">
+            <label>Tên</label>
+            <input [(ngModel)]="currentCustomer.name" class="form-control">
+        </fieldset>
+
+
+
+        <mat-form-field>
+                <input  [(ngModel)]="currentCustomer.dob" matInput [matDatepicker]="picker" placeholder="Ngày sinh">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+    </div>
+
+    <div class="row" style="margin-top: 10px">
+
+        <fieldset class="col-md-3">
+            <label>Số điện thoại</label>
+            <input [(ngModel)]="currentCustomer.phoneNumber" class="form-control">
+        </fieldset>
+
+
+
+        <fieldset class="col-md-3">
+            <label>Email</label>
+            <input [(ngModel)]="currentCustomer.email" class="form-control">
+        </fieldset>
+
+        <fieldset class="col-md-3" *ngIf="currentCustomer.customerShops">
+                <label>Mã Thẻ Vip (nếu có)</label>
+                <input [(ngModel)]="currentCustomer.customerShops[0].externalId" class="form-control">
+                <button *ngIf="currentCustomer.id" (click)="linkCustomer()">Liên kết</button>
+            </fieldset>
+
+    </div>
+    
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <div style="justify-content: flex-end;float: right;">
+        <button mat-button mat-dialog-close>Hủy</button>
+        <button [disabled]="!currentCustomer.phoneNumber || !currentCustomer.name" mat-raised-button color="primary"
+            [mat-dialog-close]="currentCustomer">Đồng ý</button>
+    </div>
+</mat-dialog-actions>

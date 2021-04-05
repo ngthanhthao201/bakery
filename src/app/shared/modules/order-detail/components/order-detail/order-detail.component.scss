@@ -1,0 +1,233 @@
+.img-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+
+    &.Male {
+        color: #aad9f1 !important;
+        border-color: #aad9f1 !important;
+        border: solid 2px;
+    }
+    ;
+
+    &.Female {
+        color: #f2bfee !important;
+        border-color: #f2bfee !important;
+        border: solid 2px;
+    }
+}
+
+agm-map {
+    height: 300px;
+}
+
+.order-status-panel {
+    text-align: center;
+}
+
+.cake-status-panel {
+    text-align: center;
+}
+
+#cake-order-status-container {
+    // The code is a bit of a mess at the moment! Sorry about that.
+
+    .cake-order-status-item {
+        height: 50px;
+        display: flex;
+    }
+
+    body {
+        padding: 1rem;
+        color: hsla(215, 5%, 50%, 1);
+    }
+
+    h1 {
+        color: hsla(215, 5%, 10%, 1);
+        margin-bottom: 2rem;
+    }
+
+    section {
+        display: flex;
+        flex-flow: row wrap;
+    }
+
+    section>div {
+        flex: 1;
+        padding: 0.5rem;
+    }
+
+    input[type="radio"] {
+        display: none;
+
+        &:not(:disabled)~label {
+            cursor: pointer;
+        }
+
+        &:disabled~label {
+            color: hsla(150, 5%, 75%, 1);
+            border-color: hsla(150, 5%, 75%, 1);
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+    }
+
+    label {
+        // height: 100%;
+        display: block;
+        background: white;
+        border: 2px solid hsla(150, 75%, 50%, 1);
+        border-radius: 20px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        //margin: 1rem;
+        text-align: center;
+        box-shadow: 0px 3px 10px -2px hsla(150, 5%, 65%, 0.5);
+        position: relative;
+
+        h5 {
+            font-size: 1.1em;
+            margin: 0px;
+            padding: 0px;
+            margin-top: 10px;
+        }
+
+        div {
+            display: block;
+            width: 100px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    input[type="radio"]:checked+label {
+        background: hsla(150, 75%, 50%, 1);
+        color: rgb(0, 0, 0);
+        box-shadow: 0px 0px 20px hsla(150, 100%, 50%, 0.75);
+
+        &::after {
+            color: hsla(215, 5%, 25%, 1);
+            font-family: FontAwesome;
+            border: 2px solid hsla(150, 75%, 45%, 1);
+            content: "\f00c";
+            font-size: 24px;
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 50px;
+            width: 50px;
+            line-height: 50px;
+            text-align: center;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0px 2px 5px -2px hsla(0, 0%, 0%, 0.25);
+        }
+    }
+
+    input[type="radio"].new:checked+label {
+        background: #fff176;
+
+        &::after {
+            background: #fff176;
+        }
+    }
+
+    input[type="radio"].in-process:checked+label {
+        background: #c5e1a5;
+
+        &::after {
+            background: #c5e1a5;
+        }
+    }
+
+    input[type="radio"].done:checked+label {
+        background: #81d4fa;
+
+        &::after {
+            background: #81d4fa;
+        }
+    }
+
+    input[type="radio"]#control_05:checked+label {
+        background: red;
+        border-color: red;
+    }
+
+    p {
+        font-weight: 900;
+    }
+
+
+    @media only screen and (max-width: 700px) {
+        section {
+            flex-direction: column;
+        }
+    }
+
+}
+
+
+.bgaddnew {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    overflow: hidden;
+    color: red;
+    border-right: 2px dashed;
+    border-left: 2px dashed;
+}
+
+.bgaddnew {
+    .dashing {
+        display: block;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+    }
+
+    .dashing:nth-of-type(1) {
+        transform: rotate(0deg);
+    }
+
+    .dashing:nth-of-type(2) {
+        transform: rotate(180deg);
+    }
+
+    .dashing i {
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 200%;
+        border-bottom: 2px dashed;
+    }
+
+    p {
+        display: block;
+        text-align: center;
+        position: absolute;
+        color: black !important;
+    }
+}
+
+.bgaddnew {
+    .dashing i {
+        animation: slideDash 4.5s infinite linear;
+    }
+}
+
+@keyframes slideDash {
+    from {
+        -webkit-transform: translateX(-50%);
+    }
+
+    to {
+        -webkit-transform: translateX(0%);
+    }
+}
+
+::ng-deep .fi-img-full {
+    max-height: -webkit-fill-available;
+}

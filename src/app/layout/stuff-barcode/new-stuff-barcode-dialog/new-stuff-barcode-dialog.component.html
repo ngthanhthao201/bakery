@@ -1,0 +1,140 @@
+<h3 *ngIf="!currentProduct.id" mat-dialog-title>Tạo mới loại bánh</h3>
+<h3 *ngIf="currentProduct.id" mat-dialog-title>Sữa thông tin bánh</h3>
+
+<mat-dialog-content style="overflow-y: auto">
+    <div class="row col-md-12" style="display: flex;justify-content: center;">
+        <img style="width: 250px;border-radius: 6px;border: 2px solid #555555;" class="category-img" src="{{ image || currentProduct.image }}" />
+    </div>
+    <div class="row col-md-12">
+        <div class="row" style="margin-bottom: 30px">
+            <!-- <mat-form-field>
+            <input matInput placeholder="Tên bánh" [(ngModel)] = "currentProduct.name">
+        </mat-form-field> -->
+            <fieldset class="col-md-4">
+                <label class="mt-2">Tên bánh</label>
+                <input [(ngModel)]="currentProduct.name" class="form-control" />
+            </fieldset>
+            <!-- <mat-form-field>
+            <input matInput placeholder="Nhãn bánh" [(ngModel)] = "currentProduct.label">
+        </mat-form-field> -->
+            <!-- <mat-form-field *ngIf="labels">
+            <input  type="text" matInput [matAutocomplete]="auto" [formControl]="labelCtrl" [(ngModel)]="currentProduct.label"
+                placeholder="Dán nhãn cho sản phẩm">
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let l of labels"  [value]="l">
+                    <span>{{l}}</span>
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field> -->
+            <fieldset class="col-md-4" *ngIf="labels">
+                <label class="mt-2">Dán nhãn cho sản phẩm</label>
+                <input [matAutocomplete]="auto" [formControl]="labelCtrl" [(ngModel)]="currentProduct.label" class="form-control" />
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let l of labels" [value]="l">
+                        <span>{{ l }}</span>
+                    </mat-option>
+                </mat-autocomplete>
+            </fieldset>
+
+            <!-- <mat-form-field>
+            <input currencyMask matInput [options]="currencyMaskOptions" placeholder="Đơn giá" [(ngModel)] = "currentProduct.price">
+        </mat-form-field> -->
+            <fieldset class="col-md-4">
+                <label class="mt-2">Đơn giá</label>
+                <input currencyMask [options]="currencyMaskOptions" [(ngModel)]="currentProduct.price" class="form-control" />
+            </fieldset>
+
+            <!-- <mat-form-field *ngIf="!currentProduct.id">
+            <input  matInput placeholder="Barcode" [(ngModel)] = "currentProduct.barcode">
+        </mat-form-field> -->
+            <fieldset class="col-md-4" *ngIf="!currentProduct.id">
+                <label class="mt-2">Barcode</label>
+                <input [(ngModel)]="currentProduct.barcode" class="form-control" />
+            </fieldset>
+
+            <fieldset class="col-md-4">
+                <label class="mt-2">Hình ảnh của bánh</label>
+                <div class="form-group">
+                    <image-uploader-button (croppedImageDone)="croppedImageDone($event)"></image-uploader-button>
+                </div>
+                <!-- <input type="file" #fileInput (change)="onFileSelect($event)" /> -->
+            </fieldset>
+        </div>
+
+        <section style="background: #ddd; padding: 20px" *ngIf="currentProduct.id">
+            <label>
+                Set/hộp khuyến mãi
+                <button
+                    class="btn btn-raised mr-1 btn-info ft-plus"
+                    (click)="isCreatingNewHardSet = true"
+                >
+                    Thêm
+                </button>
+            </label>
+            <table class="table table-stripped">
+                <thead>
+                    <th>Hinh</th>
+                    <th>Tên</th>
+                    <th>SL thực</th>
+                    <th>Giá</th>
+                    <th>Mô tả</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let hs of currentProduct.hardSetProductBarcodes">
+                        <td tabindex="0" >
+                            <!-- <img src=""/>
+                            <image-uploader-button></image-uploader-button> -->
+                            <img style="height: 64px; width:64px;" src="{{hs.image}}" >
+                            <div class="userPhotoChangePanel">
+                                <image-uploader-button (croppedImageDone)="croppedImageDoneForSet($event, hs)"></image-uploader-button>
+                            </div>
+                           
+                        </td>
+                        <td>{{ hs.name }}</td>
+                        <td>{{ hs.customerCount }}</td>
+                        <td>{{ hs.price | currencyformat }}</td>
+                        <td>{{ hs.description }}</td>
+                        <td>
+                            <button (click)="editHardSet(newHardSet)" class="btn btn-raised mr-1 ft-arrow-down" style="background-color: white">
+                                Tải mã vạch
+                            </button>
+                            <button (click)="deleteHardSet(hs)" class="btn btn-raised mr-1 btn-danger fa fa-times">
+                                Xóa
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="isCreatingNewHardSet">
+                        <td>
+                            <input [(ngModel)]="newHardSet.name" class="form-control" />
+                        </td>
+                        <td>
+                            <input [(ngModel)]="newHardSet.customerCount" class="form-control" />
+                        </td>
+                        <td>
+                            <input [(ngModel)]="newHardSet.price" class="form-control" />
+                        </td>
+                        <td>
+                            <input [(ngModel)]="newHardSet.description" class="form-control" />
+                        </td>
+                        <td>
+                            <button (click)="saveNewHardSet(newHardSet)" mat-raised-button>
+                                <mat-icon>save</mat-icon> Lưu
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions style="padding: 15px">
+    <button *ngIf="!isLoading" mat-button mat-dialog-close>Hủy</button>
+    <button *ngIf="!isLoading" [disabled]="!currentProduct.name || !currentProduct.price" mat-raised-button color="primary" (click)="createOrUpdateProduct()">
+        Đồng ý
+    </button>
+
+    <span *ngIf="isLoading" style="display: -webkit-inline-box">
+        <mat-spinner [diameter]="20"></mat-spinner> {{ loadingMessage }}
+    </span>
+</mat-dialog-actions>

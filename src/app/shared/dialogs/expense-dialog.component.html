@@ -1,0 +1,107 @@
+<div *ngIf="expenseHeader">
+    <div mat-dialog-title color="warn">
+        Nhập Hóa Đơn
+    </div>
+    <mat-dialog-content>
+        <div class="row">
+            <div class="col-md-3">
+                <fieldset>
+                    <label>{{'MaterialProvider' | translate}}</label>
+                    <input cdkFocusInitial [disabled]="!isCreateNew()" required aria-label="materialProvider" [matAutocomplete]="auto" 
+                    [(ngModel)]="expenseHeader.materialProvider" (ngModelChange)="providerChanged(expenseHeader, expenseHeader.materialProvider)" class="form-control">
+                    <mat-autocomplete [panelWidth]="600" id="material-name-autocomplete" #auto="matAutocomplete" [displayWith]="displayFn">
+                        <mat-option *ngFor="let provider of filteredMaterialProviders" [value]="provider">
+                            <span>{{ provider.name }}</span>
+                        </mat-option>
+                    </mat-autocomplete>
+                </fieldset>
+            </div>
+
+            <div class="col-md-3">
+                <fieldset>
+                    <label>{{'IdNumber' | translate}}</label>
+                    <input [(ngModel)]="expenseHeader.idNumber" name="idNumber" class="form-control">
+                </fieldset>
+            </div>
+
+            <div class="col-md-3">
+                <fieldset class="form-group">
+                    <label>Ngày</label><br>
+                    <input [matDatepicker]="expenseDate" [(ngModel)]="expenseHeader.dateCreated" class="dateCreate">
+                    <mat-datepicker-toggle matSuffix [for]="expenseDate"></mat-datepicker-toggle>
+                    <mat-datepicker #expenseDate startView="month"></mat-datepicker>
+                </fieldset>
+            </div>
+            <img *ngIf="expenseHeader.isFullPaid == true" src="../../../../assets/images/Bill2.png" alt="" style="height: 25%;width: 24%;margin: -15px 0 0 8px;;">
+        </div>
+
+        <!-- <mat-form-field style="width:100%">
+                    <input matInput placeholder="{{'Description' | translate}}" type="text" [(ngModel)]="expenseHeader.description" name="idNumber">
+                </mat-form-field> -->
+        <!-- </div> -->
+        <mat-list style="margin-left:40px; width: 100%" *ngIf="expenseHeader.materialProvider">
+            <mat-list-item *ngFor="let element of expenseHeader.expenseTransactions;  let $index = index" style="margin-top: 25px;">
+
+                <fieldset class="col-md-2 ">
+                    <label>{{'MaterialName' | translate}}</label>
+                    <input id="material-name-{{$index}}" aria-label="history" [matAutocomplete]="matAutocompleteMaterial" [(ngModel)]="element.materialBuyingHistory.material" (ngModelChange)="materialChanged(element.materialBuyingHistory, element.materialBuyingHistory.material)" class="form-control">
+                    <mat-autocomplete #matAutocompleteMaterial="matAutocomplete" [displayWith]="displayFn" class="MaterialName">
+                        <mat-option *ngFor="let history of filteredMaterialBuyingHistories" 
+                            [value]="history.material" (click)="setUnitPrice(history.unitPrice, element)">
+                            <span *ngIf="history.material">{{ history.material.name }} {{history.unitPrice |
+                                currencyformat}}/{{history.material.unit}}</span>
+                        </mat-option>
+                    </mat-autocomplete>
+                </fieldset>
+
+    
+
+                <fieldset class="col-md-2">
+                    <label>{{'UnitPrice' | translate}}</label>
+                    <input currencyMask [options]="currencyMaskOptions" [(ngModel)]="element.materialBuyingHistory.unitPrice" (ngModelChange)="updateAmount(element, element.materialBuyingHistory.unitPrice, element.materialBuyingHistory.quantity)" name="unitPrice" class="form-control">
+                </fieldset>
+
+                <fieldset class="col-md-2">
+                    <label>{{'Quantity' | translate}}</label>
+                    <input type="number" [(ngModel)]="element.materialBuyingHistory.quantity" (ngModelChange)="updateAmount(element, element.materialBuyingHistory.unitPrice, element.materialBuyingHistory.quantity)" name="quantity" class="form-control">
+                </fieldset>
+
+                <fieldset class="col-md-2">
+                    <label>{{'Fee' | translate}}</label>
+                    <input type="number" [(ngModel)]="element.fee" [max]="100" name="fee" (ngModelChange)="updateAmount(element, element.materialBuyingHistory.unitPrice, element.materialBuyingHistory.quantity)" #fee="ngModel" class="form-control">
+                    <p color="warn" *ngIf="fee.errors?.max">Không quá 100%</p>
+                </fieldset>%
+
+                <label style="margin-left:50px">{{element.amount | currencyformat}}</label>
+
+                <mat-icon *ngIf="isCreateNew() && expenseHeader.expenseTransactions.length > 1" style="left: -34px; position: absolute;color:red;"
+                    (click)="removeTransaction($index)">remove</mat-icon>
+
+                <mat-icon *ngIf="!isCreateNew() && expenseHeader.expenseTransactions.length > 1" style="left: -34px; position: absolute;color:red;"
+                    (click)="removeTransactionWarning($index, element.id)">remove</mat-icon>
+
+
+
+            </mat-list-item>
+
+        </mat-list>
+        <div class="row">
+            <button style="background-color: #ffffff;margin-left: 70px;" mat-mini-fab (click)="addTransaction()">
+                <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+            </button>
+
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+        <label style="margin-right: 10px;">Tổng cộng: {{getTotalHeaderAmount() | currencyformat}}</label>
+        <mat-slide-toggle [(ngModel)]="expenseHeader.isFullPaid">Đã thanh toán</mat-slide-toggle>
+
+        <div style="justify-content: flex-end;float: right;">
+            <button mat-button mat-dialog-close>Hủy</button>
+            <button [disabled]="(expenseType === '1' && !expenseHeader.materialProvider.name) || getTotalHeaderAmount() < 1"
+                mat-raised-button color="primary" (click)="save()">Đồng ý</button>
+        </div>
+
+    </mat-dialog-actions>
+</div>

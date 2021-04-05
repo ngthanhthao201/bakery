@@ -1,0 +1,78 @@
+<div class="row">
+    <div class="col-12 col-md-12" id="recent-sales" *ngIf="order" style="margin-right:20px;">
+        <div class="card shadow">
+            <div class="card-header" style=" padding-bottom: 0;">
+                <div class="card-title-wrap  ">
+                    <div>
+                        <a class="card-title" (click)="openOrderDetail(order)">
+                            <i *ngIf="order.isOnlineOrder" class="ft-globe topleft" style="font-size: xx-large"></i>
+                            <i *ngIf="!order.isOnlineOrder" class="ft-life-buoy topleft"
+                                style="font-size: xx-large"></i>
+                            <span style="margin-left: 10px; font-size: larger">{{order.idNumber}}</span>
+                            <br>
+                            <span *ngIf="order.customer" style="font-size: 15px; font-weight: bold">
+                                <span class="ft-user"> {{order.customer.name}} - </span>
+                                <a class="ft-phone" href="tel:{{order.customer.phoneNumber}}"
+                                    (click)="$event.stopPropagation()">
+                                    {{order.customer.phoneNumber}}</a>
+                            </span>
+                        </a>
+                        <br><br>
+                        <span style="margin-bottom: 5px;"><i class="icon-clock"> Giờ đặt:
+                                {{order.createdDate | date: 'h:mm a, d MMMM'}}</i></span>
+
+                        <div class="cake-info">
+                            <span *ngFor="let od of order.orderDetails">
+                                <span *ngIf="od.product" class="icon-pie-chart" style="display: -webkit-inline-box;">
+                                    {{od.product.name}} {{od.unitPrice | currencyformat}}
+                                    <span style="font-weight: bold;"> x{{od.quantity}}</span>
+                                </span>
+                                <span *ngIf="od.description" class="icon-pie-chart"
+                                    style="display: -webkit-inline-box;">
+                                    {{od.description}} {{od.unitPrice | currencyformat}}
+                                    <span style="font-weight: bold;"> x{{od.quantity}}</span>
+                                </span>
+                            </span>
+                        </div>
+                        <span *ngIf="order.comments" class="note">Ghi chú: {{order.comments}}</span>
+                        <span>
+                            <i class="icon-rocket"> Giờ giao: {{order.deliveryPickupTime | date: 'h:mm a, d MMMM'}}</i>
+                            <br>
+                            <mat-hint *ngIf="order.address && order.address.description"
+                                style="font-size: 14px;white-space: normal">
+                                Địa chỉ: {{order.address.description}}</mat-hint>
+                        </span>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="card-content mt-1" style="margin-left:10px">
+                <div class="currentformat" style="display:flex">
+
+                    <div class="font-small-2">
+                        Tổng: {{order.amount | currencyformat}}
+                    </div> <span
+                        style="margin-left: 5px; margin-right: 5px; color: #ddd;">|</span>
+                    <div class="font-small-2">Cọc: {{order.deposit | currencyformat}}</div> <span
+                        style="margin-left: 5px; margin-right: 5px; color: #ddd;">|</span>
+                    <div class="font-small-2">Còn : {{order.amount - order.deposit|
+                            currencyformat}}</div>
+                </div>
+                <br>
+                <span *ngIf="order.customer" class="badge badge-warning warning">
+                    Vui lòng gọi cho khách hàng
+                    <span style="color:#151414">{{order.customer.name}} -</span>
+                    <a href="tel:{{order.customer.phoneNumber}}"> {{order.customer.phoneNumber}}</a>
+                    để xác nhận
+                </span>
+                <div style="text-align: end;margin-top: inherit;">
+                    <a class="btn btn-raised mr-1 btn-secondary" (click)="cancelOrder()">Từ chối</a>
+                    <a class="btn btn-raised mr-1 btn-info" (click)="ok()">Xác nhận</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

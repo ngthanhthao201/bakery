@@ -1,0 +1,6 @@
+<h3>Đơn bánh đã huỷ</h3>
+
+<div class="container-fluid row">
+  <order-card class="col-md-3" *ngFor="let o of orders | async" [order]="o">
+  </order-card>
+</div>

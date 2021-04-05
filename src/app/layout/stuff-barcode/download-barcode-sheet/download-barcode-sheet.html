@@ -1,0 +1,29 @@
+
+<div style="padding:10px">
+
+        <button  mat-raised-button color="accent" (click)="downloadAsItem()">
+              Tải mã vạch tem (3/1)
+        </button>
+        <button  mat-raised-button color="accent" (click)="downloadAsItem2()">
+                Tải mã vạch tem (2/1)
+          </button>
+
+</div>
+<hr>
+
+<div style="padding:10px">
+        <label>
+                Tải mã vạch A4
+        </label>
+        <br>
+        <mat-checkbox [(ngModel)]="addQrCode">
+              Bao gồm mã QR  
+        </mat-checkbox>
+        <qrcode *ngIf="addQrCode" [qrdata]="hardProduct.barcode"></qrcode>
+        
+        <input style="margin: 25px;" class="form-control" [(ngModel)]="quantity" placeholder="Số lượng"> 
+        <button  mat-raised-button color="accent" (click)="downloadAsA4()">
+                Tải
+          </button>
+  
+</div>

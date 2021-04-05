@@ -1,0 +1,285 @@
+<div style="overflow-y: auto;min-height: 200px;">
+
+    <mat-spinner *ngIf="loadingIndicator">Đang tải..</mat-spinner>
+
+    <div *ngIf="loadingIndicator" class="overlay-frame"></div>
+
+    <div style="display: flow-root;margin-top: 10px;">
+        <div class="form-group" style="margin-left: 10px; padding: 20px; display: flex">
+            <label style="padding: 10px;">Chọn ngày</label><br>
+            <input style=" width:auto " [matDatepicker]="picker" [(ngModel)]="selectedDate"
+                [matDatepickerFilter]="myFilter" (dateChange)="dateChange($event)" class="dateCreate form-control"
+                readonly>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </div>
+        <button color="primary" (click)="changeToNextShift()" mat-raised-button *ngIf="nextShift && !isInPast"
+            style="float:right">
+            Chuyển Sang {{nextShift.name}}
+        </button>
+    </div>
+
+
+    <mat-tab-group [(selectedIndex)]="selectedIndexTab" (selectedIndexChange)="selectedIndexChanged()">
+        <mat-tab *ngFor="let shift of shifts">
+            <ng-template mat-tab-label>
+                <img *ngIf="shift.orderIndex == activeShift.orderIndex && !isInPast" width="48"
+                    src="../../../../assets/images/shift_active.gif">
+                {{shift.name}}<br />
+                <div *ngIf="memberService.hasFinancial" style="display: contents;font-size: 20px;font-weight: bold;">{{shift.totalAmount |
+                    currencyformat}}</div>
+                <button mat-mini-fab (click)="showReportButtonsByShift(shift)" style="margin-left: 10px;">
+                    <mat-icon aria-label="Example icon-button with a heart icon">arrow_downward</mat-icon>
+                </button>
+
+            </ng-template>
+
+
+            <div style="padding: 20px;  border: dotted 1px;  background: #f6f6ce;">
+                <mat-hint>Danh sách bánh hủy</mat-hint>
+                <ul *ngFor="let stuff of shift.stuffs">
+                    <li *ngFor="let d of stuff.destroyedHardBlockProductBarcodes">
+                        <span style="color: red">{{d.destroyedCount}} {{stuff.name}}</span>
+                        <span>({{d.destroyedReason}})</span>
+                    </li>
+                </ul>
+            </div>
+            <ngx-datatable class='bootstrap' [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+                [limit]="250" [rowHeight]="'auto'" [rows]='shift.stuffs' [loadingIndicator]="loadingIndicator"
+                [groupRowsBy]="'label'" [groupExpansionDefault]="true">
+
+
+                <!-- Group Header Template -->
+                <ngx-datatable-group-header [rowHeight]="50" #myGroupHeader>
+                    <ng-template let-group="group" let-expanded="expanded" ngx-datatable-group-header-template>
+                        <div style="padding-left:5px;">
+
+                            <a style="width: 400px; font-size: x-large;    display: -webkit-box;">
+                                {{group.value[0].label}}
+                            </a>
+                            <span style="width: 400px; display: -webkit-box;">{{getTotalOfGroupLabel(group.value) |
+                                currencyformat}}</span>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-group-header>
+
+                <ngx-datatable-column name="Tên" [sortable]="true" prop='name'>
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span> {{row.name}}</span>
+                        <span> {{row.barcode}}</span>
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Tồn đầu">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span *ngIf="row.start" style="color: #39b2ee;">
+                            {{row.start || (row.end + row.saleCount + _.sumBy(row.destroyedHardBlockProductBarcodes,'destroyedCount') - _.sumBy(row.hardBlockProductBarcodes,'originalCount')) }}</span>
+                        <span *ngIf="!row.start" style="color: #39b2ee;">0</span>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Nhập bởi">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div *ngFor="let i of row.hardBlockProductBarcodes">
+                            <span style="color: #8BC34A">
+                                +{{i.originalCount}}
+                            </span>
+                            bởi {{shopService.getMemberNameById(i.checkinBy)}} ({{i.checkinDate | date:'HH:mm'}} )
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [sortable]="true" prop='saleCount'>
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        <span>Bán</span> <br>
+                    </ng-template>
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <!-- <div *ngIf="row.hardSetProductBarcodes.length > 0">
+                            <div style="color: #FF5722; border-bottom: dotted 1px #aaa;"> {{row.saleCount}}</div>
+                            <div *ngFor="let hs of row.hardSetProductBarcodes">
+                                <span style="color: #FF5722"> {{hs.saleCount}}</span> {{hs.name}}
+                            </div>
+                        </div>
+                        <div *ngIf="row.hardSetProductBarcodes.length ==0 && row.saleCount > 0">
+                            <div style="color: #FF5722;"> {{row.saleCount}}</div>
+                        </div> -->
+
+                        <div *ngIf="row.hardSetProductBarcodes.length > 0">
+                            <div style="color: #FF5722; border-bottom: dotted 1px #aaa;">
+                                {{row.saleCount + _.sumBy(row.destroyedHardBlockProductBarcodes,'destroyedCount')}}
+                            </div>
+                            <div>
+                                <span style="color: #FF5722"> {{row.saleCount -
+                                    getSaleCountOfArray(row.hardSetProductBarcodes)}}</span> ({{row.name}})
+                            </div>
+                            <div *ngFor="let set of row.hardSetProductBarcodes">
+                                <span style="color: #FF5722"> {{set.saleCount * set.customerCount}}</span>
+                                ({{set.name}} <span style="color:#FF5722">x</span> {{set.saleCount}})
+                            </div>
+                        </div>
+                        <div *ngIf="row.hardSetProductBarcodes.length ==0 && row.saleCount > 0">
+                            <div style="color: #FF5722;"> {{row.saleCount }}</div>
+                        </div>
+                        <div *ngFor="let d of row.destroyedHardBlockProductBarcodes">
+                            <span style="color: red">{{d.destroyedCount}} </span>
+                            <span>({{d.destroyedReason}})</span>
+                        </div>
+                        <div *ngFor="let od of findOrderDetails(row)">
+                            <div>{{od.quantity}} (Đặt)
+                                <a style="margin-left: 15px;" href="javascript:void()"
+                                    (click)="openOrderDetail(od.orderId)">Xem
+                                    chi tiết</a>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column *ngIf="memberService.hasFinancial">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        <span>Thành tiền</span> <br>
+                        <span>{{shift.totalAmount | currencyformat}}</span>
+                    </ng-template>
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div *ngIf="row.money>0">
+                            <div>{{row.money | currencyformat}}</div>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Tồn cuối">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span style="color: #39b2ee;"> {{row.end}}</span>
+                    </ng-template>
+                </ngx-datatable-column>
+
+            </ngx-datatable>
+
+
+        </mat-tab>
+
+        <mat-tab *ngIf="showTotalTab">
+            <ng-template mat-tab-label>
+
+                Tổng Kết Ngày<br />
+                <div *ngIf="memberService.hasFinancial" style="display: contents;font-size: 20px;font-weight: bold;">
+                    {{totalAmount | currencyformat}}</div>
+                <button mat-mini-fab (click)="showReportButton()" style="margin-left: 10px;">
+                    <mat-icon aria-label="Example icon-button with a heart icon">arrow_downward</mat-icon>
+                </button>
+            </ng-template>
+            <div style="padding: 20px;  border: dotted 1px;  background: #f6f6ce;">
+                <mat-hint>Danh sách bánh hủy</mat-hint>
+                <ul *ngFor="let stuff of stuffs">
+                    <li *ngFor="let d of stuff.destroyedHardBlockProductBarcodes">
+                        <span style="color: red">{{d.destroyedCount}} {{stuff.name}}</span>
+                        <span>({{d.destroyedReason}})</span>
+                    </li>
+                </ul>
+            </div>
+
+
+            <ngx-datatable #table class='bootstrap' [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+                [rowHeight]="'auto'" [rowClass]="getRowClass" [limit]="250" [rows]='stuffs'
+                [loadingIndicator]="loadingIndicator" [groupRowsBy]="'label'" [groupExpansionDefault]="true">
+
+                <!-- Group Header Template -->
+                <ngx-datatable-group-header [rowHeight]="50" #myGroupHeader>
+                    <ng-template let-group="group" let-expanded="expanded" ngx-datatable-group-header-template>
+                        <div style="padding-left:5px;">
+
+                            <a style="width: 400px; font-size: x-large;    display: -webkit-box;">
+                                {{group.value[0].label}}
+                            </a>
+                            <span style="width: 400px; display: -webkit-box;">{{getTotalOfGroupLabel(group.value) |
+                                currencyformat}}</span>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-group-header>
+
+
+                <ngx-datatable-column name="Tên" [sortable]="true" prop='name'>
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span> {{row.name}}</span>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Đầu ngày">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span *ngIf="row.start" style="color: #39b2ee;">
+                            {{row.start || row.end + row.saleCount + _.sumBy(row.destroyedHardBlockProductBarcodes,'destroyedCount') - _.sumBy(row.hardBlockProductBarcodes,'originalCount')}}</span>
+                        <span *ngIf="!row.start" style="color: #39b2ee;">0</span>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Nhập bởi">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div>
+
+                            <div *ngFor="let i of row.hardBlockProductBarcodes">
+                                <span style="color: #8BC34A">
+                                    +{{i.originalCount}}
+                                </span>
+                                bởi {{shopService.getMemberNameById(i.checkinBy)}} ({{i.checkinDate | date:'HH:mm'}} )
+                            </div>
+
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [sortable]="true" prop='saleCount'>
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        <span>Bán</span> <br>
+                    </ng-template>
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div
+                            *ngIf="row.saleCount + _.sumBy(row.orderDetails,'quantity') + _.sumBy(row.destroyedHardBlockProductBarcodes,'destroyedCount') > 0">
+                            Tổng: <span style="color: #FF5722; font-weight: bold; ">- {{row.saleCount +
+                                _.sumBy(row.orderDetails,'quantity') +
+                                _.sumBy(row.destroyedHardBlockProductBarcodes,'destroyedCount')}}</span>
+                        </div>
+                        <div *ngIf="row.hardSetProductBarcodes && row.hardSetProductBarcodes.length > 0">
+                            <div>
+                                <span style="color: #FF5722"> {{row.saleCount -
+                                    getSaleCountOfArray(row.hardSetProductBarcodes)}}</span> ({{row.name}})
+                            </div>
+                            <div *ngFor="let set of row.hardSetProductBarcodes">
+                                <span style="color: #FF5722"> {{set.saleCount * set.customerCount}}</span>
+                                ({{set.name}} <span style="color:#FF5722">x</span> {{set.saleCount}})
+                            </div>
+                        </div>
+                        <div
+                            *ngIf="row.hardSetProductBarcodes && row.hardSetProductBarcodes.length ==0 && row.saleCount > 0">
+                            <div style="color: #FF5722;">{{row.saleCount}}</div>
+                        </div>
+                        <div *ngFor="let od of row.orderDetails">
+                            <div>{{od.quantity}} (Đặt)
+                                <a style="margin-left: 15px;" href="javascript:void()"
+                                    (click)="openOrderDetail(od.orderId)">Xem
+                                    chi tiết</a>
+                            </div>
+                        </div>
+                        <div>
+                            <div *ngFor="let d of row.destroyedHardBlockProductBarcodes">
+                                <span style="color: red">{{d.destroyedCount}} </span>
+                                <span>({{d.destroyedReason}})</span>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column *ngIf="memberService.hasFinancial">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        <span>Thành tiền</span> <br>
+                        <span>{{totalAmount | currencyformat}}</span>
+                    </ng-template>
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div *ngIf="row.money>0">
+                            <div>{{row.money | currencyformat}}</div>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Hiện tại" [sortable]="true" prop='total'>
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span style="color: #39b2ee;"> {{row.total}}</span>
+                        <!-- <span style="color: #FF5722;" *ngIf="row.destroyedCount > 0">({{row.destroyedCount}} hủy)</span> -->
+                        <button style="display:none" class="quick-add-hard" mat-raised-button color="primary"
+                            (click)="openAddHardBlock(row)">Nhập
+                            nhanh</button>
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable>
+        </mat-tab>
+    </mat-tab-group>
+</div>

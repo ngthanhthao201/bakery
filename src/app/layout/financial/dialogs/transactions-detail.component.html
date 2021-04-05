@@ -1,0 +1,59 @@
+<div>
+
+    <div *ngIf="header">
+      <div>
+        <label>Người tạo:</label>
+        <span style="font-size:16px; font-weight: bold"> {{shopService.getMemberNameById(header.memberId)}}</span>
+        <br/>
+        <label>Vào lúc:</label>
+        <span style="font-size:16px; font-weight: bold"> {{header.dateCreated | date:'short'}}</span>
+        <br/>
+        <label>Tổng giao dịch:</label>
+        <span style="font-size:16px; font-weight: bold"> {{header.amount | currencyformat}}</span>
+    </div>
+    </div>
+        
+
+
+          <ngx-datatable
+                #table
+                class='material no-shadow'
+                [columns]="columns"
+                [columnMode]="'force'"
+                [headerHeight]="50"
+                [footerHeight]="50"
+                [rowHeight]="'auto'"
+                [limit]="10"
+                [rows]='rows'>
+
+                <ngx-datatable-column name="Description">
+                        <ng-template let-column="column" ngx-datatable-header-template>
+                           {{'Description'| translate}}
+                          </ng-template>
+                        <ng-template  let-value="value" ngx-datatable-cell-template>
+                            <span> {{value}}</span>
+                        </ng-template>
+                    </ngx-datatable-column>
+                <ngx-datatable-column name="Amount">
+                        <ng-template let-column="column" ngx-datatable-header-template>
+                           {{'Amount'| translate}}
+                          </ng-template>
+                        <ng-template  let-value="value" ngx-datatable-cell-template>
+                            <span> {{value | currencyformat}}</span>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="CreatedDate" [sortable]="true" prop='createdDate'>
+                        <ng-template let-column="column" ngx-datatable-header-template>
+                           Thời gian
+                          </ng-template>
+                        <ng-template  let-value="value" ngx-datatable-cell-template >
+                            <span> {{value | date: 'short'}}</span>
+                        </ng-template>
+                    </ngx-datatable-column>
+      </ngx-datatable>
+
+    <mat-dialog-actions style="justify-content: flex-end;float: right;">
+        <button mat-button mat-dialog-close>Đóng</button>
+    </mat-dialog-actions>
+</div>

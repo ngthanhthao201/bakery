@@ -1,0 +1,13 @@
+<div class="modal-header">
+    <div *ngIf="expirationDate" id="modal" style="z-index:2">     
+      <h1>Vui lòng gia hạn</h1>
+      <p style="font-size:22px; line-height:1.5">Tài khoản này đã hết hạn, vui lòng liên hệ số điện thoại <span style="font-weight:bold;">0332020068</span> để gia hạn</p>
+    </div>
+    <div *ngIf="dueDate"  style="z-index:3">
+      <button style="outline: none; " type="button" class="close" aria-label="Close" (click)="dialogRef.close('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button><br>
+      <h3> Còn <strong style="font-weight:bold; font-size:32px">{{promotionDate}} ngày </strong> nữa hết hạn</h3>
+      <h2 style="font-size:24px; line-height:1.5"> Vui lòng liên hệ số điện thoại <span style="font-weight:bold;">0332020068</span>  để gia hạn</h2>  
+    </div> 
+  </div>

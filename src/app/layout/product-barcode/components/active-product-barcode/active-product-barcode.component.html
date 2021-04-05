@@ -1,0 +1,169 @@
+<section class="" style="padding-top: 30px;">
+
+    <div class="row" id="product-barcode-table" style="  padding: 20px;align-items: center;">
+        <mat-form-field style="min-width: 300px;" class="col-md-6">
+            <input matInput (keyup)="onKeyUp($event.target.value)" [(ngModel)]="searchProductText"
+                placeholder="{{'Search' | translate}}">
+            <mat-icon matSuffix>search</mat-icon>
+            <mat-hint>gõ mã</mat-hint>
+        </mat-form-field>
+
+        <div style="padding-left: 15px;">
+            <mat-radio-group [(ngModel)]="filterProductRadio" (change)="filterProductRadioChanged(filterProductRadio)">
+                <mat-radio-button value="all" style="margin-right: 10px">Tất cả</mat-radio-button>
+                <mat-radio-button value="notSold" style="margin-right: 10px">Chưa bán</mat-radio-button>
+                <mat-radio-button value="isSold" style="margin-right: 10px">Đã bán</mat-radio-button>
+                <mat-radio-button value="delete" style="margin-right: 10px">Đã hủy</mat-radio-button>
+
+            </mat-radio-group>
+        </div>
+
+        <!-- <mat-slide-toggle class="col-md-6" [(ngModel)]="isShowCakeLifeTime">Hiện Thời Gian Bánh</mat-slide-toggle> -->
+
+        <!-- <span><mat-slide-toggle [(ngModel)]="isShowPdNotSold" style="margin-right:10px" (change)="filterProductRadioChanged(isShowPdNotSold)" >Chưa bán</mat-slide-toggle></span>
+        <span><mat-slide-toggle [(ngModel)]="isShowPdIsSold" style="margin-right:10px" (change)="filterProductRadioChanged(isShowPdIsSold)">Đã bán</mat-slide-toggle></span>
+        <span><mat-slide-toggle [(ngModel)]="isShowPdUnActive" (change)="filterProductRadioChanged(isShowPdUnActive)">Đã hủy</mat-slide-toggle></span> -->
+
+    </div>
+
+    <div class="row">
+        <ngx-datatable #table class='bootstrap col-md-12' [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+        [rowHeight]="100" [limit]="25" [rows]='productBarcodes' [scrollbarH]="false" [groupRowsBy]="'price'"
+        [groupExpansionDefault]="false">
+
+            <!-- Group Header Template -->
+            <ngx-datatable-group-header [rowHeight]="50" #myGroupHeader>
+                <ng-template let-group="group" let-expanded="expanded" ngx-datatable-group-header-template>
+                    <a [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded"
+                        style="padding-left:5px;    margin: 5px;" class="row" (click)="toggleExpandGroup(group)">
+
+                        <span class="group-header col-md-3" style="font-size: x-large;">
+                            {{group.value[0].price | currencyformat}}
+                        </span>
+                        <span class="group-header col-md-3 text-success" style="font-size:large; margin-left: -4%">
+                            {{group.value | productBarcodeCount : 'notSold'}}
+                            
+                        </span>
+                        <span class="group-header col-md-3 text-primary" style="font-size: large; margin-left: -2%">
+                            {{group.value | productBarcodeCount : 'sold'}}
+                        </span>
+                        <span class="group-header col-md-3 text-danger" style="font-size: large; margin-left: -2%">
+                            {{group.value | productBarcodeCount : 'inActive'}}
+                        </span>
+                    </a>
+                </ng-template>
+            </ngx-datatable-group-header>
+
+            <ngx-datatable-column name="Loại Bánh">
+                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                    <div class="categoryName-style">
+                        {{barcodeService.getCategoryName(row.productCategoryBarcodeId)}}
+                        <span style="font-weight: bold;">({{row.barcode}})</span>
+                    </div>
+
+                    <!-- (change)="prevent($event); getFiles($event, row.barcode)" -->
+                    <span *ngIf="!row.isSold && row.isActive" >
+                        
+                        <img class="category-img" (click)="imageInput.click()" src="{{row.image  || 'https://mybakerystorage.blob.core.windows.net/static/placeholder-image.jpg'}}">
+                        <div tabindex="0" class="userPhotoChangePanel" (click)="imageInput.click()">
+                            
+                            <div class="editPhoto-Label">Click vào để chọn hình</div>
+                                <div class="editPhoto">
+                                    <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+                                </div>    
+                        </div>
+                        <input (change)="getFiles($event, row)" #imageInput type="file" ngModel  accept="image/*" id="icon-input" class="image">
+                    </span>
+                </ng-template>
+            </ngx-datatable-column>
+
+            <!-- <ng-template let-row="row" ngx-datatable-cell-template>
+                <div class="categoryName-style">
+                    {{barcodeService.getCategoryName(row.productCategoryBarcodeId)}}
+                    <span style="font-weight: bold;">({{row.barcode}})</span>
+                    
+                </div>
+                <div *ngIf="!row.isSold && row.isActive">        
+                    <input style="display:none" type="file" ngModel (change)="getFiles($event, row)" accept="image/*" id="id-input">            
+                    <label for="id-input">
+                        <img class="category-img" src="{{ image || '../../../../../../assets/icons/icon_addImage.png'}}">
+                    </label>
+                </div>      
+            </ng-template> -->
+            
+
+            <!-- <ngx-datatable-column *ngIf="isShowCakeLifeTime" [sortable]="true" prop='checkinDate' name="Thời gian kiểm">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span [innerHtml]="row.checkinDate | timeAgoBarcode"></span>
+                </ng-template>
+            </ngx-datatable-column> -->
+
+            <ngx-datatable-column name="Ngày nhập">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span *ngIf="!row.isSold && row.isActive" class="bg-success bg-padding" style="color:white">
+                        {{row.checkinDate | date:'short'}}
+                        
+                    
+                    </span>
+
+                    <span *ngIf="row.isSold" class="bg-padding">
+                        {{row.checkinDate | date:'short'}}</span>
+                    <span *ngIf="!row.isSold && !row.isActive" class="bg-padding">
+                        {{row.checkinDate | date:'short'}}</span>
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Ngày bán">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span *ngIf="row.isSold" class="badge badge-primary cell-text">
+                        {{row.checkoutDate | date:'short'}} bởi {{shopService.getMemberNameById(row.checkoutBy)}}
+                        <span *ngIf="row.orderId">| <a style="color:#00f160" href="javascript:void()" (click)="viewOrder(row.orderId)">xem đơn</a> </span>
+                    </span>
+                      
+                </ng-template>
+            </ngx-datatable-column>
+
+            <!-- <ngx-datatable-column name="Ngày hủy" [sortable]="true">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span *ngIf="!row.isActive" class="bg-danger bg-padding" style="color: white">
+                        {{row.destroyedTime | date:'short'}}
+                         bởi {{shopService.getMemberNameById(row.checkinBy)}}
+                    </span>
+
+                </ng-template>
+            </ngx-datatable-column> -->
+            <ngx-datatable-column name="Hủy..." [width]="20">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <a><mat-icon *ngIf="row.isActive && !row.isSold" matTooltip="Hủy bánh" color="warn"
+                        (click)="removeBC(row)">remove</mat-icon></a>
+                    <span *ngIf="!row.isActive" class="bg-danger bg-padding" style="color: white">
+                        {{row.destroyedTime | date:'short'}}
+                        <!-- bởi {{shopService.getMemberNameById(row.checkinBy)}} -->
+                    </span>
+                </ng-template>
+            </ngx-datatable-column>
+
+            <!-- <ngx-datatable-column name="Hủy...">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <a>
+                        <mat-icon matTooltip="Xóa" color="warn" (click)="removeBC(row)">remove</mat-icon>
+                    </a>
+                </ng-template>
+            </ngx-datatable-column> -->
+            <ngx-datatable-column name="Lý do hủy">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span *ngIf="!row.isActive && row.destroyedReason" class="bg-danger bg-padding cell-text"
+                        style="color: white">
+                        {{row.destroyedReason}}</span>
+                    <div>
+                        {{shopService.getMemberNameById(row.destroyedBy)}}
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+
+
+        </ngx-datatable>
+    </div>
+
+
+</section>

@@ -1,0 +1,60 @@
+<mat-dialog-content>
+    <form [formGroup]="form">
+        <div class="row">
+
+            <fieldset class="col-md-4">
+                <label>Tên</label>
+                <input required [(ngModel)]="member.name" formControlName="name" class="form-control">
+            </fieldset>
+
+            <fieldset class="col-md-4">
+                <label>Vai trò</label>
+                <mat-select multiple required [(ngModel)]="member.roleIds" formControlName="role" class="form-control">
+                    <mat-option *ngFor="let r  of roles" [value]="r.id">
+                        {{ r.name }}
+                    </mat-option>
+                </mat-select>
+            </fieldset>
+
+            <fieldset class="col-md-4">
+                <label>Giới tính</label>
+                <mat-select  [(ngModel)]="member.gender" formControlName="gender" class="form-control">
+                    <mat-option [value]="1">Nữ</mat-option>
+                    <mat-option [value]="2">Nam</mat-option>
+                </mat-select>
+            </fieldset>
+
+            <div *ngIf="!member.id">
+                    <div class="row form-group" style="margin:20px;">
+                            <mat-slide-toggle  formControlName="canLogIn" [(ngModel)]="canLogIn">Có Quyền Đăng Nhập</mat-slide-toggle>
+                        </div>
+            
+                        <div class="row col-md-12" *ngIf="canLogIn">
+                                <fieldset class="col-md-4">
+                                        <label>Số điện thoại</label>
+                                        <input [(ngModel)]="member.username" formControlName="username" class="form-control">
+                                    </fieldset>
+                            <fieldset class="col-md-6">
+                                <label>Mật khẩu</label>
+                                <input type="password" [(ngModel)]="member.password" formControlName="password" class="form-control">
+                            </fieldset>
+                
+                            <fieldset class="col-md-6">
+                                <label>Xác nhận mật khẩu</label>
+                                <input type="password" [(ngModel)]="confirmPassword" formControlName="confirmPassword" class="form-control">
+                            </fieldset>
+                        </div>
+            </div>
+
+
+
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions style="float:right">
+    <button class="btn btn-raised mr-1 shadow-z-1" mat-dialog-close>Hủy</button>
+    <!-- Can optionally provide a result for the closing dialog. -->
+    <button *ngIf="member.id" (click)="updateMember()" class="btn btn-raised mr-1 shadow-z-1 btn-success" >Cập Nhật</button>
+    <button *ngIf="!member.id" (click)="createMember()" class="btn btn-raised mr-1 shadow-z-1 btn-success" [disabled]="canLogIn && (member.password != confirmPassword) && member.username"
+        >Đồng ý</button>
+</mat-dialog-actions>

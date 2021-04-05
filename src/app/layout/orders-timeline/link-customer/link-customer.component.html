@@ -1,0 +1,83 @@
+<div>
+    <div mat-dialog-title>
+        <label>Liên kết khách hàng với thẻ</label>
+        <span>
+            <button class="float-right fa fa-times btn btn-raised mr-1 btn-round btn-danger" mat-dialog-close></button>
+        </span>
+    </div>
+
+    <mat-dialog-content>
+        <div class="row">
+            <div class="col-md-5" style="display: inline-flex; text-align: center">
+                <span class="rounded-circle ">
+                    <img src="{{selectedCustomer.image || '../../../../../../assets/images/avatar_placeholder.png'}}"
+                        alt="" style="width: 48px; height: 48px;">
+                </span>
+                <div class="customer-box">
+                    <p>Khách Hàng <span>({{selectedCustomer.name}})</span></p>
+                    <div style="width:100%">
+                        <fieldset class="form-group">
+                            <label>Số điện thoại</label>
+                            <sup *ngIf="selectedCustomer" (click)="deleteSelectedCustomer()"
+                                class="ft-x-circle badge-danger"
+                                style="border-radius: 0.5rem; margin-left: 2px; cursor: pointer;"
+                                matTooltip="Xoá"></sup>
+                            <input [(ngModel)]="selectedCustomer" maxlength="10" [matAutocomplete]="auto" type="tel"
+                                class="form-control" [formControl]="searchCtrl" inputWithNumpad
+                                #autoComplete_linkCustomerDialog (numberPressedChanged)="numberPressedChanged()"
+                                [customControl]="searchCtrl">
+                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+                                (optionSelected)="onSelectionChanged($event)">
+                                <mat-option *ngFor="let c of filteredCustomers | async" [value]="c">
+                                    <span>{{ c.phoneNumber }}</span>
+                                    <span>({{c.name}})</span>
+                                    <span> <img style="height: 32px;" src="{{c.customerType.icon}}" /></span>
+                                </mat-option>
+                            </mat-autocomplete>
+                        </fieldset>
+                    </div>
+                    <div [hidden]="(selectedCustomer && selectedCustomer.id)" style="width:100%">
+                        <fieldset class="form-group">
+                            <label>Tên</label>
+                            <input class="form-control" [formControl]="nameCtrl" [customControl]="nameCtrl" [(ngModel)]="newCustomerName" inputWithWordPad>
+                        </fieldset>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-2 ft-arrow-right" style="margin: auto;font-size: 200%; text-align: center"></div>
+            <div class="col-md-5" style="margin: auto; text-align: center; top: 25px;display: grid;">
+                <div style="max-width: 75%;">
+                    <i class="fa fa-list-alt" style="font-size: 150%;"></i>
+                    <input [(ngModel)]="externalId" inputWithNumpad [formControl]="vipCtrl" [customControl]="vipCtrl" class="form-control draw input-animation mb-2"
+                        placeholder="Nhập mã Vip" style="width: -webkit-fill-available;">
+                    <!-- <sup  (click)="deleteExternalId()"
+                            class="ft-x-circle badge-danger"
+                            style="border-radius: 1.5rem; margin-left: 2px; cursor: pointer;position: absolute;"
+                            matTooltip="Xoá mã"></sup> -->
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field>
+                        <mat-label>Cấp Thành Viên</mat-label>
+                        <select matNativeControl required [(ngModel)]="customerShop.customerTypeId">
+                            <option selected *ngFor="let t of customerTypes" [value]="t.id">{{t.name}}</option>
+                        </select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <div class="col-md-12" style="text-align: center;">
+            <button *ngIf="selectedCustomer.id" [disabled]="!externalId || !selectedCustomer.id"
+                (click)="linkCustomerShop()" class="btn btn-raised mr-1 btn-success"
+                style="margin-bottom: 0 !important;">
+                Liên Kết Thẻ</button>
+            <button *ngIf="!selectedCustomer.id"
+                [disabled]="!externalId || !selectedCustomer || (selectedCustomer.length != 10)"
+                (click)="createAndLinkCustomerShop()" class="btn btn-raised mr-1 btn-success"
+                style="margin-bottom: 0 !important;">
+                Tạo Mới K.Hàng Và Liên Kết Thẻ</button>
+        </div>
+    </mat-dialog-content>
+</div>

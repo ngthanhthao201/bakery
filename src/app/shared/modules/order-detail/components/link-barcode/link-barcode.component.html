@@ -1,0 +1,36 @@
+<mat-dialog-content>
+    <h3 class="bar-header">Vui lòng quét mã bánh</h3>
+    <div mat-dialog-content class="bar-body">
+        <table class="table table-striped">
+            <thead>
+                <th style="border-bottom: unset">#</th>
+                <th style="border-bottom: unset">Tên</th>
+                <th style="border-bottom: unset">Số Lượng</th>
+                <th style="border-bottom: unset">Tổng</th>
+                <th style="border-bottom: unset">Barcode</th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let od of currentOrder.orderDetails;  let index = index;">
+                    <th scope="row">{{index + 1}}</th>
+                    <td>{{od.description }}</td>
+                    <td> &times; {{od.quantity}}</td>
+                    <td>{{od.unitPrice * od.quantity | currencyformat}}</td>
+                    <td [ngClass]="{'bgaddnew': od.id == firstEmptyOdId}">
+                        <p>{{od.barcode}}</p>
+                        <span class="dashing" style="bottom: 0;"><i></i></span>
+                        <span class="dashing" style="top: 0;"><i></i></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="bar-footer">
+        <mat-dialog-actions>
+            <mat-action-row>
+                <button mat-button mat-dialog-close class="badge badge-info" (click)="updateOrder()">
+                    <span><i class="material-icons" style="vertical-align: text-bottom;">save</i> Lưu</span>
+                </button>
+            </mat-action-row>
+        </mat-dialog-actions>
+    </div>
+</mat-dialog-content>

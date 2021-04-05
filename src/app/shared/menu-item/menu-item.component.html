@@ -1,0 +1,33 @@
+<mat-menu #childMenu="matMenu" [overlapTrigger]="false">
+  <span *ngFor="let child of items">
+    <!-- Handle branch node menu items -->
+    <span *ngIf="child.children && child.children.length > 0">
+      <button mat-menu-item color="primary" [matMenuTriggerFor]="menu.childMenu">
+        <div style="display: flex;">
+          <mat-icon *ngIf="child.iconName">{{child.iconName}}</mat-icon>
+          <div>
+            <div>{{child.displayName}}</div>
+            <div>{{child.price}}</div>
+          </div>
+        </div>
+
+      </button>
+      <app-menu-item #menu [items]="child.children"></app-menu-item>
+    </span>
+    <!-- Handle leaf node menu items -->
+    <span *ngIf="!child.children || child.children.length === 0" (mouseover)='child.displayImage = true' (mouseleave)='child.displayImage = false'>
+      <button mat-menu-item [routerLink]="child.route" (click)="child.clickEvent(child.data)">
+
+        <div style="display: flex;">
+          <div style="width:100%;">
+            <span>{{child.displayName}}</span>
+            <span style="float: right; ">{{child.price | currencyformat}}</span>
+          </div>
+          <img *ngIf="child.displayImage" (click)="$event.stopPropagation(); resizeImage(child);" class="style_img"
+            src="{{child.image}}">
+        </div>
+
+      </button>
+    </span>
+  </span>
+</mat-menu>

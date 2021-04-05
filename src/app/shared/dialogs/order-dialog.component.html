@@ -1,0 +1,38 @@
+<div>
+    <form>
+        <div class="" style="display: inline">
+            <h2>Tạo order</h2>
+            <mat-form-field style="float: right;margin-top: -25px;">
+                <input matInput [matDatepicker]="orderDate" placeholder="Ngày" [(ngModel)]="order.dateCreated" name="dateCreated">
+                <mat-datepicker-toggle matSuffix [for]="orderDate"></mat-datepicker-toggle>
+                <mat-datepicker #orderDate startView="month"></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <div *ngFor="let orderDetail of order.orderDetails">
+            <mat-form-field class="example-full-width">
+                <input matInput placeholder="Product" aria-label="Product" [matAutocomplete]="auto" [formControl]="productCtrl" [(ngModel)]="orderDetail.product">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                    <mat-option *ngFor="let product of filteredProducts | async" [value]="product" >                        
+                        <img style="vertical-align:middle;" aria-hidden src="{{product.flag}}" height="25" />
+                        <span>{{ product.name }}</span> |
+                        <small>Gia: {{product.sellingPrice}}</small>
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+
+            <mat-dialog-content>
+                <mat-form-field>
+                    <input matInput placeholder="Số tiền" type="number" class="example-right-align" [(ngModel)]="order.amount" name="amount">
+                    <span matSuffix>vnd</span>
+                </mat-form-field>
+            </mat-dialog-content>
+
+            <span>{{orderDetail.productId}}</span>
+        </div>
+        <mat-dialog-actions>
+            <button mat-button mat-dialog-close>Không</button>
+            <!-- Can optionally provide a result for the closing dialog. -->
+            <button mat-button [mat-dialog-close]="order">Có</button>
+        </mat-dialog-actions>
+    </form>
+</div>

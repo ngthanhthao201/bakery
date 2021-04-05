@@ -1,0 +1,28 @@
+<div mat-dialog-title>
+    <span>{{'OpenCloseTime' | translate}}</span>
+</div>
+
+<section mat-dialog-content class="example-full-width">
+    <!-- <mat-form-field>
+        <input matInput [(ngModel)]="currentShop.openTime"/>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput [(ngModel)]="currentShop.closeTime"/>
+    </mat-form-field> -->
+    <div class="row">
+        <fieldset class="col-md-6">
+            <input [(ngModel)]="currentShop.openTime" class="form-control" />
+        </fieldset>
+
+        <fieldset class="col-md-6">
+            <input [(ngModel)]="currentShop.closeTime" class="form-control" />
+        </fieldset>
+    </div>
+</section>
+
+<mat-dialog-actions>
+    <div style="justify-content: flex-end;float: right;">
+        <button mat-button mat-dialog-close>Hủy</button>
+        <button mat-raised-button color="primary" (click)="saveOpenClosetTime()">Lưu</button>
+    </div>
+</mat-dialog-actions>

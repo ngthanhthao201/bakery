@@ -1,0 +1,64 @@
+<div>
+    <button color="warn" mat-dialog-close style="float: right;" mat-mini-fab><mat-icon>close</mat-icon></button>
+    <h3 class="badge badge-danger">{{hpbWarning.hardProductBarcode.name}}<span> số lượng hiện có: {{hpbWarning.count}}</span></h3>
+    <br>
+    <span >Đừng lo! Bạn có thể giải quyết vấn đề này bằng 1 trong 2 cách phía dưới.</span>
+</div>
+<div mat-content-dialog>
+
+
+
+  <mat-tab-group>
+    <mat-tab label="Nhập"> 
+        <div class="col-md-12">
+
+            <fieldset class="form-group">
+                <label>Nhập Số Lượng</label>
+                <input required   type="number" min="1"  [(ngModel)] = "newHardBlockProductBarcode.count" class="form-control">
+                <label>Lý Do Nhập Trễ</label>
+                <input required type="text"  [(ngModel)] = "newHardBlockProductBarcode.note" class="form-control">
+            </fieldset>
+            
+        </div>
+
+        <div  class="form-actions text-right">
+          <button (click)="createHBPB()" [disabled]="newHardBlockProductBarcode.count < 1 || !newHardBlockProductBarcode.note"  class="btn btn-raised btn-success" type="button"><i  class="icon-note"></i> Nhập </button>
+        </div>
+
+    </mat-tab>
+    <mat-tab label="Hủy Giao Dịch"> 
+
+        <label class="label">
+            Các giao dịch gần đây. Giao dịch hủy sẽ lưu lại trong lịch sử.
+        </label>
+            <div id="tracking" style="height:450px">
+                    <div class="tracking-list">
+                        <div  class="tracking-item" *ngFor="let c of incomeContainers">
+                            <div class="tracking-icon status-intransit">
+                               <!-- <svg class="svg-inline--fa fa-circle fa-w-16" aria-hidden="true" data-prefix="fas" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+                                  <path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path>
+                               </svg> -->
+                               <!-- <i class="fas fa-circle"></i> -->
+                               <img  src="{{shopService.getMemberImageById(c.memberId) || '../../../../../assets/images/avatar_placeholder.png'}}">
+                            </div>
+                            <div class="tracking-date">{{c.date| date:'dd-MM-yyyy'}}<span>{{c.date | date :'HH:mm'}}</span>
+                            </div>
+                            <div class="tracking-content">Tổng giao dịch: {{c.amount| currencyformat}}<span>{{c.incomeTransactions | descriptions: 'quantitydescription'}}</span>
+                            </div>
+          
+                            <div  class="">
+                                    <fieldset>
+                                            <label>Lý do hủy giao dịch</label>
+                                            <input [(ngModel)]="c.destroyedReason" class="form-control">
+                                        </fieldset>
+                                        <div>
+                                            <button [disabled]="!c.destroyedReason" color="warn" mat-raised-button (click)="removeIncomeTransactions(c)">Hủy GD</button>
+                                        </div>
+                            </div> 
+          
+                         </div>
+                    </div>
+                 </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

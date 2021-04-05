@@ -1,0 +1,28 @@
+<ng-template #content let-c="close" let-d="dismiss">
+
+    <div class="modal-header">
+        <h4 class="modal-title">Chọn ảnh bánh</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <input type="file"  (change)="fileChangeEvent($event)" />
+
+        <!-- <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="1"
+            [resizeToWidth]="128" format="png" (imageCroppedBase64)="imageCropped($event)" (imageLoaded)="imageLoaded()"
+            (loadImageFailed)="loadImageFailed()"></image-cropper>-->
+
+        <img  id="image" [src]="imageInputFile" /> 
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="d('Close click')">Đóng</button>
+        <button type="button" class="btn primary" (click)="c()">Đồng ý</button>
+
+    </div>
+
+</ng-template>
+<label (click)="open(content)" class=".uploader" ondragover="return false;">
+    <i class="icon icon-upload"></i>
+    <div>Nhấp vào đây để chèn hình</div>
+</label>

@@ -1,0 +1,131 @@
+<!-- Nav tabs -->
+<div [@routerTransition]>
+    <app-page-header heading="Bánh kem - bánh lớn (mã vạch riêng)"></app-page-header>
+
+    <mat-tab-group style="margin-top: 5px;" [(selectedIndex)]="selectedIndexTab"
+        (selectedIndexChange)="selectedIndexChanged()">
+
+        <mat-tab active label="Tình Trạng Bánh">
+            <app-active-product-barcode></app-active-product-barcode>
+        </mat-tab>
+
+        <mat-tab label="Biểu đồ">
+            <div class="card-header">
+                Tổng cộng {{barcodeService.productBarcodesNotSold.length}}
+            </div>
+            <div class="card-body" *ngIf="barChartData" class="col-md-10">
+                <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+                    [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)"
+                    (chartClick)="chartClicked($event)">
+                </canvas>
+            </div>
+        </mat-tab>
+
+        <!-- Bar code printer -->
+        <mat-tab label="Mã vạch">
+            <section class="container">
+                <div class="" style="padding-top: 30px;">
+                    <legend>Tạo mới mã vạch:</legend>
+                    <ol>
+                        <li>
+                            <!-- <label style="display: -webkit-box;">Chọn album bánh</label>
+                            <mat-form-field class="col-md-6">
+                                <mat-select [(ngModel)]="barcode.type">
+                                    <mat-option *ngFor="let pc of categories" value="{{pc.idBarcode}}">
+                                        {{pc.name}} ({{pc.idBarcode}})
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field> -->
+                            <fieldset class="form-group col-md-6">
+                                <label>Chọn album bánh</label>
+                                <mat-select [(ngModel)]="barcode.type" class="form-control">
+                                    <mat-option *ngFor="let pc of categories" value="{{pc.idBarcode}}">
+                                        {{pc.name}} ({{pc.idBarcode}})
+                                    </mat-option>
+                                </mat-select>
+                            </fieldset>
+                        </li>
+                        <li>
+                            <div>
+                                <label style="display: -webkit-box;">Giá (đơn vị 1000)</label>
+                                <span>
+                                    <input
+                                        style="  font-weight: bold; width:20%; margin-bottom: 14px;color: #39b2ee; font-family: 'Open Sans Condensed'; font-size: 2em; line-height: 2em; text-align: right; border: solid 1px #39b2ee; height: 35px;"
+                                        matInput required [(ngModel)]="barcode.price" max="99999">
+                                </span>
+                                <span class="b-main"
+                                    style=" font-weight: bold;font-family: 'Open Sans Condensed'; font-size: 2em; line-height: 2em;">.000
+                                    đ</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <label style="display: -webkit-box;">Xem trước</label>
+                                <ngx-barcode6 id="barcode-content" [bc-element-type]="'img'" [bc-value]="bcValue"
+                                    [bc-display-value]="'true'" [bc-format]="'CODE128'" [bc-background]="'#ffffff'">
+                                </ngx-barcode6>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <!-- <label style="display: -webkit-box;">Chọn loại tem</label>
+                                <mat-form-field class="row col-md-6">
+                                    <mat-select placeholder="Loại tem" [(ngModel)]="selectedBarcodeSize"
+                                        (selectionChange)="selectedBarcodeSizeChanged()">
+                                        <mat-option [value]="33522">
+                                            Loại 3 tem 1 hàng (thường 35x22 mm)
+                                        </mat-option>
+                                        <mat-option [value]="24025">
+                                            Loại 2 tem 1 hàng (decal PVC 40x25 mm)
+                                        </mat-option>
+                                        <mat-option [value]="4">
+                                            Loại giấy A4 cứng
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field> -->
+                                <fieldset class="form-group col-md-6">
+                                    <label>Chọn loại tem</label>
+                                    <mat-select placeholder="Loại tem" [(ngModel)]="selectedBarcodeSize"
+                                        (selectionChange)="selectedBarcodeSizeChanged()" class="form-control">
+                                        <mat-option [value]="33522">
+                                            Loại 3 tem 1 hàng (thường 35x22 mm)
+                                        </mat-option>
+                                        <mat-option [value]="24025">
+                                            Loại 2 tem 1 hàng (decal PVC 40x25 mm)
+                                        </mat-option>
+                                        <mat-option [value]="4">
+                                            Loại giấy A4 cứng
+                                        </mat-option>
+                                    </mat-select>
+                                </fieldset>
+                                <ul *ngIf="selectedBarcodeSize === 4">
+                                    <li>
+                                        <label>Số lượng </label>
+                                        <input [(ngModel)]="productBarcodePrintingQuantity">
+                                    </li>
+                                    <li>
+                                        <div style="display:none" id="testQr">
+
+                                        </div>
+                                        <!-- <qrcode *ngIf="addQrCode" [qrdata]="qrCodeValue"></qrcode> -->
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <label style="display: -webkit-box;">Bấm nút tải</label>
+                            <button [disabled]="!barcode.type || barcode.price <2"
+                                class="row btn btn-raised mr-1 btn-info" (click)="readFileXml()">Tải
+                                Mã Vạch</button>
+                        </li>
+                    </ol>
+                </div>
+            </section>
+        </mat-tab>
+    </mat-tab-group>
+
+    <div class="input-product">
+        <a class="btn btn-raised mr-1 btn-info" (click)="openInputProduct()">Nhập bánh</a>
+    </div>
+
+</div>

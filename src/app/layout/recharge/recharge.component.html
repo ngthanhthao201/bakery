@@ -1,0 +1,180 @@
+<div class="row">
+
+  <div class="col-md-12 col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title-wrap bar-success">
+          <h4 class="card-title">Nạp tiền</h4>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-block">
+          <ul ngbNav #nav="ngbNav"  [activeId]="activeTab" (tabChange)="activeTab = $event.nextId; tabChanged();">
+
+            <li ngbNavItem *ngFor="let t of tabMap | keyvalue" >
+
+              <a ngbNavLink>{{t.value.title}}</a>
+                <ng-template ngbTabContent>
+                  <form name="moneyFrm" >
+                    <div class="row">
+                        <div class="col-xs-6">
+                                <div class="form-group" ng-class="{'has-error': moneyFrm.amount.$invalid &amp;&amp; !moneyFrm.amount.$pristine || error.amount}">
+                                    <label for="amount" class="text text-default">Số tiền cần nạp (vnd):</label>
+                                    <input type="number" placeholder="Số tiền cần nạp (vnd)" name="amount" class="form-control ng-pristine ng-invalid ng-invalid-min ng-valid-max ng-valid-required ng-touched" [(ngModel)]="setExpressCheckoutParams.total_amount" required="" data-min="5000" data-max="100000000" max-length="10">
+                                    <span class="help-block ng-binding ng-hide" ng-show="moneyFrm.amount.$error.required &amp;&amp; !moneyFrm.amount.$pristine || error.amount !=''"></span>
+                                </div>
+                                <div class="form-group" ng-class="{'has-error': moneyFrm.fullName.$invalid &amp;&amp; !moneyFrm.fullName.$pristine || error.fullName}">
+                                    <label for="fullName" class="text text-default">Họ tên:</label>
+                                    <input type="text" placeholder="Tên của bạn" name="fullName" class="form-control ng-pristine ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength ng-touched" [(ngModel)]="setExpressCheckoutParams.buyer_fullname" required="" ng-minlength="6" ng-maxlength="25">
+                                    <span class="help-block ng-binding ng-hide" ng-show="moneyFrm.fullName.$error.required &amp;&amp; !moneyFrm.fullName.$pristine || error.fullName"></span>
+                                </div>
+                                <div class="form-group" ng-class="{'has-error': moneyFrm.mobile.$invalid &amp;&amp; !moneyFrm.mobile.$pristine || error.mobile}">
+                                    <label for="mobile" class="text text-default">Số điện thoại:</label>
+                                    <input type="text" placeholder="Số điện thoại của bạn" name="mobile" class="form-control ng-pristine ng-valid ng-valid-required ng-valid-minlength ng-valid-maxlength ng-touched" [(ngModel)]="setExpressCheckoutParams.buyer_mobile" required="" ng-minlength="10" ng-maxlength="11">
+                                    <span class="help-block ng-binding ng-hide" ng-show="moneyFrm.mobile.$error.required &amp;&amp; !moneyFrm.mobile.$pristine || error.mobile"></span>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <b>Vui lòng chọn ngân hàng bên dưới:</b>
+                            <ul class="cardList clearfix">
+                                <li *ngFor="let b of banks" class="bank-online-methods ">
+                                  <label for="{{b.bank_code}}">
+                                      <i *ngIf="bankIcons.indexOf(b.bank_code) > -1" class="{{b.bank_code}}" title="{{b.bank_code}}"></i>
+                                      <span style="display: block;" *ngIf="bankIcons.indexOf(b.bank_code) < 0"  >{{b.bank_code}}</span>
+                                      <input type="radio" [(ngModel)]="setExpressCheckoutParams.bank_code" (change)="bankChanged()" [value]="b.bank_code" name="bankcode" id="{{b.bank_code}}" class="ng-valid ng-dirty ng-touched ng-valid-parse">
+                                  </label>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div *ngFor="let f of requiredFields" class="form-group" >
+                                <div [ngSwitch]="f">
+                                    <div *ngSwitchCase="'BANK_ACCOUNT'">
+                                        <label for="bankAccount" class="text text-default">{{t.value.bank_account_field}}</label>
+                                        <input type="text" placeholder="{{t.value.bank_account_placeholder}}" name="bankAccount" style="width: auto;" class="form-control ng-pristine ng-valid ng-valid-required ng-valid-minlength ng-valid-maxlength ng-touched" [(ngModel)]="setExpressCheckoutParams.card_number" required="" ng-minlength="10" ng-maxlength="11">
+                                    </div>
+                                    <div *ngSwitchCase="'BANK_NAME'">
+                                        <label for="bankName" class="text text-default">Tên chủ tài khoản (không dấu) *</label>
+                                        <input type="text" placeholder="Số điện thoại của bạn" name="bankName" style="width: auto;" class="form-control ng-pristine ng-valid ng-valid-required ng-valid-minlength ng-valid-maxlength ng-touched" [(ngModel)]="setExpressCheckoutParams.card_fullname">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-xs-12" style="display: flex;">
+                            <input type="hidden" name="payment_method" value="IB">
+                            <button mat-raised-button color="primary"  (click)="ok()" type="submit">Nạp tiền</button>
+                            <p *ngIf="errorMessage" class="badge badge-danger">
+                                {{errorMessage}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <br>
+                            <b>Phí thanh toán: 1.1% + 1760đ. VD: bạn nạp 100.000đ, số tiền được cộng vào tài khoản của bạn sẽ là 97,140đ do cổng thanh toán thu phí dịch vụ là: 100.000*0.011 + 1760 = 2860vnd</b>
+                            <br>
+                            <b>Số tiền sẽ được tự động cập nhật vào tài khoản của bạn sau khi thanh toán thành công.</b>
+                        </div>
+                    </div>
+                    </form>
+                </ng-template>
+              </li>
+
+            </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- hiển thị dịch vụ -->
+<!-- <div class="row">
+  <div class="col-md-9">
+    <div class="card mb-3">
+      <div class="card-header">Dịch Vụ</div>
+      <table>
+        <tr>
+          <th>Dịch Vụ</th>
+          <th>Tình Trạng</th>
+          <th>Ngày Hết Hạn</th>
+        </tr>
+        <tr>
+          <td>DỊCH VỤ Cloud Server</td>
+          <td>
+            <mat-icon class="icon">check_circle</mat-icon> Đang hoạt động
+          </td>
+          <td>{{shopService.currentShop.expiredDate | date:'long'}}</td>
+        </tr>
+        <tr>
+          <td>DỊCH VỤ SMS</td>
+          <td>
+            <mat-icon class="icon">check_circle</mat-icon> Đang hoạt động
+          </td>
+          <td>{{shopService.currentShop.expiredDate | date:'long'}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card mb-3">
+      <div class="card-header">Lịch sử</div>
+       <mat-tab-group>
+        <mat-tab label="Tiền nạp"> 
+          <p style="padding: 10px;">- Quý khách đã nạp <b>1.000.000đ</b> vào lúc <u>09:00. 01/03/2019</u></p>
+        </mat-tab>
+        <mat-tab label="Thanh toán"> 
+          <p style="padding: 10px;">- Phí tháng : <b>-1.000.000đ</b> 
+            <br>- Phí giao hàng Lalamove Đơn bánh JJ2802-IRI: <b>-25.000đ</b> vào lúc <u>09:00. 01/03/2019</u></p>
+        </mat-tab>
+      </mat-tab-group> 
+    </div>
+  </div>
+</div> -->
+<!-- hiển thị TKNH  -->
+
+<!-- <div class="col-md-9">
+  <div class="card mb-3">
+    <div class="card-header">Thông tin tài khoản</div>
+    <div class="card-body">
+      <mat-card class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar><img src="../../../assets/images/bank_logo.png" alt=""
+              style="border: aliceblue; max-width: 100%;"></div>
+          <p style="font-family: -webkit-body;">Ngân Hàng: BIDV - Ngân hàng TMCP Đầu tư và Phát triển Việt Nam <br>Chủ
+            Tài Khoản: Công Ty TNHH CÔNG NGHỆ PHẦN MỀM NETS <br>Số Tài Khoản: 318.10000.219652</p>
+        </mat-card-header>
+      </mat-card>
+    </div>
+    <p style="padding: 10px;"><b>Quý khách vui lòng chuyển khoản qua ngân hàng để nạp tiền. Trong phần "Nội
+        dung chuyển khoản", Quý khách
+        gửi theo cú pháp NAPTIEN + Số điện thoại
+        <br>VÍ DỤ: số điện thoại của Quý khách là 0923456789, vui lòng nhập "NAPTIEN 0923456789" vào nội dung
+        chuyển khoản.
+        <br>Số tiền Quý khách nạp vào tài khoản sẽ được kế toán duyệt và cộng ngay vào tài khoản của quý khách sau
+        đó.
+        <br><br>Mọi thắc mắc cần hỗ trợ, Quý khách vui lòng liên hệ bộ phận hỗ trợ của chúng tôi:
+        hotro@tiembanhngon.com</b></p>
+  </div>
+</div> -->
+
+
+
+<!-- hiển thị hotline -->
+<!-- <div class="col-sm-9">
+  <div class="card mb-3">
+    <div class="card-header">Hỗ Trợ</div>
+    <div class="card-body">
+      <p class="card-text">Nguyễn Mạnh Hùng <br>Sđt: 0906848502 <br>Email: hungngm@outlook.com.vn</p>
+    </div>
+  </div>
+</div> -->

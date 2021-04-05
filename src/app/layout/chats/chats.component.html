@@ -1,0 +1,72 @@
+<nav mat-tab-nav-bar>
+    <div style="width: 400px;margin: auto; text-align: center;">
+        <a class="a-tab" mat-tab-link routerLink="/chats-facebook-messenger" routerLinkActive="router-active">FaceBook</a>
+        <a class="a-tab" mat-tab-link routerLink="/chats" routerLinkActive="router-active">Zalo</a>
+    </div>
+</nav>
+
+<div class="chat-application">
+
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,600,700&display=swap" rel="stylesheet">
+
+
+
+    <!-- <h3 *ngIf="isFacebookMessenger">
+        Facebook Messenger Preview
+    </h3> -->
+
+    <div class="content-overlay"></div>
+    <div class="chat-sidebar float-left d-none d-sm-none d-md-block d-lg-block">
+        <div class="chat-sidebar-content">
+            <!-- <div class="chat-fixed-search p-2">
+      <form>
+        <div class="position-relative has-icon-left">
+          <input class="form-control" id="timesheetinput1" name="employeename" type="text">
+          <div class="form-control-position">
+            <i class="ft-user"></i>
+          </div>
+        </div>
+      </form>
+    </div> -->
+            <!-- <div id="users-list" class="list-group position-relative users-list-padding"> -->
+            <div id="users-list" class="list-group position-relative">
+                <div *ngIf="chatRoomsIsLoading" style="padding: 35%">
+                    <mat-spinner></mat-spinner>
+                </div>
+                <div *ngIf="!chatRoomsIsLoading">
+                    <div *ngFor="let cr of chatRooms">
+                        <a class="list-group-item {{cr.name == selectedRoomName ? 'bg-blue-grey border-right-primary':'border-none'}}  bg-lighten-5  border-right-2"
+                            (click)="setActive($event, cr)">
+                            <span class="media" *ngIf="cr.customer">
+                                <span class="avatar avatar-md avatar-online mr-2">
+                                    <img src="{{cr.customer.image || '../../../../../../assets/images/avatar_placeholder.png'}}"
+                                        alt="avatar" class="media-object d-flex mr-3 bg-primary rounded-circle"
+                                        style="width: 32px; height: 32px;">
+                                </span>
+                                <div class="media-body">
+                                    <div>
+                                        <span class="list-group-item-heading">{{cr.customer.name}}
+                                            <a (click)="openOrder(cr.orderId)" class="success font-small-2"
+                                                *ngIf="cr.orderId">Xem đơn</a>
+                                        </span>
+                                        <div class="float-right" *ngIf="cr">
+                                            <span *ngIf="cr.lastMessageFrom"
+                                                class="{{cr.lastMessageFrom == 1 ? 'ft-alert-triangle text-warning' : ''}}"></span>&nbsp;
+                                            <span
+                                                *ngIf="cr.chatMessages && cr.chatMessages.length > 0">{{cr.chatMessages.length}}</span>
+                                        </div>
+                                    </div>
+                                    <p class="list-group-item-text text-muted">{{cr.lastMessage}}</p>
+                                </div>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <app-chat-window *ngIf="selectedChatRoom" [chatRoom]="selectedChatRoom"></app-chat-window>
+
+</div>

@@ -1,0 +1,125 @@
+<div class="row">
+    <div class="col-12 col-md-12" id="recent-sales" *ngIf="order" style="margin-right:20px;">
+        <div class="card shadow">
+            <div class="card-header" style=" padding-bottom: 0;">
+                <div
+                    class="card-title-wrap  
+                    {{order.status == 2 ?'order-done':''}} 
+                    {{(order.address != null && order.address.description)  || (order.advanceInfo && order.advanceInfo.address) ? 'bar-danger' : 'bar-muted'}}">
+                    <!--bar-primary = Today , bar-warning= leaving in <1, bar-danger = late leaving,  bar-muted = future dated -->
+                    <div class="card-title row" (click)="openOrderDetail(order)">
+                        <div class="col-md-8">
+                            <i *ngIf="!order.hasDriverRun"
+                                class="font-large-2 topleft {{order | orderStatusIcon : '0'}}"></i>
+                            <img *ngIf="order.hasDriverRun" class="topleft" src="{{order | orderStatusIcon : '1'}}"
+                                style="width: 40px;">
+                            <span class="ml-1" style="font-size: 1.25rem; font-weight: bold; ">
+                                {{order.idNumber}}
+                            </span>
+                            <br>
+                            <a *ngIf="order.customer" class="badge badge-info  mr-2"
+                                style="margin-bottom:10px; margin-top: 10px;">
+                                <span class="mr-2">{{order.customer.name}}</span>
+                                <span>{{order.customer.phoneNumber}}</span>
+                            </a>
+                        </div>
+
+                        <div class="col-md-4" style="text-align: right;">
+                            <!-- <button mat-button [matMenuTriggerFor]="menu" class="btn btn-outline-info btn-raised">
+                                    <i class="fa fa-cog"></i></button>
+                                <div style="color: none; background-color: none;">
+                                    <mat-menu #menu="matMenu">
+                                        <button mat-menu-item (click)="editOrder(order)"><i
+                                                class="fa fa-edit"></i>Sửa</button>
+                                        <button (click)="linkBarcode()" mat-menu-item><i class="fa fa-barcode"></i>Gắn
+                                            Mã Vạch</button>
+                                        <button mat-menu-item (click)="cancelOrder()">Hủy Đơn</button>
+                                        <button mat-menu-item (click)="printReceipt()"><i class="fa fa-print"></i>In
+                                            Phiếu Biên</button>
+                                    </mat-menu>
+                                    <mat-menu #subMenu="matMenu" xPosition="before">
+                                        <a mat-menu-item *ngFor="let baker of bakers"
+                                            (click)="selectedBaker(baker);orderService.updateCakeStatus(order,1);">{{baker.name}}</a>
+                                        <a mat-menu-item
+                                            (click)=" selectedBaker(baker);orderService.updateCakeStatus(order,1);">{{memberService.currentMember.name}}</a>
+                                        <a mat-menu-item [routerLink]="['/settings']" [queryParams]="{tab: 1}">Thêm mới thợ
+                                            làm bánh</a>
+                                    </mat-menu>
+                                </div> -->
+                            <order-button [order]="order"></order-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-content" >
+                <div style="margin:0 10px">
+                    <div *ngIf="order.advanceInfo">
+                        <div *ngIf="order.advanceInfo.size">{{order.advanceInfo.size}}</div>
+                        <div *ngIf="order.advanceInfo.size">{{order.advanceInfo.filling}}</div>
+                        <div *ngIf="order.advanceInfo.note">{{order.advanceInfo.note}}</div>
+                    </div>
+                    <span *ngIf="order.comments && !order.comments.startsWith('{')">{{order.comments}}</span>
+                    <h5 class="card-subtitle btn-outline-primary mr-1 btn-round" (click)="openCreateDriverRunDialog()">
+                        <a target="_blank">
+                            <b>Giờ Giao:</b>
+                            {{order.deliveryPickupTime | date: 'h:mm a, d MMMM'}}
+                            <br>
+                            <mat-hint *ngIf="order.advanceInfo" style="font-size: 14px;white-space: normal">
+                                {{order.advanceInfo.address}}</mat-hint>
+                            <mat-hint *ngIf="!order.advanceInfo && order.address && order.address.description"
+                                style="font-size: 14px;white-space: normal"> {{order.address.description}}</mat-hint>
+                            <mat-hint
+                                *ngIf="order.advanceInfo && !order.advanceInfo.address && order.address && order.address.description"
+                                style="font-size: 14px;white-space: normal"> {{order.address.description}}</mat-hint>
+                        </a>
+                    </h5>
+                    <h5 *ngIf="order.status == 3" style="white-space: pre-wrap; " class="badge badge-danger">
+                        {{order.skippedComment}}</h5>
+                    <!-- <div class="currentformat mt-1">
+                        <div style="display:flex">
+                            <div class="font-small-4">
+                                Tổng: {{order.netAmount + order.fee | currencyformat}}
+                            </div> <span style="margin-left: 5px; margin-right: 5px; color: #ddd;">|</span>
+                            <div class="font-small-4">Cọc: {{order.deposit | currencyformat}}</div> <span
+                                style="margin-left: 5px; margin-right: 5px; color: #ddd;">|</span>
+                            <div class="badge badge-warning mr-2 font-small-4">Còn : {{order.netAmount + order.fee - order.deposit|
+                                    currencyformat}}</div>
+                        </div>
+                        <div *ngIf="order.fee" class="font-small-2 warning">
+                            {{order.netAmount | currencyformat}} + phí {{order.fee | currencyformat}}
+                        </div>
+                    </div> -->
+                    <div style="margin: 0 5px;" class="mt-1">
+                            <label class="font-small-4" style="width: 100%; margin-right: 15px;">Tổng cộng:
+                                <span *ngIf="order.fee" class="font-small-2 warning" style="display: inline-block;">
+                                    ({{order.netAmount | currencyformat}} + phí {{order.fee | currencyformat}})
+                                </span>
+                                <span
+                                    style="float: right;">{{order.netAmount + order.fee | currencyformat}}</span></label>
+                            <label class="font-small-4" style="width: 100%; margin-right: 15px;">Đặt cọc:<span
+                                    style="float: right;">{{order.deposit | currencyformat}}</span></label>
+                            <label class="font-small-4" style="width: 100%; margin-right: 15px;">Còn lại:
+                                <span class="badge badge-warning" style="float: right; font-weight: bold;">{{order.netAmount + order.fee - order.deposit
+                                    | currencyformat}}</span></label>
+                    </div>
+                    <!-- <div>
+                        <div><i class="ft-user"></i>  Tạo bởi {{shopService.getMemberNameById(order.memberId)}}, lúc {{order.createdDate | date: 'h:mm a, d MMMM'}}</div>
+                    </div>
+                    <div class="card-content mt-1">
+                        <i class="ft-clipboard"></i>
+                        <span style="font-weight: 600;">{{order | orderStatus: 'statusText'}} : {{order | orderStatus:
+                            'statusDateTime'}}</span>
+                        <div class="box-shadow-2 mt-1">
+                            <ngb-progressbar type="success" [value]="order| orderStatus:'statusValue'" [striped]="true"
+                                class="progress-bar-md"></ngb-progressbar>
+                        </div>
+                    </div> -->
+                </div>
+                
+                <app-progress-tracker [steps]="steps" class="mt-1"></app-progress-tracker>
+
+            </div>
+        </div>
+    </div>
+</div>

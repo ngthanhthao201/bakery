@@ -1,0 +1,143 @@
+<div *ngIf="order && currentShop.address" class="row col-md-12">
+    <div class="col-md-4">
+        <div style="overflow-y: auto; height: 80vh;">
+            <div style="background-color:white; padding: 20px">
+                <div style="font-weight: 500;color: rgba(0, 0, 0, 0.6);">
+                    <span>
+                        <span class="text-danger" style="font-size: 36px;font-weight: 600;">1</span> Tiệm bánh
+                    </span>
+                    <span style="float: right;color: black; font-size:small">
+                        <span>Tên: {{currentShop.name}}</span> <br>
+                        <span>Sđt: {{currentShop.phoneNumber}}</span>
+                    </span>
+                </div>
+                <br/>
+                <div>
+                    <app-order-details-info [order]="order"></app-order-details-info>
+                </div>
+
+            </div>
+
+            <div style="background-color:white; padding: 20px; margin-top: 10px">
+                <fieldset class="form-group" style="margin-top: 10px;">
+                    <label style="font-weight: 500;color: rgba(0, 0, 0, 0.6);"><span class="text-danger"
+                            style="font-size: 36px;font-weight: 600;">2</span> Địa Chỉ Giao Bánh</label>
+                    <input placeholder="Nhập địa chỉ..." class="form-control" ngx-google-places-autocomplete
+                        [options]="{types: [],componentRestrictions: { country: 'VN' }}"
+                        style="text-align: left;   width: 100%;" #placesRef="ngx-places"
+                        (onAddressChange)="handleAddressChange($event)" [(ngModel)]="order.advanceInfo.address"
+                        *ngIf="order.advanceInfo.address">
+                    <a class="btn btn-raised mr-1 btn-secondary" *ngIf="!order.address || !order.address.lat"
+                        style="float:right; color:white" (click)="creatAddress()">Tạo địa chỉ giao</a>
+                    <input placeholder="Nhập địa chỉ..." class="form-control" ngx-google-places-autocomplete
+                        [options]="{types: [],componentRestrictions: { country: 'VN' }}"
+                        style="text-align: left;   width: 100%;" #placesRef="ngx-places"
+                        (onAddressChange)="handleAddressChange($event)" [(ngModel)]="order.address.description"
+                        *ngIf="order.address && !order.advanceInfo.address">
+                </fieldset>
+                <div class="panel-detail">
+                    <table style="width:100%">
+                      <tr>
+                          <td class="panel-label">Khách hàng:</td>
+                          <td class="panel-value"> {{order.customer.name}}</td>
+                      </tr>
+                      <tr>
+                          <td class="panel-label">Sđt:</td>
+                          <td class="panel-value"> {{order.customer.phoneNumber}}</td>
+                      </tr>
+                  </table>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px;" *ngIf="hasQuote">
+                <mat-hint style="font-weight: 500;">
+                    Dịch vụ khác
+                </mat-hint>
+                <ul>
+                    <li *ngFor="let sr of specialRequestsList">
+                        <mat-checkbox (change)="servicesChanged()" [(ngModel)]="sr.checked">
+                            {{sr.name}}
+                            <span
+                                *ngIf="sr.name == 'Dịch vụ thu hộ (miễn phí), thu hộ: '">{{order.netAmount + order.fee -order.deposit| currencyformat}}</span>
+                        </mat-checkbox>
+                    </li>
+                </ul>
+            </div>
+
+            <fieldset class="form-group" *ngIf="hasQuote">
+                <label>Ghi chú cho tài xế</label>
+                <textarea class="form-control" [(ngModel)]="remarks">
+            </textarea>
+            </fieldset>
+        </div>
+        <div style="position: absolute; bottom: 0; width: 100%">
+            <div *ngIf="!lalamoveOrderId">
+                <div style="margin: 18px; padding: 10px;">
+                    <span>Phí lalamove </span> <span
+                        class="badge badge-danger">{{currentQuote.totalFee | currencyformat}}</span>
+                    <br>
+                    <mat-hint>
+                        Tất cả vận đơn đã được thanh toán bằng ví điện tử.
+                    </mat-hint>
+                </div>
+
+
+                <div class="row col-md-12" *ngIf="!lalamoveOrderResponse">
+                    <button (click)="placeAppointmentOrder()" class="col-md-6" mat-raised-button color="accent"
+                        [disabled]="!currentQuote.totalFee || currentQuote.totalFee < 1">
+                        Giao Theo Hẹn ({{order.deliveryPickupTime | date :'short'}})
+                    </button>
+                    <button style="right: 0; margin-right: 15px; position: absolute;" mat-raised-button color="accent"
+                        [disabled]="!currentQuote.totalFee || currentQuote.totalFee < 1">
+                        Giao Ngay
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-8">
+
+        <div *ngIf="driverDetail">
+            <div style="font-weight: 500;color: rgba(0, 0, 0, 0.6);"><span class="text-danger"
+                    style="font-size: x-large;font-weight: 600;">TX</span>Thông tin tài xế</div>
+            <fieldset class="form-group" *ngIf="driverDetail">
+
+                <div>
+                    <h3>{{driverDetail.name}}</h3>
+                    <h3>{{driverDetail.phone}}</h3>
+                </div>
+            </fieldset>
+        </div>
+
+        <agm-map [scrollwheel]="true" #AgmMap [zoom]="15" [latitude]="initPosition.lat" [longitude]="initPosition.long">
+            <agm-marker [label]="shopLabel" iconUrl="" [latitude]="currentShop.address.lat"
+                [longitude]="currentShop.address.long">
+                <agm-info-window isOpen="true">
+                    <div style="display: inline-block;">
+                        <div>
+                            <div class="address-text">{{currentShop.name}}</div>
+                        </div>
+                    </div>
+                </agm-info-window>
+            </agm-marker>
+            <agm-marker *ngIf="order.address" [label]="customerLabel" iconUrl="" [markerDraggable]="markerDraggable"
+                (dragEnd)="markerDragEnd($event)" [latitude]="order.address.lat" [longitude]="order.address.long">
+                <agm-info-window isOpen="true">
+                    <div style="display: inline-block;">
+                        <div>
+                            <div class="address-text">{{order.customer.name}} {{order.customer.phoneNumber}}</div>
+                        </div>
+                    </div>
+                </agm-info-window>
+            </agm-marker>
+
+            <agm-marker *ngIf="driverLocation" [label]="driverLabel" iconUrl="" [latitude]="driverLocation.location.lat"
+                [longitude]="driverLocation.location.lng">
+
+            </agm-marker>
+
+        </agm-map>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+.customer-avatar {
+    border-radius: 50%;
+    width: 48px;
+
+    &.Male {
+
+        color: #aad9f1 !important;
+        border-color: #aad9f1 !important;
+        border: solid 2px;
+    }
+
+    ;
+
+    &.Female {
+
+        color: #f2bfee !important;
+        border-color: #f2bfee !important;
+        border: solid 2px;
+    }
+}
+
+.a-style {
+    height: -webkit-fill-available;
+    width: -webkit-fill-available;
+    position: absolute;
+}
+
+.filter-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+  }
+  

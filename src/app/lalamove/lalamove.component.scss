@@ -1,0 +1,30 @@
+agm-map {
+    height: 96vh;
+
+    agm-marker {
+        text-shadow: -1px 0 #fff, 0 1px #fff, 1px 0 #fff, 0 -1px #fff;
+    }
+}
+
+agm-marker {
+    text-shadow: -1px 0 #fff, 0 1px #fff, 1px 0 #fff, 0 -1px #fff;
+}
+
+.panel-detail {
+    background: #eee;
+    padding: 15px;
+}
+
+.panel-label {
+    color: #6b7bf1
+}
+
+td.panel-label {
+    color: #6b7bf1;
+    float: right;
+}
+
+td.panel-value {
+    color: black;
+    width: 55%;
+}

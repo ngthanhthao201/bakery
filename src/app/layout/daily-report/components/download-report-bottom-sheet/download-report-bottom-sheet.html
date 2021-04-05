@@ -1,0 +1,9 @@
+<div  *ngFor="let b of buttons">
+
+        <button *ngIf="!b.link" mat-raised-button color="accent" (click)="b.action()">
+                {{b.name}}   
+        </button>
+        <a *ngIf="b.link" target="_blank" href="{{b.link}}">
+                {{b.name}}
+        </a>
+</div>

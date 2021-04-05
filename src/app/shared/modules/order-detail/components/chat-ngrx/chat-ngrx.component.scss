@@ -1,0 +1,118 @@
+
+	// CHat window
+	.chat-app-window{
+		 background: url("../../../../../../assets/img/pages/sativa.png");
+
+		 padding: 20px 30px;
+		 overflow-y: scroll;
+		 text-align: center;
+		 height: calc(100% - 183px);
+		 position: relative;
+	}
+
+	// Chat form
+	.chat-app-form{
+
+		position: relative;
+	    padding: 20px 10px;
+		overflow: hidden;
+		
+
+	}
+
+	
+	// Form control position
+	.form-control-position{
+		cursor: pointer;
+		&.control-position-right{
+			right: 18px;
+			top: 2px;
+			cursor: pointer;
+		}
+	}
+
+		// Heading
+		.list-group-item-heading{
+			font-size: 0.8rem;
+			font-weight: 500;
+			span{
+				font-size: 0.8rem;
+				font-weight: 400;
+			}
+		}
+	
+	// chats
+	.chats {
+	    padding: 0;
+	    .chat-body {
+		    display: block;
+		    margin: 10px 30px 0 0;
+		    overflow: hidden;
+		    .chat-content {
+		    	&:before{
+		    		position: absolute;
+				    top: 10px;
+				    right: -10px;
+				    width: 0;
+				    height: 0;
+				    content: '';
+				    border: 5px solid transparent;
+				    border-left-color: theme-color('info');
+		    	}
+		    	+.chat-content:before {
+				    border-color: transparent;
+				}
+		    	text-align: right;
+			    position: relative;
+			    display: block;
+			    float: right;
+			    padding: 8px 15px;
+			    margin: 0 20px 10px 0;
+			    clear: both;
+			    color: #fff;
+                background-color: #1e9ff2;
+			    border-radius: 4px;
+			    p{
+			    	margin: 0;
+			    }
+			}
+		}		
+		.chat-avatar{			
+    			float: right;
+			.avatar {
+			    width: 50px;
+			    margin-top: -10px
+			}
+		}
+		.time {
+			color: #343a40;
+			font-size: 14px;
+			text-align: center;
+			margin: 40px 0;
+			font-weight: 500;
+		}
+		.chat-left {
+			.chat-avatar{
+				float: left;
+			}
+			.chat-body {
+				margin-right: 0;
+    			margin-left: 30px;
+			}
+			.chat-content{
+				+.chat-content:before {
+				    border-color: transparent;
+				}
+				&:before{					
+					right: auto;
+				    left: -10px;
+				    border-left-color: transparent;
+				}
+				text-align: left;
+				float: left;
+				margin: 0 0 10px 20px;
+    			color: black;
+    			background-color: whitesmoke;
+			}
+		}		
+	}

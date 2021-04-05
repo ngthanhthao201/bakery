@@ -1,0 +1,44 @@
+<div >
+    <mat-dialog-content >
+        <ngx-datatable
+        #table
+        class='material no-shadow'
+
+        [columnMode]="'force'"
+        [headerHeight]="50"
+        [footerHeight]="50"
+        [rowHeight]="'auto'"
+        [limit]="10"
+        [rows]='rows'>
+
+        <ngx-datatable-column name="Description">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                   {{'Description'| translate}}
+                  </ng-template>
+                <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
+                      <div *ngIf="row.description">
+                              {{row.description}}
+                        </div>
+                        <div *ngIf="row.materialBuyingHistory">
+                              <p>{{(row.materialBuyingHistory.quantity || '') + ' ' + (row.materialBuyingHistory.material.unit ||'') + ' ' + (row.materialBuyingHistory.material.name || '') }}</p>
+                              <p style="color:#aaa">{{'UnitPrice'| translate}}: {{row.materialBuyingHistory.unitPrice | currencyformat}}</p>
+                        </div>
+                </ng-template>
+            </ngx-datatable-column>
+        <ngx-datatable-column name="Amount">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                   {{'Amount'| translate}}
+                  </ng-template>
+                <ng-template  let-value="value" ngx-datatable-cell-template>
+                    <span> {{value | currencyformat}}</span>
+                </ng-template>
+            </ngx-datatable-column>
+      </ngx-datatable>
+    </mat-dialog-content>
+
+
+
+    <mat-dialog-actions style="justify-content: flex-end;float: right;">
+        <button mat-button mat-dialog-close>Đóng</button>
+    </mat-dialog-actions>
+</div>

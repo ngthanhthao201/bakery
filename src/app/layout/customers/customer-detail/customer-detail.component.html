@@ -1,0 +1,134 @@
+<div *ngIf="currentCustomer">
+    <div mat-dialog-title color="warn"></div>
+    <mat-dialog-content>
+        <!-- customerInfo -->
+        <div class="row" style="padding: 30px;">
+            <div style="position: relative; text-align: center;">
+                <img src="{{currentCustomer.image || '../../../../../../assets/images/avatar_placeholder.png'}}"
+                    alt="avatar" class="media-object d-flex mr-3 bg-primary rounded-circle"
+                    style="width: 128px; height: 128px;">
+                <!-- <div tabindex="0" class="userPhotoChangePanel">
+                    <input style="display:none" type="file" ngModel (change)="getFiles($event)" accept="image/*"
+                        id="icon-input">
+                    <label for="icon-input">
+                        <div class="editPhoto-Label">Đổi ảnh</div>
+                        <div class="editPhoto">
+                            <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+                        </div>
+                    </label>
+                </div> -->
+            </div>
+            <div style="margin-left: 15px">
+                <div *ngIf="!editMode" style="padding: 7px; font-size:20px; font-weight:600">
+                    {{currentCustomer.name}}</div>
+                <div *ngIf="editMode" style="padding: 7px; font-size:20px; font-weight:600">
+                    <fieldset style="max-width: 500px; width: 276px;">
+                        <label>Tên: &nbsp;&nbsp;</label>
+                        <input [(ngModel)]="currentCustomer.name" class="form-control">
+                    </fieldset>
+                </div>
+                <div class="row" style="padding: 10px;">
+                    <div style="padding: 7px">
+                        <fieldset class="form-group">
+                            <label>Số điện thoại: &nbsp;&nbsp;</label>
+                            <input [disabled]="!editMode" [(ngModel)]="currentCustomer.phoneNumber"
+                                class="form-control">
+                        </fieldset>
+                    </div>
+                    <div style="padding: 7px">
+                        <fieldset style="min-width: 275px;">
+                            <label>Email: &nbsp;&nbsp;</label>
+                            <input [disabled]="!editMode" [(ngModel)]="currentCustomer.email" class="form-control">
+                        </fieldset>
+                    </div>
+                    <div style="padding: 7px">
+                        <fieldset style="min-width: 275px;">
+                            <label>Sinh Nhật: &nbsp;&nbsp;</label>
+                            <input readonly [(ngModel)]="currentCustomer.dob" class="form-control">
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <mat-icon *ngIf="!editMode" color="primary" (click)="enterEditMode()">edit</mat-icon>
+                <mat-icon *ngIf="editMode" color="primary" (click)="saveCustomer()">save</mat-icon>
+            </div>
+        </div>
+
+        <div class="row col-md-12">
+            <!-- IncomeHeaders -->
+            <div class="col-md-6 card">
+
+                <div class="card-header">
+                    <div class="card-title-wrap bar-info">
+                        <h4 class="card-title">Danh sách bánh mua</h4>
+                    </div>
+                    <p *ngIf="incomeHeaders && incomeHeaders.length > 0">Tổng: {{incomeHeaders.length}}</p>
+                    <p *ngIf="incomeHeaders.length < 1">Tổng: 0</p>
+                </div>
+                <div class="card-body" *ngIf="incomeHeaders && incomeHeaders.length > 0">
+                    <div class="card-block">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tên Bánh</th>
+                                    <th>Giá</th>
+                                    <th>Thời gian</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let ih of incomeHeaders; let index = index;">
+                                    <th scope="row">{{index + 1}}</th>
+                                    <td>{{ih.incomeTransactions | descriptions: 'quantitydescription'}}</td>
+                                    <td>{{ih.amount | currencyformat}}</td>
+                                    <td>{{ih.dateCreated| date}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- orders -->
+            <div class="col-md-6 card">
+
+                <div class="card-header">
+                    <div class="card-title-wrap bar-info">
+                        <h4 class="card-title">Danh sách đơn bánh đặt</h4>
+                    </div>
+                    <p *ngIf="orders && orders.length > 0">Tổng: {{orders.length}}</p>
+                    <p *ngIf="orders.length < 1">Tổng: 0</p>
+                </div>
+                <div class="card-body" *ngIf="orders && orders.length > 0">
+                    <div class="card-block">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Mã đơn</th>
+                                    <th>Tổng hóa đơn</th>
+                                    <th>Thời Gian</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let o of orders; let index = index;">
+                                    <th scope="row">{{index + 1}}</th>
+                                    <td>{{o.idNumber}}</td>
+                                    <td>{{o.amount | currencyformat}}</td>
+                                    <td>{{o.createdDate | date:'short'}}</td>
+                                    <td><a href="javascript:void()" (click)="openOrderDetail(o.id)">Xem chi tiết</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </mat-dialog-content>
+</div>

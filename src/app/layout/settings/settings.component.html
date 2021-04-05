@@ -1,0 +1,527 @@
+<div [@routerTransition]>
+        <app-page-header heading="{{'Settings' | translate}}"></app-page-header>
+        <mat-tab-group style="margin-top: 40px;" (selectedTabChange)="tabChanged($event)" #tabGroup
+            [selectedIndex]="selectedIndex">
+            <mat-tab active label="Chung" id="1">
+                <div style="padding: 30px"> 
+                        <div class="row" style="padding: 30px;">
+                                <div>
+                                    <div style="position: relative; cursor: pointer; height: 128px; text-align: center; width: 128px;">
+                                        <img class="shop-icon" src="{{currentShop.icon}}">
+                
+                                        <div tabindex="0" class="userPhotoChangePanel">
+                                            <input style="display:none" type="file" ngModel (change)="getFiles($event)" accept="image/*"
+                                                id="icon-input">
+                                            <label for="icon-input">
+                                                <div class="editPhoto-Label">Đổi ảnh</div>
+                                                <div class="editPhoto">
+                                                    <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+                                                </div>
+                                            </label>
+                                            <div tabindex="0" class="removePhoto">
+                                                <!-- <md-tooltip>
+                                                            Remove Photo
+                                                        </md-tooltip> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                
+                                </div>
+                                <div style="margin-left: 15px">
+                                    <div style="padding: 7px; font-size:20px; font-weight:600">
+                                        <label></label> {{currentShop.name}}</div>
+                                    <div style="padding: 7px">
+                                        <fieldset class="form-group">
+                                            <label>Phone: &nbsp;&nbsp;</label>
+                                            <input [disabled]="!editMode" [(ngModel)]="currentShop.phoneNumber" class="form-control">
+                                        </fieldset>
+                                    </div>
+                                    <div style="padding: 7px">
+                                        <fieldset style="min-width: 275px;">
+                                            <label>Email: &nbsp;&nbsp;</label>
+                                            <input [disabled]="!editMode" [(ngModel)]="currentShop.email" class="form-control">
+                                        </fieldset>
+                                    </div>
+                                </div>
+                
+                                <div>
+                                    <mat-icon *ngIf="!editMode" color="primary" (click)="enterEditMode()">edit</mat-icon>
+                                    <mat-icon *ngIf="editMode" color="primary" (click)="saveGeneralSettings()">save</mat-icon>
+                                </div>
+                            </div>
+                            <div class="row" >
+                                <div class="col-sm-3">
+                                    <div class="card shadow">
+                                        <div class="card-header" style="padding:1.5rem 0 0 1.5rem;">
+                                            <a class="btn btn-raised btn-info" href="javascript:void(0)" style="margin-bottom: 0"
+                                                (click)="settingOpenCloseTime()">
+                                                Thời gian
+                                            </a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="card-block">
+                                                <div class="card-text">
+                                                    Cài đặt thời gian mở cửa trong ngày, khách hàng vẫn có thể đặt hàng và
+                                                    lấy vào ngày sau đó
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="card shadow">
+                                        <div class="card-header" style="padding:1.5rem 0 0 1.5rem;">
+                                            <a class="btn btn-raised btn-info" href="javascript:void(0)" style="margin-bottom: 0"
+                                                (click)="settingCakeSizeType()">
+                                                Cỡ bánh
+                                            </a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="card-block">
+                                                <div class="card-text">
+                                                    Cài đặt sẵn kích cỡ bánh, dễ dàng tạo đơn bánh hơn
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="card shadow">
+                                        <div class="card-header" style="padding:1.5rem 0 0 1.5rem;">
+                                            <a class="btn btn-raised btn-info" href="javascript:void(0)" style="margin-bottom: 0"
+                                                (click)="settingDeliveryOptions()">
+                                                Phí
+                                            </a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="card-block">
+                                                <div class="card-text">
+                                                    Cài đặt phí
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 
+                                <div class="col-sm-4">
+                                    <div class="card  mb-3">
+                                        <div class="card-header">Cài đặt in hóa đơn</div>
+                                        <div class="card-body">
+                                            <button mat-raised-button color="accent" (click)="settingBillHeader()" >Đầu hóa đơn</button>
+                                                <button mat-raised-button color="accent" (click)="settingBillFooter()" class="card-title">Đuôi hóa đơn</button>
+                                            <p class="card-text">Cài đặt chữ trên hóa đơn sđt, zalo, facebook </p>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <div class="col-sm-4">
+                                    <div class="card  mb-3">
+                                        <div class="card-header">Cài đặt thời gian màn hình chờ</div>
+                                        <div class="card-body row">
+                                            <p class="card-text">Thời gian (giây):
+                                                <input [(ngModel)]="idleTime" stype="text" style="margin-left: 10px"
+                                                    placeholder="... giây">
+                                            </p>
+                                            <button class="setTime-button" mat-raised-button color="accent"
+                                                (click)="setTimeForidle()">Đặt</button>
+                                        </div>
+                                    </div>
+                                </div> -->
+                
+                                <div class="col-sm-3">
+                                    <div class="card shadow">
+                                        <div class="card-header" style="padding:1.5rem 0 0 1.5rem;"s>
+                                            <a class="btn btn-raised btn-info" href="javascript:void(0)" style="margin-bottom: 0"
+                                                (click)="openCheckInSetting()">
+                                                Check In
+                                            </a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="card-block">
+                                                <div class="card-text">
+                                                    Cài đặt Check In
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                            </div>
+                </div>
+    
+            </mat-tab>
+    
+            <mat-tab active label="{{ 'Members' | translate}}" id="2">
+                <div class="table-responsive" style="margin-top: 50px">
+                    <!-- <button style="margin-bottom: 20px;" matTooltip="{{ 'NewMember' | translate }}" (click)="newMember()"
+                        mat-mini-fab color="primary">
+                        <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+                    </button> -->
+                    <div class="" (click)="newMember()" style="cursor: pointer;">
+                        <span class="ft-plus btn btn-info mr-1 btn-fab" style="border-radius: 50%; font-weight: bold;"></span>
+                        <span style="vertical-align: super; ">Thêm thành viên mới</span>
+                    </div>
+          
+                    <ngx-datatable #table class='table material' [columnMode]="'force'" [headerHeight]="50"
+                        [footerHeight]="50" [rowHeight]="'auto'" [rows]='shopService.members'>
+                        <ngx-datatable-column name="Name">
+                            <ng-template let-column="column" ngx-datatable-header-template>
+                                Thành Viên
+                            </ng-template>
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <div class="row" style="display: -webkit-inline-box;">
+    
+                                    <!-- <img class="member-img {{row.member.gender === 1 ? 'Female' : 'Male'}}" src="{{row.member.image || 'https://mybakerystorage.blob.core.windows.net/static/avatar-placeholder.png'}}" /> -->
+                                    <div
+                                        style="position: relative; cursor: pointer; height: 128px; text-align: center; width: 128px;">
+                                        <img class="member-img"
+                                            src="{{row.image || '../../../../../assets/images/avatar_placeholder.png'}}">
+    
+                                        <div tabindex="0" class="userPhotoChangePanel">
+                                            <input style="display:none" type="file" (change)="getFilesForMember($event)"
+                                                accept="image/*" id="icon-input">
+                                            <label for="icon-input" (click)="selectedMember4ChangeImage = row">
+                                                <div class="editPhoto-Label">Đổi ảnh</div>
+                                                <div class="editPhoto">
+                                                    <mat-icon aria-label="Example icon-button with a heart icon">edit
+                                                    </mat-icon>
+                                                </div>
+                                            </label>
+                                            <div tabindex="0" class="removePhoto">
+                                                <!-- <md-tooltip>
+                                                            Remove Photo
+                                                        </md-tooltip> -->
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                    <div style="padding: 10px;">
+                                        <div>{{row.name}} | {{row.username}}</div>
+                                        <!-- <div style="color:#aaa">{{row.role.name}}</div> -->
+                                        <div style="display: grid;" *ngIf="memberService.currentMember.id == row.id  || row.roleIds != 1 ">
+                                            <a href="javascript:void()" (click)="editMember(row)"
+                                                aria-label="Example icon-button with a heart icon">Sửa</a>
+                                            <a href="javascript:void()" (click)="changePassword(row)">Đổi mật khẩu</a>
+                                            <a *ngIf="isAdmin" href="javascript:void()"
+                                                (click)="deleteMemberByMemberId(row)" class="text-danger">Xoá tài khoản</a>
+                                            <!-- <mat-icon color="warn" (click)="deleteMember(row)" aria-label="Example icon-button with a heart icon">remove</mat-icon> -->
+                                        </div>
+                                    </div>
+
+                                    
+        
+                                </div>
+                                <div class="col-md-12 row">
+                                    <mat-chip-list aria-label="Fish selection">
+                                        <mat-chip color="accent" selected *ngFor="let roleId of row.roleIds">
+                                            {{mapRoleIds[roleId]}}</mat-chip>
+                                    </mat-chip-list>
+    
+    
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column cellClass="member-setting-cell" name="">
+                            <ng-template let-column="column" ngx-datatable-header-template>
+                                Quyền
+                            </ng-template>
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+           
+               
+                                    <table class="table table-bordered">
+                                        <tbody >
+                                            <tr *ngFor="let p of definedMemberClaims">
+                                                <td> {{p.name | translate}}</td>
+                                                <td> <mat-slide-toggle (change)="assignMemberClaim($event.checked, p,row.id)"
+                                                    [checked]="hasPermission(row, p)">{{hasPermission(row,
+                                                    p) ? 'On': 'Off'}}</mat-slide-toggle></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+              
+
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column cellClass="member-setting-cell" name="">
+                            <ng-template let-column="column" ngx-datatable-header-template>
+                               Nhận Thông Báo
+                            </ng-template>
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+
+                                    <table class="table table-bordered">
+                                        <tbody >
+                                            <tr *ngFor="let p of definedMemberNotificationClaims">
+                                                <td> {{p.name | translate}}</td>
+                                                <td> <mat-slide-toggle (change)="assignMemberClaim($event.checked, p,row.id)"
+                                                    [checked]="hasPermission(row, p)">{{hasPermission(row,
+                                                    p) ? 'On': 'Off'}}</mat-slide-toggle></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+     
+
+                            </ng-template>
+                        </ngx-datatable-column>
+    
+                        <ngx-datatable-column cellClass="member-setting-cell" name="">
+                            <ng-template let-column="column" ngx-datatable-header-template>
+                                Quản lý ca
+                            </ng-template>
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <div class="row" *ngFor="let s of shifts">
+                                    <mat-checkbox [checked]="hasMemberShift(row, s.id)"
+                                        (change)="assignMemberShift($event.checked, s.id,row.id)">{{s.name}}</mat-checkbox>
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                    </ngx-datatable>
+                </div>
+            </mat-tab>
+
+            <mat-tab active label="Tài xế" id="2">
+                <div class="table-responsive" style="margin-top: 50px">
+                    <div class="" (click)="newDriver()" style="cursor: pointer;">
+                        <span class="ft-plus btn btn-info mr-1 btn-fab" style="border-radius: 50%; font-weight: bold;"></span>
+                        <span style="vertical-align: super; ">Thêm tài xế giao hàng mới</span>
+                    </div>
+                    <ngx-datatable #table class='table material' [columnMode]="'force'" [headerHeight]="50"
+                        [footerHeight]="50" [rowHeight]="'auto'" [rows]='shopService.drivers'>
+                        <ngx-datatable-column name="Name">
+                            <ng-template let-column="column" ngx-datatable-header-template>
+                                Tài xế
+                            </ng-template>
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <div class="row" style="display: -webkit-inline-box;">
+                                    <div
+                                        style="position: relative; height: 128px; text-align: center; width: 128px;">
+                                        <img class="member-img"
+                                            src="{{row.image || '../../../../../assets/images/avatar_placeholder.png'}}">
+    
+                                        <!-- <div tabindex="0" class="userPhotoChangePanel">
+                                            <input style="display:none" type="file" (change)="getFilesForMember($event)"
+                                                accept="image/*" id="icon-input">
+                                            <label for="icon-input" (click)="selectedMember4ChangeImage = row">
+                                                <div class="editPhoto-Label">Đổi ảnh</div>
+                                                <div class="editPhoto">
+                                                    <mat-icon aria-label="Example icon-button with a heart icon">edit
+                                                    </mat-icon>
+                                                </div>
+                                            </label>
+                                            <div tabindex="0" class="removePhoto">
+                                        
+                                            </div>
+                                        </div> -->
+                                    </div>
+    
+                                    <div style="padding: 10px;">
+                                        <div>{{row.name}} | {{row.phoneNumber}}</div>
+                                        <!-- <div style="display: grid;">
+                                            <a href="javascript:void()" (click)="editMember(row)"
+                                                aria-label="Example icon-button with a heart icon">Sửa</a>
+                                            <a href="javascript:void()" (click)="changePassword(row)">Đổi mật khẩu</a>
+                                            <a *ngIf="isAdmin" href="javascript:void()"
+                                                (click)="deleteMemberByMemberId(row)" class="text-danger">Xoá tài khoản</a>
+                                        </div> -->
+                                    </div>
+
+                                    
+        
+                                </div>
+                                <div class="col-md-12 row">
+                                    <mat-chip-list aria-label="Fish selection">
+                                        <mat-chip color="accent" selected *ngFor="let roleId of row.roleIds">
+                                            {{mapRoleIds[roleId]}}</mat-chip>
+                                    </mat-chip-list>
+    
+    
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                    </ngx-datatable>
+                </div>
+            </mat-tab>
+
+            <mat-tab *ngIf="false" label="Zalo">
+                <div>
+                    <div class="row col-md-12">
+                        <div class="col-md-3">
+                            <mat-card class="example-card">
+                                <mat-card-header>
+                                    <div mat-card-avatar class="zalopageslogo-image"></div>
+                                    <mat-card-title>Các trang zalo bạn đang quản lý</mat-card-title>
+                                    <mat-card-subtitle>Vui lòng đăng nhập zalo để lấy danh sách</mat-card-subtitle>
+                                </mat-card-header>
+                                <mat-card-content>
+                                    <button (click)="loginZl()" *ngIf="zaloPages.length < 1"
+                                        class="loginBtn loginBtn--zalo">
+                                        Login with Zalo
+                                    </button>
+                                    <div style="padding:10px;" *ngFor="let zlPage of zaloPages">
+                                        <img src="{{zlPage.image}}" /> {{zlPage.name}}
+    
+                                        <mat-icon (click)="getLongLiveToken(zlPage)" style="cursor: pointer;"
+                                            matTooltip="Thêm" color="primary">add</mat-icon>
+                                    </div>
+                                </mat-card-content>
+    
+                            </mat-card>
+                        </div>
+                        <div class="col-md-9">
+    
+    
+                            <mat-card class="example-card">
+                                <mat-card-header>
+                                    <div mat-card-avatar class="zalopages-image"></div>
+                                    <mat-card-title>Các trang đang hoạt động</mat-card-title>
+                                    <mat-card-subtitle>tự động post bài (lấy hình ảnh từ tủ bánh - không post giá)
+                                    </mat-card-subtitle>
+                                </mat-card-header>
+                                <mat-card-content *ngFor="let zlPageShop of zaloPageShops">
+                                    <div class="zalo-page-container" style="padding: 10px">
+                                        <img style="width: 64px; height: 64px; border-radius:32px ; float: left; margin-right: 15px;"
+                                            src="{{zlPageShop.image}}" />
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <div>
+                                                    {{zlPageShop.name}}
+                                                    <mat-icon (click)="removeZaloPage(zlPageShop)" style="cursor: pointer;"
+                                                        matTooltip="Xóa" color="warn">remove</mat-icon>
+                                                </div>
+                                                <div style="color:#3f67ff">
+                                                    Ngày hết hạn khoảng {{zlPageShop.expiredTime | date}}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6" style="display: flex;">
+                                                <fieldset class="form-group">
+                                                    <label>Thời gian post</label>
+                                                    <mat-select [(ngModel)]="zlPageShop.postTime3"
+                                                        (selectionChange)="zaloPostTimeChange(zlPageShop)"
+                                                        class="form-control" style="width: 145px; margin-left: 10px">
+                                                        <!-- <mat-option value="none">none</mat-option> -->
+                                                        <mat-option value="07:00:00">7:00 Sáng</mat-option>
+                                                        <mat-option value="08:00:00">8:00 Sáng</mat-option>
+                                                        <mat-option value="09:00:00">9:00 Sáng</mat-option>
+                                                        <mat-option value="10:00:00">10:00 Sáng</mat-option>
+                                                        <mat-option value="11:00:00">11:00 Trưa</mat-option>
+                                                        <mat-option value="12:00:00">12:00 Trưa</mat-option>
+                                                        <mat-option value="13:00:00">13:00 Chiều</mat-option>
+                                                        <mat-option value="14:00:00">14:00 Chiều</mat-option>
+                                                        <mat-option value="15:00:00">15:00 Chiều</mat-option>
+                                                        <mat-option value="16:00:00">16:00 Chiều</mat-option>
+                                                        <mat-option value="17:00:00">17:00 Chiều</mat-option>
+                                                        <mat-option value="18:00:00">18:00 Tối</mat-option>
+                                                        <mat-option value="19:00:00">19:00 Tối</mat-option>
+                                                        <mat-option value="20:00:00">20:00 Tối</mat-option>
+                                                        <mat-option value="21:00:00">21:00 Tối</mat-option>
+                                                    </mat-select>
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-sm-2" style="top: 10px">
+                                                <button (click)="openCreateZaloPost(zlPageShop)" mat-raised-button
+                                                    color="primary" style="float:right;top: 6px">Thêm post mới</button>
+                                            </div>
+                                        </div>
+    
+                                        <div class="row container" style="margin-top: 50px">
+                                            <div *ngFor="let zp of zlPageShop.zaloPosts">
+                                                <div>
+                                                    <img (click)="editZaloPost(zp, zlPageShop)" matTooltip="{{zp.message}}"
+                                                        style="width: 80px;height: 80px;"
+                                                        src="../../../../../assets/images/icon_76.png">
+                                                    <button (click)="deleteZaloPost(zp)"
+                                                        class="mat-icon material-icons text-block-delete" mat-mini-fab
+                                                        color="warn" matTooltip="Xóa">
+                                                        <mat-icon style="font-size: 12px; margin-top: -16px;">remove
+                                                        </mat-icon>
+                                                    </button>
+                                                    <button (click)="editZaloPost(zp, zlPageShop)"
+                                                        class="mat-icon material-icons text-block-update" mat-mini-fab
+                                                        color="primary" matTooltip="Sửa">
+                                                        <mat-icon style="font-size: 12px; margin-top: -16px;">edit
+                                                        </mat-icon>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+    
+                                    </div>
+                                </mat-card-content>
+                                <!-- <mat-card-footer>
+                                        <textarea *ngModel= style="width: 100%;" rows="3" placeholder="liên hệ & chữ ký"></textarea>
+                                    </mat-card-footer> -->
+                            </mat-card>
+                        </div>
+                    </div>
+    
+                </div>
+    
+            </mat-tab>
+    
+    
+            <mat-tab active label="{{ 'Website' | translate}}" id="3">
+                <div>
+                    <div style="min-height:400px;padding: 20px;">
+                        <!-- Màu Chủ Đạo
+                                    <input [style.background]="color"
+                                    [colorPicker]="color"
+                                    [cpOKButton]="true"
+                                    cpOKButtonText="Save"
+                                    (colorPickerSelect)="color=$event; colorChanged($event)"/> -->
+    
+                        <a target="_blank" href="https://tiembanhngon.com/shop/{{shopNameUrl}}">
+                            Link website
+                        </a>
+                    </div>
+    
+                    <div>
+                        Quảng cáo tiệm bánh dạng slide:
+                        <button style="margin-bottom: 20px;" matTooltip="{{ 'NewAdvSlide' | translate }}"
+                            (click)="newOrEditAdvSlide('')" mat-mini-fab color="primary">
+                            <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+                        </button>
+                        <ngx-datatable class="material" [rows]="advSlidesConfigs" [columnMode]="'force'" [headerHeight]="50"
+                            [footerHeight]="50" [rowHeight]="'auto'">
+                            <ngx-datatable-column name="Image">
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <img class="category-img"
+                                        src="{{row.value.image || 'https://mybakerystorage.blob.core.windows.net/static/placeholder-image.jpg'}}" />
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Name">
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <div style="text-transform: capitalize;">{{row.value.title}}</div>
+                                    <div style="color:#bbb;">{{row.value.description}}</div>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Actions">
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <button matTooltip="{{ 'ClickToEdit' | translate }}"
+                                        (click)="newOrEditAdvSlide(row); $event.stopPropagation();" mat-icon-button
+                                        color="primary">
+                                        <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+                                    </button>
+                                    <button matTooltip="{{ 'ClickToRemove' | translate }}"
+                                        (click)="deleteAdvSlide(row.id); $event.stopPropagation();" mat-icon-button
+                                        color="warn">
+                                        <mat-icon aria-label="Example icon-button with a heart icon">remove</mat-icon>
+                                    </button>
+                                </ng-template>
+                            </ngx-datatable-column>
+                        </ngx-datatable>
+                    </div>
+                </div>
+            </mat-tab>
+    
+    
+            <!-- members setting -->
+    
+    
+        </mat-tab-group>
+    
+    
+    
+    
+    </div>
+    

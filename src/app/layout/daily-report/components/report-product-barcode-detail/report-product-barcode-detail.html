@@ -1,0 +1,14 @@
+<div  style="border-bottom:#8BC34A solid 1px">
+     Nhập tổng cộng: <span style="color: #8BC34A">+{{productBarcodes.length}}</span> 
+      
+</div>
+<table class="table">
+        <tbody>
+                <tr *ngFor="let pb of productBarcodes">
+                        <td>{{barcodeService.getCategoryName(pb.productCategoryBarcodeId)}}</td>
+                        <td>{{pb.price | currencyformat}}</td>
+                        <td>{{pb.checkinDate| date:'short'}}</td>
+                        <td>{{pb.barcode}}</td>
+                </tr>
+        </tbody>
+</table>

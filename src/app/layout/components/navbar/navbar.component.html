@@ -1,0 +1,449 @@
+<!-- Navbar (Header) Starts -->
+<nav class="header-navbar navbar navbar-expand-lg navbar-light bg-faded" style="  background-color: #f4f5fa;  display: block;">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle d-lg-none float-left" data-toggle="collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <span class="d-lg-none navbar-right navbar-collapse-toggle">
+                <a class="open-navbar-container" (click)="isCollapsed = !isCollapsed"
+                    [attr.aria-expanded]="!isCollapsed" aria-controls="navbarSupportedContent">
+                    <i class="ft-more-vertical"></i>
+                </a>
+            </span>
+            <a href="javascript:;" class="mr-2 display-inline-block" id="navbar-fullscreen" appToggleFullscreen (click)="ToggleClass()">
+                <i class="{{toggleClass}} blue-grey darken-4"></i>
+                <p class="d-none">fullscreen</p>
+            </a>
+            <!-- <a class="ml-2 display-inline-block">
+                <i class="ft-shopping-cart blue-grey darken-4"></i>
+                <p class="d-none">cart</p>
+            </a> -->
+            <div ngbDropdown placement="bottom-left" class="ml-2 display-inline-block">
+                <a class="nav-link position-relative" id="apps" ngbDropdownToggle>
+                    <i class="ft-edit blue-grey darken-4"></i>
+                    <span class="mx-1 blue-grey darken-4 text-bold-400">Tiện Ích</span>
+                </a>
+                <div ngbDropdownMenu aria-labelledby="apps" class="apps">
+                    <div class="arrow_box">
+                        <!-- <a class="dropdown-item py-1" href="javascript:;">
+                            <span>Mở TeamViewer</span>
+                        </a> -->
+                        <a (click)="openSupportDialog()" class="dropdown-item py-1" href="javascript:;">
+                            <i class="icon-users"></i>&nbsp;
+                            <span>Hỗ Trợ Từ Xa</span>
+                        </a>
+                        <a (click)="openPrinterSelection()" class="dropdown-item py-1" href="javascript:;">
+                            <i class="fa fa-print"></i>&nbsp;
+                            <span>Máy In Hóa Đơn</span><br />
+                            <a style="font-size: smaller" *ngIf="connectedPrinter">{{connectedPrinter}}</a> <span class="badge badge-danger" *ngIf="!connectedPrinter" style="z-index: 9999;">Chưa Kết Nối</span>
+                        </a>
+                        <!-- <mat-slide-toggle class="dropdown-item py-1" (click)="$event.stopPropagation();"
+                        (change)="isChanged()" [(ngModel)]="isTurnOn">Bật/Tắt Mã QR</mat-slide-toggle> -->
+
+                        <a class="dropdown-item py-1" href="javascript:void();" (click)="openLinkCustomer()">
+                            <i class="fa fa-list-alt"></i>&nbsp; Liên kết khách hàng - thẻ vip
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div ngbDropdown placement="bottom-left" class="ml-2 display-inline-block" *ngIf="shops && shops.length > 1">
+                <a class="nav-link position-relative" id="apps" ngbDropdownToggle>
+                    <i class="ft-edit blue-grey darken-4"></i>
+                    <span class="mx-1 blue-grey darken-4 text-bold-400">Shops</span>
+                </a>
+                <div ngbDropdownMenu aria-labelledby="apps" class="apps">
+                    <div class="arrow_box">
+                        <a *ngFor="let s of shops" class="dropdown-item py-1" (click)="selectShop(s)" href="javascript:;">
+                            <span>{{s.name}}</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div ngbDropdown placement="bottom-left" class="ml-2 display-inline-block">
+                <a class="nav-link position-relative" id="apps" ngbDropdownToggle>
+                    <span class="mx-1 blue-grey darken-4 text-bold-400">Nhập</span>
+                </a>
+                <div ngbDropdownMenu aria-labelledby="apps" class="apps">
+                    <div class="arrow_box">
+                        <a class="dropdown-item py-1" ref="javascript:;" (click)="openNewExpense()">
+                            <i class="fa fa-usd" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;
+                            <span> Nhập Hóa Đơn</span>
+                        </a>
+                        <a class="dropdown-item py-1" ref="javascript:;" (click)="openNewOtherExpense()">
+                            <i class="fa fa-usd" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;
+                            <span> Nhập CHI</span>
+                        </a>
+                        <a (click)="openInputProduct()" class="dropdown-item py-1" href="javascript:;">
+                            <i class="fa fa-barcode"></i>&nbsp;
+                            <span>Nhập Sản Phẩm - Mã Vạch</span>
+                        </a>
+
+                        <a (click)="inputProductHandmade()" class="dropdown-item py-1" href="javascript:;">
+                            <i class="fa fa-birthday-cake" aria-hidden="true"></i>&nbsp;
+                            <span>Nhập Sản Phẩm - Thủ Công</span>
+                        </a>
+
+                        <a class="dropdown-item py-1" ref="javascript:;">
+                            <i class="fa fa-archive" aria-hidden="true"></i>&nbsp;
+                            <span>Mở Két Tiền</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+        <div style="padding-bottom: 0px;">
+            <!-- <span class="bg-warning text-highlight white">Thông báo tự động thay đổi đầu số điện thoại từ 23h ngày 4/1/2019
+                <a href="javascript:void()" (click)="openNoticeDialog()"> Chi tiết</a></span>  -->
+            <span *ngIf="!onlineOfflineService.isOnline" class="bg-warning text-highlight white"> Chế Độ Ngoại Tuyến
+                <a href="javascript:void()" (click)="openOfflineDialog()"> Chi tiết</a></span>
+        </div>
+
+        <div class="navbar-container">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent" [ngbCollapse]="isCollapsed">
+                <ul class="navbar-nav">
+     
+                    <button mat-button [matMenuTriggerFor]="menu1">
+                        <i class="ft-search blue-grey darken-4"></i>
+                    </button>
+                    <mat-menu #menu1="matMenu">
+                        <div aria-labelledby="search" class="search" style="width: 400px;padding-left: 10px;">
+                            <form (click)="$event.stopPropagation();" class="navbar-form" role="search">
+                                <div class="position-relative has-icon-right mb-0">
+                                    <!-- <input type="text" class="form-control" placeholder="Search" id="navbar-search">
+                                        <div class="form-control-position navbar-search-close">
+                                            <i class="ft-x"></i>
+                                        </div> -->
+                                    <input style="width: 100%;line-height: 3rem;" [formControl]="searchOrderCtrl" matInput [matAutocomplete]="auto" type="text" placeholder="Mã đặt bánh, sđt, ..." id="myInput" #ordersAutoCompleteInput inputWithNumpad [customControl]="searchOrderCtrl" (numberPressedChanged)="numberPressedChanged()">
+                                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectionChanged($event)">
+                                        <mat-option *ngFor="let o of filteredOrders | async" [value]="o" style="height:108px; line-height: 1.5em; border-bottom: solid 1px #ddd;">
+                                            <div *ngIf="o.order">
+                                                <span><i class="ft-life-buoy"
+                                                            style="color:#8e8e8e"></i>{{o.order.idNumber}}</span>
+                                                <span *ngIf="o.order.customer" style="padding-left: 5%;">
+                                                        <span><i class="fa fa-user" style="color:#8e8e8e"></i>
+                                                            {{o.order.customer.name}}</span> -
+                                                <span> {{o.order.customer.phoneNumber}}</span>
+                                                </span>
+                                                <ng-template #others>
+                                                    <span style="float: right;">({{o.order.status | orderStatusText}})</span>
+                                                </ng-template>
+                                                <span *ngIf="o.order.status == 1 && o.order.deliveryPickupTime < now; else others" style="float: right; color: red">(Quá hạn)</span>
+                                                <br>
+                                                <span *ngIf="o.order.deliveryPickupTime">Giờ giao:
+                                                        {{o.order.deliveryPickupTime | date: 'h:mm a, d MMMM yyyy'}}</span>
+                                                <br>
+                                                <span *ngIf="o.order.comments && o.order.comments!='{}'">Ghi chú:
+                                                        {{o.order.comments}}</span>
+                                                <br>
+                                                <span style="font-size:11px;border-bottom: solid 2px #2196F3;">
+                                                        Tổng: {{o.order.amount | currencyformat}}</span>
+                                                <span style="font-size:11px; border-bottom: solid 2px #FF5722; margin-left: 10px;">
+                                                        Đặt cọc: {{o.order.deposit| currencyformat}}</span>
+                                                <span style="font-size:12px; border-bottom: solid 2px #8cff06; margin-left: 10px;">
+                                                        Còn lại:
+                                                        {{o.order.amount - o.order.deposit| currencyformat}}</span>
+                                            </div>
+                                            <div *ngIf="o.customer" class="not-click" (click)="$event.stopPropagation()">
+                                                <img class="avatar" class="width-50" alt="avatar" src="{{o.customer.image || '../../../../../../assets/images/avatar_placeholder.png'}}" />
+                                                <span style="padding-left: 5%;">
+                                                        <span><i class="fa fa-user" style="color:#8e8e8e">
+                                                            </i> {{o.customer.name}}</span>-<span>
+                                                            {{o.customer.phoneNumber}}</span>
+                                                </span>
+                                                <br>
+                                                <span>Email: {{o.customer.email}}</span>
+                                                <br>
+                                                <span>Sinh nhật: {{o.customer.dob | date: 'd MMMM' }}</span>
+                                            </div>
+                                            <div *ngIf="o.materialProvider" class="not-click" (click)="$event.stopPropagation()">
+                                                <img class="avatar" class="width-50" alt="avatar" src="{{o.materialProvider.image || '../../../../../../assets/images/avatar_placeholder.png'}}" />
+                                                <span style="padding-left: 5%;">
+                                                        <span> {{o.materialProvider.name}}</span> -<span>
+                                                            {{o.materialProvider.phone}}</span>
+                                                </span>
+                                            </div>
+                                            <div *ngIf="o.voucher" class="not-click" (click)="$event.stopPropagation()">
+                                                <span><i class="icon-wallet" style="color:#8e8e8e"></i>
+                                                        {{o.voucher.text}}</span>
+                                                <br>
+                                                <span>Loại voucher:</span>
+                                                <span *ngIf="o.voucher.voucherType == 0"> Tiền<span> -
+                                                            {{o.voucher.cash | currencyformat}}</span></span>
+                                                <span *ngIf="o.voucher.voucherType == 1"> Tặng quà</span>
+                                                <span *ngIf="o.voucher.voucherType == 2"> Giảm giá theo % đơn<span>
+                                                            - {{o.voucher.orderPercent}}%</span></span>
+                                                <br>
+                                                <span *ngIf="o.voucher.startDate">Từ
+                                                        {{o.voucher.startDate | date:'d MMMM yyyy'}}</span>
+                                                <span *ngIf="o.voucher.endDate"> Đến
+                                                        {{o.voucher.endDate | date:'d MMMM yyyy'}}</span>
+                                            </div>
+                                            <div *ngIf="o.product" class="not-click" (click)="$event.stopPropagation()">
+                                                <img class="avatar" class="width-50" alt="avatar" src="{{o.product.image || '../../../../../../assets/images/avatar_placeholder.png'}}" />
+                                                <span> {{o.product.idNumber}}</span>
+                                                <span style="padding-left: 5%;">{{o.product.name}} -
+                                                        {{o.product.sellingPrice | currencyformat}}</span>
+                                                <br>
+                                                <span *ngIf="o.product.description">
+                                                        Mô tả : {{o.product.description}}</span>
+                                                <br>
+                                                <span>Còn : {{o.product.unitsInStock}}</span>
+
+                                            </div>
+
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </div>
+                            </form>
+
+                        </div>
+                    </mat-menu>
+
+                    <button mat-button [matMenuTriggerFor]="menu2" (click)="$event.stopPropagation()">
+                            <i class="ft-bell blue-grey darken-4"></i>
+                            <span class="badge badge2">0</span>
+                            <p class="d-none">Notifications</p>
+                    </button>
+                    <mat-menu class="mr-2 ml-2" #menu2="matMenu">
+                        <h4 class="m-2 mb-0 text-bold-400">Thông Báo</h4>
+                        <hr>
+                        <div style="padding-left: 10px;" *ngFor="let noti of notifications" class="m-2 row">
+                            <span *ngFor="let c of categories">{{c.title}}</span>
+                            <div class="card" (click)="openNotiDialog(noti)" style="margin-top:10px">
+                                <div class="card-header noti-header">{{noti.title}}</div>
+                                <div class="m-1 card-body row noti-body">
+                                    <img src="{{noti.image}}" alt="abc" class="col-md-4">
+                                    <span class="col-md-7">{{noti.description}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-menu>
+
+                    <button mat-button [matMenuTriggerFor]="menu3">
+                        <a>
+                            <span class="avatar avatar-online">
+                                <img *ngIf="memberService.currentMember"
+                                    src="{{memberService.currentMember.image || '../../../../../../assets/images/avatar_placeholder.png'}}"
+                                    alt="avatar" id="navbar-avatar">
+                            </span>
+                            <p class="d-none">User Settings</p>
+                        </a>
+                    </button>
+                    <mat-menu #menu3="matMenu">
+                        <span mat-menu-item>{{memberService.currentMember.name}}</span>
+                        <div class="dropdown-divider"></div>
+                        <a mat-menu-item (click)="logout()" class="dropdown-item" href="javascript:;">
+                            <i class="ft-power mr-2"></i>
+                            <span>Đăng Xuất</span>
+                        </a>
+                    </mat-menu>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="extend-content" class=" col-md-12" style="display:none;     height: 92vh;">
+        <div class="row">
+
+            <div class="ml-5 col-md-5">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title-wrap bar-primary">
+                            <h4 class="card-title">Bánh Nhỏ & Phụ Kiện Số Lượng Dưới 10
+
+                            </h4>
+                            <span><a routerLink="/stuff-barcode">Xem tất cả</a></span>
+                            <button *ngIf="activeShift" style="margin-right: 15px;" (click)="refresh()" mat-raised-button style="float:right">
+                                Làm Mới
+                            </button>
+                            <button *ngIf="activeShift" color="primary" (click)="changeToNextShift()" mat-raised-button style="float:right">
+                                Chuyển Ca
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="height: 30vh; overflow-y: auto;">
+                        <div *ngIf="dashboardHardProdIsLoading">
+                            <mat-spinner></mat-spinner>
+                        </div>
+                        <div *ngIf="!dashboardHardProdIsLoading" class="card-block">
+                            <div class="table-responsive">
+                                <table id="recent-orders" class="table table-hover table-xl mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="border-top-0">Tên</th>
+                                            <th class="border-top-0">Số Lượng
+                                            </th>
+                                            <th class="border-top-0"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let hp of dashboardHardProd.emptingHardProducts | sort : 'count'">
+                                            <!-- <td class="text-truncate"><i class="fa fa-dot-circle-o success font-medium-1 mr-1"></i> Paid</td> -->
+                                            <td class="text-truncate">{{hp.name}}</td>
+                                            <td class="text-truncate">{{hp.count}}</td>
+                                            <td><span class="ft-plus-circle text-info" matTooltip="Nhập" (click)="openAddHardBlock(hp)" style="cursor: pointer"></span>
+                                                <!-- <button mat-icon-button [matMenuTriggerFor]="menu"
+                                                    aria-label="Example icon-button with a menu">
+                                                    <mat-icon>more_vert</mat-icon>
+                                                </button>
+                                                <mat-menu #menu="matMenu">
+                                                    <button (click)="openAddHardBlock(hp)" mat-menu-item>
+                                                        <mat-icon>add</mat-icon>
+                                                        <span>Nhập</span>
+                                                    </button>
+                                                </mat-menu> -->
+                                            </td>
+                                        </tr>
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title-wrap bar-danger">
+                            <h4 class="card-title">Đơn Bánh Cần Giao Trong Ngày</h4>
+                            <span><a routerLink="/orders">Xem tất cả</a></span>
+                        </div>
+                    </div>
+                    <div class="card-body" style="height: 65vh; overflow-y: auto;">
+                        <div *ngIf="dashboardOrderIsLoading">
+                            <mat-spinner></mat-spinner>
+                        </div>
+                        <div *ngIf="!dashboardOrderIsLoading" class="card-block">
+                            <div class="table-responsive">
+                                <table id="recent-orders" class="table table-hover table-xl mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="border-top-0">#Đơn</th>
+                                            <th class="border-top-0">Địa Chỉ <br>Thời Gian
+                                            </th>
+                                            <!-- <th class="border-top-0">..</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let o of dashboardOrder.deliveringOrders" id="{{o.idNumber}}" (click)="openOrderDetail(o.id)" style="cursor: pointer">
+                                            <!-- <td class="text-truncate"><i class="fa fa-dot-circle-o success font-medium-1 mr-1"></i> Paid</td> -->
+                                            <td class="text-truncate">
+                                                <span>{{o.idNumber}}</span><br>
+                                                <span class="{{o | orderActiveStep : '3'}}">
+                                                    <img matTooltip="{{o | orderActiveStep : '2'}}"
+                                                        src="{{o | orderActiveStep : '1'}}"
+                                                        style="width: 30px; height: 30px; border-radius: 20px" />&nbsp;
+                                                    <span >{{o | orderActiveStep : '0'}}</span>
+                                                </span>
+                                            </td>
+                                            <td *ngIf="o.advanceComments" class="text-truncate">
+                                                <a target="_blank" href="https://www.google.com/maps/search/{{o.advanceComments.address}}" style="color: #007bff !important;white-space: pre-line;">{{o.advanceComments.address}}
+                                                </a>
+                                                <br> {{o.deliveryPickupTime | date :'h:mm a'}}
+                                            </td>
+                                            <!-- <td>
+                                                <button mat-icon-button [matMenuTriggerFor]="menu"
+                                                    aria-label="Example icon-button with a menu">
+                                                    <mat-icon>more_vert</mat-icon>
+                                                </button>
+                                                <mat-menu #menu="matMenu">
+                                                    <button (click)="openOrderDetail(o.id)" mat-menu-item>
+                                                        <mat-icon>details</mat-icon>
+                                                        <span>Chi Tiết</span>
+                                                    </button>
+                                                </mat-menu>
+                                            </td> -->
+                                        </tr>
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="false">
+
+            <div class=" ml-5">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title-wrap bar-warning">
+                            <h4 class="card-title">Bánh Gần Hết Hạn</h4>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="card-body" style="height: 30vh; overflow-y: auto;">
+                        <div *ngIf="dashboardProdIsLoading">
+                            <mat-spinner></mat-spinner>
+                        </div>
+                        <div *ngIf="!dashboardProdIsLoading" class="card-block">
+                            <div class="table-responsive">
+                                <table id="recent-orders" class="table table-hover table-xl mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="border-top-0">Ngày<br>Thời Gian</th>
+                                            <th class="border-top-0">Mã Vạch<br>Tên Bánh</th>
+                                            <th class="border-top-0">Giá</th>
+                                            <th class="border-top-0"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let p of dashboardProd.expiringProducts | sort : 'checkinDate'">
+                                            <td class="text-truncate"><i class="fa fa-dot-circle-o warning font-medium-1 mr-1"></i> {{p.checkinDate | date}} <br> {{p.checkinDate | timeAgo}} </td>
+                                            <td class="text-truncate">
+
+                                                <span>{{barcodeService.getCategoryName(p.productCategoryBarcodeId)}}</span>
+                                                <br>
+                                                <a href="javascript:void()">{{p.barcode}}</a>
+                                            </td>
+                                            <td class="text-truncate">{{p.price | currencyformat}}</td>
+                                            <td><span class="ft-x-circle text-danger" (click)="removeBC(p)" matTooltip="Hủy" style="cursor: pointer;"></span>
+                                                <!-- <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                                                    <mat-icon>more_vert</mat-icon>
+                                                  </button>
+                                                  <mat-menu #menu="matMenu">
+                                                    <button (click)="removeBC(p)" mat-menu-item>
+                                                      <mat-icon>cancel</mat-icon>
+                                                      <span>Hủy</span>
+                                                    </button>
+                                                  </mat-menu> -->
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+    <div style="margin-left: 50px;" *ngIf="currentShop.isTrial && trialDays <= 15 && trialDays > 3" class="col-md-4 text-danger">
+        Còn {{trialDays}} ngày để sử dụng bản dùng thử. Vui lòng nâng cấp tài khoản bakery lên chính thức để tiếp tục sử dụng.
+    </div>
+
+    <!--Work shift-->
+    <button id="workshift" (click)="toggleExtend(); " color="accent" class="extend-btn" mat-fab aria-label="Example icon-button with a heart icon">
+        <label *ngIf="activeShift" style="color:white">{{activeShift.name}}</label><br>
+        <i [ngClass]="{'ft-chevrons-down':extendCollapsed,'ft-chevrons-up':!extendCollapsed}" class=""></i>
+    </button>
+
+</nav>
+<!-- Navbar (Header) Ends -->

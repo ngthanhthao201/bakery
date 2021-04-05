@@ -1,0 +1,23 @@
+h5.card-subtitle {
+    text-align: center;
+    padding: 5px 0;
+}
+
+.currentformat {
+    font-size: 16px;
+    font-weight: 400;
+    // padding-top: 10px;
+    padding-left: 10px;
+}
+
+button > i{
+    margin-right: 5px;
+}
+
+.order-done{
+    opacity: 0.3;
+}
+
+// ::ng-deep .mat-menu-content{
+//     max-height: 40vh;
+// }

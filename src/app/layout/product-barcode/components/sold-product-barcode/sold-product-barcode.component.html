@@ -1,0 +1,69 @@
+<section class="container" style="padding-top: 30px;">
+
+    <div class="row">
+        <mat-expansion-panel class="col-md-12" *ngIf="barcodeService.productBarcodesIsSold.length > 0">
+            <mat-expansion-panel-header>
+                <mat-panel-title>Biểu đồ bánh đã bán</mat-panel-title>
+
+            </mat-expansion-panel-header>
+
+            <div class="card-header">
+                Tổng cộng {{barcodeService.productBarcodesIsSold.length}}
+            </div>
+            <div class="card-body" *ngIf="barChartData">
+                <canvas baseChart [datasets]="barChartDataIsSold" [labels]="barChartLabelsIsSold" [options]="barChartOptions"
+                    [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)"
+                    (chartClick)="chartClickedIsSold($event)">
+                </canvas>
+            </div>
+        </mat-expansion-panel>
+    </div>
+
+    <div class="row" style="  padding: 20px;align-items: center;">
+        <mat-form-field style="min-width: 300px;">
+            <input matInput (keyup)="onKeyUpSoldCakes($event.target.value)" [(ngModel)]="searchProductTextIsSold"
+                placeholder="{{'Search' | translate}}">
+            <mat-icon matSuffix>search</mat-icon>
+            <mat-hint>gõ tên không dấu, ngày/tháng. VD: 30/04</mat-hint>
+        </mat-form-field>
+    </div>
+
+    <div class="row">
+        <ngx-datatable #table2 class='material no-shadow col-md-12' [columnMode]="'force'" [headerHeight]="50"
+            [footerHeight]="50" [rowHeight]="'auto'" [limit]="100" [rows]='productBarcodesIsSoldRows'>
+
+            <ngx-datatable-column name="Loại Bánh" [sortable]="true" prop='productCategoryName'>
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <div>
+                        <div style="font-weight:bold">
+                            {{row.productCategoryName}}
+                        </div>
+                        <div style="font-weight:bold">
+                            {{row.price | currencyformat}}
+                        </div>
+                        <div>
+                            <img src="../../../../../assets/images/barcode.png"> {{row.barcode}}
+                        </div>
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Ngày nhập" [sortable]="true" prop='checkinDate'>
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span> {{row.checkinDate | date:'short'}}</span>
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Ngày bán" [sortable]="true" prop='checkoutDate'>
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span style="font-weight:bold;"> {{row.checkoutDate | date:'short'}}</span>
+                    <div>
+                        {{shopService.getMemberNameById(row.checkoutBy)}}
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+
+        </ngx-datatable>
+    </div>
+
+</section>

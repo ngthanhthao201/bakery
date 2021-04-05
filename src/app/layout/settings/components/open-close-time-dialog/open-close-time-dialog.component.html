@@ -1,0 +1,24 @@
+<div mat-dialog-title>
+    <span>{{'OpenCloseTime' | translate}}</span>
+</div>
+
+<section mat-dialog-content class="example-full-width">
+    <div class="row">
+        <fieldset class="col-md-6">
+            <label>Giờ mở cửa</label>
+            <input atp-time-picker value="currentShop.openTime" [(ngModel)]="currentShop.openTime" class="form-control" />
+        </fieldset>
+
+        <fieldset class="col-md-6">
+            <label>Giờ đóng cửa</label>
+            <input atp-time-picker value="currentShop.closeTime" [(ngModel)]="currentShop.closeTime" class="form-control" />
+        </fieldset>
+    </div>
+</section>
+
+<mat-dialog-actions>
+    <div style="justify-content: flex-end;float: right;">
+        <button mat-button mat-dialog-close>Hủy</button>
+        <button mat-raised-button color="primary" (click)="saveOpenClosetTime()">Lưu</button>
+    </div>
+</mat-dialog-actions>

@@ -1,0 +1,263 @@
+<div [@routerTransition]>
+  <app-page-header heading="{{'Financial' | translate}}"></app-page-header>
+  <div style="padding: 20px;font-size:12px">
+    <div class="row">
+      <div class="col-md-4">
+        <fieldset class="form-group">
+          <label>{{'ReportBy' | translate}}</label>
+          <mat-select [(ngModel)]="selectedDate" (ngModelChange)="selectedDateChanged($event)" style="width:25%">
+            <mat-option *ngFor="let sDate of selectDates" [value]="sDate.value">
+              {{ sDate.display }}
+            </mat-option>
+          </mat-select>
+        </fieldset>
+      </div>
+
+      <div class="col-md-4">
+        <fieldset class="form-group">
+          <label>{{'StartDate' | translate}}</label>
+          <input [matDatepicker]="pickerStart" [(ngModel)]="financial.startDate" (ngModelChange)="initFinancial()">
+          <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+          <mat-datepicker #pickerStart startView="month"></mat-datepicker>
+        </fieldset>
+      </div>
+
+      <div class="col-md-4">
+        <fieldset class="form-group">
+          <label>{{'EndDate' | translate}}</label>
+          <input [matDatepicker]="pickerEnd" [(ngModel)]="financial.endDate" (ngModelChange)="initFinancial()">
+          <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+          <mat-datepicker #pickerEnd startView="month"></mat-datepicker>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nav tabs -->
+  <mat-tab-group style="margin-top: 5px;">
+    <mat-tab *ngIf="memberService.hasFinancial" active label="{{ 'Income' | translate}}">
+
+      <div class="example-container mat-elevation-z8">
+        <button matTooltip="{{ 'NewIncome' | translate }}" (click)="openDialog()" mat-raised-button color="primary">
+          <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+          Tạo mới
+        </button>
+
+        <span class="example-spacer"></span>
+        <div style=" float:right">{{ 'TotalAmount' | translate}} &nbsp; &nbsp;
+          <span style="font-size: x-large;">
+            {{totalIncomeString}}
+          </span>
+          <div style="color:#a7a7a7">
+            {{financial.startDate | date}} đến {{financial.endDate | date}}
+          </div>
+          <div>
+            <a style="font-size: x-large" href="javascript:void()" (click)="viewIncomeDetail()">Xem Thu Theo Ngày</a>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <div *ngIf="!loadingIndicator && incomeHeadersCache.length ==0">
+            Chưa có khoản thu nào trong tháng/ngày này. <span (click)="openDialog()" style="cursor:pointer" class="b-main">Tạo
+              ngay <mat-icon aria-label="Example icon-button with a heart icon">monetization_on</mat-icon></span>
+          </div>
+          <div *ngIf="incomeHeadersCache.length > 0">
+            <mat-form-field style="min-width: 300px;">
+              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{'Search' | translate}}">
+              <mat-icon matSuffix>search</mat-icon>
+              <mat-hint>gõ tên không dấu, ngày/tháng. VD: 30/04</mat-hint>
+            </mat-form-field>
+
+            <!-- <fieldset class="form-group">
+              <label >{{'Search' | translate}}</label>
+              <input (keyup)="applyFilter($event.target.value)" placeholder="gõ tên không dấu, ngày/tháng. VD: 30/04" style="width:25%"> 
+              <mat-icon matSuffix>search</mat-icon>
+              <mat-hint>gõ tên không dấu, ngày/tháng. VD: 30/04</mat-hint>
+            </fieldset> -->
+            
+            <ngx-datatable #table class='material' [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+              [rowHeight]="60" [limit]="50" (activate)="onActivate($event);" [rows]='incomeHeadersRows'
+              [loadingIndicator]="loadingIndicator" [reorderable]="reorderable">
+              <ngx-datatable-column name="dateCreated">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                  {{'Date'| translate}}
+                </ng-template>
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <span> {{row.incomeDate | date}}</span>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Amount">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                  {{'Amount'| translate}}
+                </ng-template>
+                <ng-template let-value="value" ngx-datatable-cell-template>
+                  <span> {{value | currencyformat}}</span>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Description">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                  <span>{{'Description'| translate}}</span>
+                </ng-template>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                  <div>
+                    {{row.transactionCount}} giao dịch
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Actions">
+                <ng-template let-column="column" ngx-datatable-header-template>
+
+                </ng-template>
+                <!-- <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                  <div class="actions-button">
+                    <button matTooltip="{{ 'ClickToEdit' | translate }}" (click)="openDialog4Update(row)"
+                      mat-icon-button color="primary">
+                      <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+                    </button>
+                    <button matTooltip="{{ 'ClickToDelete' | translate }}" (click)="removeIncome(row.id)"
+                      mat-icon-button color="warn">
+                      <mat-icon aria-label="Example icon-button with a heart icon">remove</mat-icon>
+                    </button>
+                  </div>
+                </ng-template> -->
+              </ngx-datatable-column>
+            </ngx-datatable>
+          </div>
+        </div>
+
+      </div>
+    </mat-tab>
+    <mat-tab label="{{ 'Expense' | translate}}">
+
+      <div class="example-container mat-elevation-z8">
+        <button matTooltip="{{ 'NewExpense' | translate }}" (click)="openExpenseDialog()" mat-raised-button color="warn">
+          <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+          Tạo mới
+        </button>
+
+        <span class="example-spacer"></span>
+        <div style=" float:right">{{ 'TotalAmount' | translate}}&nbsp;&nbsp;
+          <span style="font-size: x-large;">
+            {{totalExpenseString}}
+          </span>
+          <div style="color:#a7a7a7">
+            {{financial.startDate | date}} đến {{financial.endDate | date}}
+          </div>
+        </div>
+        <div class="table-responsive">
+          <div *ngIf="!loadingIndicatorExpense && expenseHeadersCache.length ==0">
+            Chưa có khoản CHI nào trong tháng/ngày này. <span (click)="openExpenseDialog()" style="cursor:pointer"
+              class="r-main">Tạo ngay <mat-icon aria-label="Example icon-button with a heart icon">monetization_on</mat-icon></span>
+          </div>
+          <div *ngIf="expenseHeadersCache.length > 0">
+            <div>
+              <mat-form-field style="min-width: 300px;">
+                <input matInput (keyup)="applyFilterExpense($event.target.value)" placeholder="{{'Search' | translate}}">
+                <mat-icon matSuffix>search</mat-icon>
+                <mat-hint>gõ tên không dấu, ngày/tháng. VD: 30/04</mat-hint>
+              </mat-form-field>
+              <mat-icon style="margin-left: 50px;">filter_list</mat-icon>
+              <mat-radio-group [(ngModel)]="filterExpenseRadio" (ngModelChange)="filterExpenseRadioChanged(filterExpenseRadio)">
+                <mat-radio-button value="1">Tất cả</mat-radio-button>
+                <mat-radio-button value="2">Nhập hàng</mat-radio-button>
+                <mat-radio-button value="3">CHI</mat-radio-button>
+              </mat-radio-group>
+            </div>
+
+            <ngx-datatable #table class='material' [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+              [rowHeight]="60" [limit]="50"  [rows]='expenseHeadersRows'
+              [loadingIndicator]="loadingIndicatorExpense">
+              <ngx-datatable-column name="dateCreated">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                  {{'Date'| translate}}
+                </ng-template>
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <span> {{row.dateCreated | date}}</span>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="IdNumber">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                  {{'MaterialProvider'| translate}} / {{'IdNumber'| translate}}
+                </ng-template>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                  <span *ngIf="row.materialProvider"> {{row.materialProvider.name}}</span>
+                  <div><span style="color:#aaa"> {{value}}</span></div>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Amount">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                  {{'Amount'| translate}}
+                </ng-template>
+                <ng-template let-value="value" ngx-datatable-cell-template>
+                  <span> {{value | currencyformat}}</span>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Description">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                  <span>{{'Description'| translate}}</span>
+                </ng-template>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                  <span *ngIf="!row.materialProvider" (click)="showDetailsOfExpense(row.id)" class="description-header b-link">{{row.expenseTransactions
+                    | descriptions : 'description'}}</span>
+                  <span *ngIf="row.materialProvider" (click)="showDetailsOfExpense(row.id)" class="description-header b-link">{{row.expenseTransactions
+                    | descriptions : 'materialProvider'}}</span>
+                  <img *ngIf="row.isFullPaid == true" src="../../../../assets/images/Bill2.png" alt="" style="width: 45%;margin: -30px 0 0 0;float: right;">
+
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Actions">
+                <ng-template let-column="column" ngx-datatable-header-template>
+
+                </ng-template>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                  <div class="actions-button">
+                    <button matTooltip="{{ 'ClickToEdit' | translate }}" (click)="openExpenseDialog4Update(row)"
+                      mat-icon-button color="primary">
+                      <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+                    </button>
+                    <button matTooltip="{{ 'ClickToDelete' | translate }}" (click)="removeExpense(row.id)"
+                      mat-icon-button color="warn">
+                      <mat-icon aria-label="Example icon-button with a heart icon">remove</mat-icon>
+                    </button>
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+            </ngx-datatable>
+          </div>
+
+        </div>
+
+      </div>
+    </mat-tab>
+    <mat-tab *ngIf="memberService.hasFinancial" label="Tổng kết">
+      <div style="font-weight: bold; padding: 15px;font-family: 'Open Sans Condensed';color: #aaa;">tháng hiện tại :</div>
+      <div class="col-md-12 stats-item-container row">
+
+        <div class="md-padding col-md-3 stats-item">
+          <div style="border-bottom: 3px solid #39b2ee; text-transform: uppercase;">{{ 'Income' | translate}}</div>
+          <div class="b-main" style="text-align: center; font-family: 'Open Sans Condensed'; font-size: 2em; line-height: 2em;">{{totalIncomeString}}</div>
+        </div>
+        <div class="md-padding col-md-3 stats-item">
+          <div style="border-bottom: 3px solid #FF5722; text-transform: uppercase;">{{ 'Expense' | translate}}</div>
+          <div class="r-main" style="text-align: center; font-family: 'Open Sans Condensed'; font-size: 2em; line-height: 2em;">{{totalExpenseString}}</div>
+        </div>
+        <div class="md-padding col-md-3 stats-item">
+          <div style="border-bottom: 3px solid #8BC34A; text-transform: uppercase;">{{ 'Revenue' | translate}}</div>
+          <div class="g-main" style="text-align: center; font-family: 'Open Sans Condensed'; font-size: 2em; line-height: 2em;">{{getTotalBalance()}}</div>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-header">
+          {{'Report12Months' | translate}}
+        </div>
+        <div class="card-body">
+          <canvas baseChart height="130" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
+            [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)">
+          </canvas>
+        </div>
+      </div>
+
+    </mat-tab>
+  </mat-tab-group>
+</div>

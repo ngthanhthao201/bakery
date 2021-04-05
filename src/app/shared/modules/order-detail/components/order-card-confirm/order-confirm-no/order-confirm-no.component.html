@@ -1,0 +1,19 @@
+<div>
+    <mat-radio-group [(ngModel)]="selectedReason" (change)="selectedReasonChanged()">
+        <mat-radio-button selected *ngFor="let rs  of reasons" (click)="order.skippedComment = rs" [value]="rs"
+            style="display: -webkit-box;">{{rs}}
+        </mat-radio-button>
+    </mat-radio-group>
+
+    <div *ngIf="selectedReason == 'Khác'">
+        <textarea rows="4" id="content" class="form-control" placeholder="Vui lòng cho biết lý do"
+            [(ngModel)]="order.skippedComment"></textarea>
+    </div>
+
+    
+    <mat-dialog-actions style="justify-content: flex-end;float: right;">
+        <button mat-button mat-dialog-close>Hủy</button>
+        <button mat-button color="warn" [disabled]="!order.skippedComment" (click)="refuse()">Từ chối</button>
+    </mat-dialog-actions>
+
+</div>

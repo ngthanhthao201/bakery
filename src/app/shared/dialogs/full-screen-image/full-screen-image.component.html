@@ -1,0 +1,18 @@
+<div>
+    <button style="float:right;z-index: 9;" color="warn"  mat-fab mat-dialog-close>
+        <mat-icon color="white">close</mat-icon>
+    </button>
+    <img src="{{imageLink}}">
+    <div style="    position: absolute;top: 95px;right: 200px;" class="focus-in-expand">
+            <p  style="color: black; font-size:24px">
+                    {{product.name}}
+           </p>
+           <p>
+               {{product.sellingPrice | currencyformat}}
+           </p>
+           <p>
+               <button (click)="orderNow()" color="primary" mat-raised-button>Đặt Ngay</button>
+           </p>
+    </div>
+
+</div>

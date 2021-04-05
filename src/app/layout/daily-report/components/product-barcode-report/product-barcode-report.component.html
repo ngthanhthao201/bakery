@@ -1,0 +1,230 @@
+<div style="overflow-y: auto;min-height: 200px;">
+    <div>
+        <div style="display: flow-root;margin-top: 10px;">
+            <div>
+                <div class="form-group" style="margin-left: 10px; padding: 20px; display: flex">
+                    <label style="padding: 10px;">Chọn ngày</label><br>
+                    <input style=" width:auto " [matDatepicker]="picker" [(ngModel)]="selectedDate"
+                        [matDatepickerFilter]="myFilter" (dateChange)="dateChange($event)"
+                        class="dateCreate form-control" readonly>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </div>
+            </div>
+            <button color="primary" (click)="changeToNextShift()" mat-raised-button *ngIf="nextShift && !isInPast"
+                style="float:right">
+                Chuyển Sang {{nextShift.name}}
+            </button>
+        </div>
+        <mat-tab-group [(selectedIndex)]="selectedIndexTab" (selectedIndexChange)="selectedIndexChanged()">
+            <mat-tab *ngFor="let shift of shifts">
+                <ng-template mat-tab-label>
+                    <img *ngIf="activeShift && shift.orderIndex == activeShift.orderIndex &&!isInPast" width="48"
+                        src="../../../../assets/images/shift_active.gif">
+                    {{shift.name}}<br />
+                    <div *ngIf="memberService.hasFinancial"
+                        style="display: contents;font-size: 20px;font-weight: bold;">{{shift.totalAmountBigCake |
+                        currencyformat}}</div>
+                    <button mat-mini-fab (click)="showReportButtonsByShift(shift)" style="margin-left: 10px;">
+                        <mat-icon aria-label="Example icon-button with a heart icon">arrow_downward</mat-icon>
+                    </button>
+                </ng-template>
+
+                <div style="padding: 20px;  border: dotted 1px;  background: #f6f6ce;">
+                    <mat-hint>Danh sách bánh hủy</mat-hint>
+                    <ul>
+                        <li *ngFor="let dc of destroyedCakes">
+                            <span>
+                                <span
+                                    style="color: red">{{barcodeService.getCategoryName(dc.productCategoryBarcodeId)}}</span>
+                                {{dc.price | currencyformat}} ({{dc.barcode}})
+                                <span style="color: red"> "{{dc.destroyedReason}}"</span>
+                                <span *ngIf="dc.destroyedBy"> {{shopService.getMemberNameById(dc.destroyedBy)}}</span>
+                                lúc {{dc.destroyedTime | date: 'h:mm a, d MMMM'}}
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <ngx-datatable class='bootstrap' [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+                        [rowHeight]="auto" [limit]="250" [rows]='shift.priceCategories'
+                        [loadingIndicator]="loadingIndicator" [groupRowsBy]="'price'" [groupExpansionDefault]="true">
+
+                        <!-- Group Header Template -->
+                        <ngx-datatable-group-header [rowHeight]="50" #myGroupHeader>
+                            <ng-template let-group="group" let-expanded="expanded" ngx-datatable-group-header-template>
+                                <div style="padding-left:5px;">
+
+                                    <a style="width: 400px; font-size: x-large;    display: -webkit-box;">
+                                        {{group.value[0].price | currencyformat}}
+                                    </a>
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-group-header>
+
+                        <ngx-datatable-column name="Tên" [sortable]="true" prop='name'>
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span> {{row.name}}</span>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Tồn Đầu">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span style="color: #39b2ee;"> {{row.start}}</span>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Nhập" [sortable]="true" prop='productBarcodes'>
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <div *ngIf="row.productBarcodes && row.productBarcodes.length > 0">
+                                    <span style="color: #8BC34A">+{{row.productBarcodes.length}}</span>
+                                    <a style="margin-left: 15px;" href="javascript:void()"
+                                        (click)="viewDetail(row.productBarcodes)">Xem
+                                        chi tiết</a>
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column [sortable]="true" prop='saleCount'>
+                            <ng-template let-column="column" ngx-datatable-header-template>
+                                <span>Bán</span> <br>
+                            </ng-template>
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <div *ngIf="row.transactions && row.transactions.length > 0">
+                                    <span style="color: #FF5722"> {{row.transactions.length}}</span>
+                                    <a style="margin-left: 15px;" href="javascript:void()"
+                                        (click)="viewDetailTransaction(row.transactions)">Xem
+                                        chi tiết</a>
+                                </div>
+                                <!-- <div *ngIf="row.orderDetailsGrp">
+                                    <div *ngFor="let item of row.orderDetailsGrp | keyvalue">
+                                        <span style="color: #FF5722">
+                                            {{item.value.length}} (đặt)
+                                            <a style="margin-left: 15px;" href="javascript:void()"
+                                                (click)="openOrderDetail(item.key)">Xem
+                                                chi tiết</a>
+                                        </span>
+
+                                    </div>
+                                </div> -->
+
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Tồn Cuối">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span style="color: #39b2ee;"> {{row.end}}</span>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                    </ngx-datatable>
+                </div>
+
+
+            </mat-tab>
+            <mat-tab *ngIf="showTotalTab">
+                <ngx-datatable class='bootstrap' [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+                    [rowHeight]="'auto'" [limit]="250" [rows]='priceCategories' [loadingIndicator]="loadingIndicator"
+                    [groupRowsBy]="'price'" [groupExpansionDefault]="true">
+                    <ng-template mat-tab-label>
+
+                        Tổng Kết Ngày<br />
+                        <div *ngIf="memberService.hasFinancial"
+                            style="display: contents;font-size: 20px;font-weight: bold;">{{totalAmountBigCake |
+                            currencyformat}}</div>
+                        <button mat-mini-fab (click)="showReportButton()" style="margin-left: 10px;">
+                            <mat-icon aria-label="Example icon-button with a heart icon">arrow_downward</mat-icon>
+                        </button>
+                    </ng-template>
+
+
+                    <!-- Group Header Template -->
+                    <ngx-datatable-group-header [rowHeight]="50" #myGroupHeader>
+                        <ng-template let-group="group" let-expanded="expanded" ngx-datatable-group-header-template>
+                            <div style="padding-left:5px;">
+
+                                <a style="width: 400px; font-size: x-large;    display: -webkit-box;">
+                                    {{group.value[0].price | currencyformat}}
+                                </a>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-group-header>
+                    <ngx-datatable-column name="Tên" [sortable]="true" prop='name'>
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <span> {{row.name}}</span>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Đầu ngày">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <span style="color: #39b2ee;"> {{row.start}}</span>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column  [sortable]="true" prop='productBarcodes'>
+                            <ng-template ngx-datatable-header-template>
+                                    <span>Nhập <span style="color: #8BC34A">(tổng {{productBarcodesCount}})</span></span>
+                                  </ng-template>
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <div *ngIf="row.productBarcodes && row.productBarcodes.length > 0">
+
+                                <span style="color: #8BC34A">+{{row.productBarcodes.length}}</span>
+                                <a style="margin-left: 15px;" href="javascript:void()"
+                                    (click)="viewDetail(row.productBarcodes)">Xem
+                                    chi tiết</a>
+
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [sortable]="true" prop='saleCount'>
+                        <ng-template let-column="column" ngx-datatable-header-template>
+                            <span>Bán  <span style="color: #FF5722">(tổng {{productBarcodesSaleCount}})</span> </span> <br>
+
+                        </ng-template>
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <div *ngIf="row.transactions &&  row.transactions.length > 0">
+                                <span style="color: #FF5722"> {{row.transactions.length}}</span>
+                                <a style="margin-left: 15px;" href="javascript:void()"
+                                    (click)="viewDetailTransaction(row.transactions)">Xem
+                                    chi tiết</a>
+                            </div>
+                            <div *ngIf="row.orderDetailsGrp">
+                                <div *ngFor="let item of row.orderDetailsGrp | keyvalue">
+                                    <span style="color: #FF5722">
+                                        {{item.value.length}} (đặt)
+                                        <a style="margin-left: 15px;" href="javascript:void()"
+                                            (click)="openOrderDetail(item.key)">Xem
+                                            chi tiết</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Hiện tại" [sortable]="true" prop='total'>
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <span style="color: #39b2ee;"> {{row.total}}</span>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <!-- 
+
+
+                    <ngx-datatable-column>
+                        <ng-template let-column="column" ngx-datatable-header-template>
+                            <span>Thành tiền</span> <br>
+                            <span>{{totalAmountBigCake | currencyformat}}</span>
+                        </ng-template>
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <div *ngIf="row.money>0">
+                                <div>{{row.money | currencyformat}}</div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column> -->
+
+                </ngx-datatable>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+
+
+</div>

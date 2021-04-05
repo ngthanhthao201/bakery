@@ -1,0 +1,17 @@
+<h3>
+  Chức năng Reset tồn về 0.
+</h3>
+  <p>
+    - Tất cả bánh nhỏ và phụ kiện sẽ có số lượng là 0.
+  </p>
+<p>
+  - Thường dùng khi số lượng tồn trong máy và thực tế có sai sót.
+</p>
+
+
+
+<mat-hint>Vui lòng nhập chữ ok vào ô bên dưới để xác nhận</mat-hint>
+<br>
+<input type="text" [(ngModel)]="confirmText"> 
+
+<button [mat-dialog-close]="true" class="btn btn-raised mr-1 btn-info " [disabled]="confirmText != 'ok'" >Reset</button>

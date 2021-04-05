@@ -1,0 +1,147 @@
+#screensaver { position: fixed; width: 100%; height:600vh; left:0px; top: 0px; display: none; z-index:9999; }
+
+.main-container {
+    margin-top: 56px;
+    margin-left: 0px;
+    padding: 15px;
+    -ms-overflow-x: hidden;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    position: relative;
+    overflow: hidden;
+    background: white;
+}
+@media screen and (max-width: 992px) {
+    .main-container {
+        margin-left: 0px !important;
+    }
+}
+
+.fixed-right-container{
+    position: fixed;
+    right: 0px;
+    top: 0px;
+    z-index: 1000;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: whitesmoke;
+}
+
+#chat-notifications-container{
+    position: fixed;
+    left: 20%;
+    bottom: 0px;
+    z-index: 99999999;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+.quick-add{
+    bottom: 10px;
+    margin-left: 30px;
+    position: fixed;
+}
+
+@media screen and (max-width: 450px) {
+    .quick-add{
+        display: none;
+    }
+}
+.quick-cameras{
+    bottom: 10px;
+    margin-left: 100px;
+    position: fixed;
+}
+
+.orders-timeline-toggle{
+    bottom: 10px;
+    margin-left: -60px;
+    position: fixed;
+}
+
+.orders-timeline{
+    width: 100%;
+    height: 100vh;
+    background: white;
+    border: solid 1px #2196F3;
+}
+
+.customer-img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.badge-number{
+    font-size: initial;
+    position: absolute;
+    top: 0;
+    background: #f44336;
+    border-radius: 0.8em;
+    -moz-border-radius: 0.8em;
+    -webkit-border-radius: 0.8em;
+    color: #ffffff;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1.6em;
+    margin-right: 5px;
+    text-align: center;
+    width: 1.6em;
+}
+
+.carousel-inner >{
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    display: block;
+}
+.adv-carousel-item {
+    display: none;
+
+}
+.adv-carousel-item.active{
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* Absolute Center Spinner */
+.loading-indicator {
+    position: fixed;
+    z-index: 999;
+    height: 2em;
+    width: 2em;
+    overflow: show;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+  
+  /* Transparent Overlay */
+  .loading-indicator:before {
+    content: '';
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.3);
+  }
+
+.orders-timeline-bg{
+    // background: linear-gradient(rgba(255,255,255,.8), rgba(255,255,255,.8)), url('../../assets/images/cake_background.jpg');
+    background-image: linear-gradient(to left, rgb(255,255,255), #D3D3D3);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    border-left: 1px solid #beb2b2;
+}

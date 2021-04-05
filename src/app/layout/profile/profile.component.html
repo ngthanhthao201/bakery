@@ -1,0 +1,30 @@
+<section class="container">
+  <div class="row col-md-12">
+      <div class="col-md-4">
+        <label>Mật khẩu cũ</label>
+      </div>
+      <div class="col-md-8">
+        <input type="password" [(ngModel)]="changePasswordVM.oldPassword">
+      </div>
+  </div>
+  <div class="row col-md-12">
+      <div class="col-md-4">
+        <label>Mật khẩu mới</label>
+      </div>
+      <div class="col-md-8">
+        <input type="password" [(ngModel)]="changePasswordVM.newPassword">
+      </div>
+  </div>
+  <div class="row col-md-12">
+      <div class="col-md-4">
+        <label>Nhập lại mật khẩu mới</label>
+      </div>
+      <div class="col-md-8">
+        <input type="password" [(ngModel)]="changePasswordVM.confirmPassword">
+      </div>
+  </div>
+
+  <div class="row col-md-12">
+      <button color="primary" [disabled]="!changePasswordVM.oldPassword || !changePasswordVM.newPassword || changePasswordVM.newPassword != changePasswordVM.confirmPassword" (click)="changePassword()" mat-raised-button>Cập nhật</button>
+  </div>
+</section>

@@ -1,0 +1,24 @@
+<div  style="border-bottom:#FF5722 solid 1px">
+    Bán tổng cộng: <span style="color: #FF5722">{{incomeTransactions.length}}</span> 
+      
+</div>
+<table class="table">
+        <thead>
+                <tr>
+                        <th>Tên</th>
+                        <th>Giá</th>
+                        <th>Thời gian</th>
+                        <th>Mã vạch</th>
+                </tr>
+        </thead>
+        <tbody>
+                <tr *ngFor="let t of incomeTransactions">
+                        <td>{{t.description}} (
+                                <a href="javascript:void()" (click)="viewHeader(t.incomeHeaderId)">Chi tiết</a>)
+                        </td>
+                        <td>{{t.amount | currencyformat}}</td>
+                        <td>{{t.createdDate| date:'short'}}</td>
+                        <td>{{t.barcode}}</td>
+                </tr>
+        </tbody>
+</table>

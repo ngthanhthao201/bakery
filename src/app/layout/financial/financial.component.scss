@@ -1,0 +1,56 @@
+.product-category-container .bg-primary{
+    opacity: 0.5;
+}
+.example-icon {
+    padding: 0 14px;
+  }
+  
+  .example-spacer {
+    flex: 1 1 auto;
+  }
+
+  button{
+      margin: 10px;
+  }
+
+  .stats-item-container{
+      padding: 40px;
+  }
+
+  .stats-item{
+    font-weight: bold;
+      padding: 15px;
+      font-family: 'Open Sans Condensed';
+  }
+  mat-toolbar{
+      margin-top: 50px;
+  }
+
+
+  .example-container{
+    padding: 40px;
+  }
+
+  mat-row{
+    min-height: 65px;
+  }
+
+  .description-header{
+    cursor: pointer;
+  }
+
+ 
+  .datatable-body-row.datatable-row-even.ng-star-inserted:hover .show-on-active{
+   
+       display:inline-block !important;
+     
+  }
+
+ .actions-button .mat-icon-button{
+   margin: 0px !important;
+ }
+ .form-group{
+   label{
+    font-weight: bold;margin-right: 20px;
+   }
+ }

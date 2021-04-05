@@ -1,0 +1,19 @@
+<div>
+    <div mat-dialog-title>
+        <label>Bạn có chắc chắn muốn liên kết mã vạch với đơn này?</label>
+    </div>
+
+    <mat-dialog-content style="min-height:200px; padding: 20px;">
+        <fieldset class="form-group">
+            <label>Vui lòng gõ lienket vào ô bên dưới để xác nhận. (Đồng thời gởi thông báo đến quản lý)</label>
+            <input [(ngModel)]="textConfirm" type="text" class="form-control">
+        </fieldset>
+    </mat-dialog-content>
+
+
+
+    <mat-dialog-actions style="justify-content: flex-end;float: right;">
+        <button mat-button mat-dialog-close>Không</button>
+        <button mat-button color="warn" [disabled]="textConfirm != 'lienket' "  (click)="ok()">Có</button>
+    </mat-dialog-actions>
+</div>

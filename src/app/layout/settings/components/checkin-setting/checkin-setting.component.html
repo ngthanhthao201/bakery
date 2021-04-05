@@ -1,0 +1,29 @@
+<div mat-dialog-title >
+  <span>Check In Setting</span>
+</div>
+<div mat-dialog-content class="example-full-width" cellspacing="0">
+
+    <mat-form-field style="width: 20%;">
+        <label>Khuyến mãi (% tổng đơn) cho khách</label>
+        <input  matInput type="number" [(ngModel)]="customerCampaign.discountPercent">
+    </mat-form-field>
+
+  <mat-form-field style="width: 100%;">
+      <label>Nội dung khách chia sẻ khi check in</label>
+      <textarea matInput [(ngModel)]="customerCampaign.shareQuote"></textarea>
+  </mat-form-field>
+
+  <mat-form-field style="width: 100%;">
+      <label>Link khách chia sẻ khi check in</label>
+      <input matInput [(ngModel)]="customerCampaign.shareLink">
+  </mat-form-field>
+
+</div>
+
+
+<mat-dialog-actions>
+<div style="justify-content: flex-end;float: right;">
+    <button mat-button mat-dialog-close>Hủy</button>
+    <button  mat-raised-button color="primary" (click)="save()">Lưu</button>
+</div>
+</mat-dialog-actions>

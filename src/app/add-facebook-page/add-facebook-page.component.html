@@ -1,0 +1,24 @@
+<section class="col-md-12 row">
+  <div class="col-md-6">
+    {{shop.name}}
+    <br>
+    <button (click)="loginFb()" class="loginBtn loginBtn--facebook">
+      Login facebook
+   </button>
+    <ul>
+      <li *ngFor="let p of facebookPages">
+        {{p.name}}
+        <button (click)="getLongLiveToken(p)">Liên kết / Làm mới</button>
+      </li>
+    </ul>
+  </div>
+  <div class="col-md-6">
+    <label>Các trang facebook đang liên kết</label>
+    <ul>
+      <li *ngFor="let p of facebookPagesLinked">
+        {{p.name}}
+      </li>
+    </ul>
+
+  </div>
+</section>

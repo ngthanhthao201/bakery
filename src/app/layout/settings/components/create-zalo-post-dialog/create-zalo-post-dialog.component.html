@@ -1,0 +1,50 @@
+<div mat-dialog-title>
+    <span>Tạo mẫu bài Zalo</span>
+</div>
+<div mat-dialog-content class="example-full-width" style="min-height: 200px;margin-bottom: 15px;">
+    <mat-card-header>
+        <div mat-card-avatar class="zalopageslogo-image"></div>
+        <mat-card-title>Post bài lên trang Zalo của bạn</mat-card-title>
+    </mat-card-header>
+
+    <mat-card class="example-card">
+        <label for="subject">Bài Viết</label>
+        <textarea rows="4" id="content" class="form-control" placeholder="..." [(ngModel)]="zaloPost.message"></textarea>
+        <div class="row dottedMain" style="margin-left: 2px;margin-top: 10px; margin-right: 2px;">
+            <mat-select  placeholder="Chọn album bánh" [(ngModel)]="selectedCategory" (selectionChange)="categoryChanged()">
+                <mat-option [value]="c" *ngFor='let c of categories'>
+                    <div>
+                        {{c.name}}
+                    </div>
+                </mat-option>
+            </mat-select>
+        </div>
+
+    </mat-card>
+    <br><br>
+
+    <h6>Xem trang ví dụ</h6>
+    <mat-card>
+        <mat-card-header>
+            <div mat-card-avatar class="zalopageslogo-image"></div>
+            <mat-card-title>Test</mat-card-title>
+            <mat-card-subtitle>1 phút trước</mat-card-subtitle>
+        </mat-card-header>
+        <hr>
+        <mat-card-content>
+            <textarea rows="4" readonly id="clone-textarea" class="form-control" placeholder="..." [(ngModel)]="zaloPost.message"></textarea>
+            <div class="row">
+                <div class="col-md-12" (click)="goToProducts(zaloPost.link)">
+                    <div style="text-align: center"> <img style="width: 100%" src="../../../../../assets/images/icon_76.png"></div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+<mat-dialog-actions>
+    <div style="justify-content: flex-end;float: right">
+        <button mat-button mat-dialog-close>Hủy</button>
+        <button [disabled]='!zaloPost.message ' mat-raised-button style="background:#2196f3" (click)="ok()">Lưu</button>
+    </div>
+</mat-dialog-actions>

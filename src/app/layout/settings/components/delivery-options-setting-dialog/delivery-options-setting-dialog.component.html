@@ -1,0 +1,35 @@
+<div mat-dialog-title >
+    <span>Cài đặt phí</span>
+</div>
+<table mat-dialog-content class="example-full-width" cellspacing="0">
+  <tr *ngFor="let t of deliveryOptions" class="row">
+      <td class="col-md-6">
+          <fieldset style="margin-top:10px">
+            <label>Tên</label>
+            <input [(ngModel)]="t.name" class="form-control">
+        </fieldset>
+      </td>
+      <!-- <td >
+        <fieldset style="margin-top:10px">
+            <label>{{'Description' | translate}}</label>
+            <input [(ngModel)]="t.description" class="form-control">
+        </fieldset>
+      </td> -->
+      <td class="col-md-6">
+        <fieldset style="margin-top:10px">
+            <label>Giá</label>
+            <input currencyMask [options]="currencyMaskOptions" [(ngModel)]="t.price" class="form-control">
+        </fieldset>
+      </td>
+  </tr>
+</table>
+<button  (click)="addType()" mat-mini-fab>
+  <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+</button>
+
+<mat-dialog-actions>
+  <div style="justify-content: flex-end;float: right;">
+      <button mat-button mat-dialog-close>Hủy</button>
+      <button  mat-raised-button color="primary" (click)="saveDeliveryOptions()">Lưu</button>
+  </div>
+</mat-dialog-actions>

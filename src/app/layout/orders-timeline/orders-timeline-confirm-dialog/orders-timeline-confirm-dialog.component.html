@@ -1,0 +1,15 @@
+<div>
+    <div mat-dialog-title>
+        <label>Bạn chưa nhập ngày giờ giao!</label>
+    </div>
+
+    <mat-dialog-content>
+        <!-- <label class="text-danger">Bạn có muốn tiếp tục?</label> -->
+        <p>Tự động chọn giờ hiện tại</p>
+    </mat-dialog-content>
+
+    <mat-dialog-actions style="justify-content: flex-end;float: right;">
+        <button mat-button mat-dialog-close>Quay lại</button>
+        <button mat-button color="primary" (click)="continue()">Tiếp tục</button>
+    </mat-dialog-actions>
+</div>

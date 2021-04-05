@@ -1,0 +1,33 @@
+<section class="container" style="padding-top: 60px;">
+
+    <div class="row">
+        <ngx-datatable #table3 class='material no-shadow col-md-12' [columnMode]="'force'" [headerHeight]="50"
+            [footerHeight]="50" [rowHeight]="'auto'" [limit]="100" [rows]='productBarcodeRemoveRows'>
+
+            <ngx-datatable-column name="Loại Bánh" [sortable]="true" prop='productCategoryName'>
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <div style="font-weight: bold;">
+                        {{row.productCategoryName}}
+                    </div>
+                    <div>
+                        {{row.barcode}}
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Lý Do Hủy" [sortable]="true" prop='destroyedReason'>
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span> {{row.destroyedReason}}</span>
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Ngày Giờ Hủy" [sortable]="true" prop='destroyedTime'>
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span style="font-weight:bold;"> {{row.destroyedTime | date:'short'}}</span>
+                </ng-template>
+            </ngx-datatable-column>
+
+        </ngx-datatable>
+    </div>
+
+</section>

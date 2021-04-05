@@ -1,0 +1,15 @@
+<div>
+    <div mat-dialog-title>
+        <label>Xác nhận xoá tài khoản</label>
+    </div>
+
+    <mat-dialog-content>
+        <label class="text-danger">Bạn có chắc muốn xoá ?</label>
+        <div style="margin-left: 5%">Thành viên <span style="font-weight: bold">{{member.name}}</span></div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions style="justify-content: flex-end;float: right;">
+        <button mat-button mat-dialog-close>Huỷ</button>
+        <button mat-button color="warn" [disabled] = "isDisabled" (click)="delete()">Xoá</button>
+    </mat-dialog-actions>
+</div>

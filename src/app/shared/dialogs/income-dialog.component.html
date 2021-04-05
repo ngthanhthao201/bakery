@@ -1,0 +1,70 @@
+<div mat-dialog-title color="warn">
+
+</div>
+<mat-dialog-content>
+
+    <div class="row">
+
+        <div class="col-md-3">
+            <fieldset class="form-group">
+                <mat-icon style="vertical-align: middle;margin-right: 5px;" color="accent">receipt</mat-icon>
+                <label>{{'IdNumber' | translate}}</label>
+                <input readonly [(ngModel)]="incomeHeader.idNumber" name="idNumber" class="form-control">
+            </fieldset>
+        </div>
+
+        <div class="col-md-4">
+            <fieldset class="form-group">
+                <label>Ngày</label><br>
+                <input [matDatepicker]="incomeDate" [(ngModel)]="incomeHeader.dateCreated" class="dateCreate">
+                <mat-datepicker-toggle matSuffix [for]="incomeDate"></mat-datepicker-toggle>
+                <mat-datepicker #incomeDate startView="month"></mat-datepicker>
+            </fieldset>
+        </div>
+        
+    </div>
+
+
+    <mat-list style="margin-left:40px;">
+        <mat-list-item *ngFor="let element of incomeHeader.incomeTransactions;  let $index = index" style="margin-top: 25px;">
+            <fieldset class="col-md-3">
+                <label>{{'Description' | translate}}</label>
+                <input [(ngModel)]="element.description" (ngModelChange)="descriptionChanged(element.description)" name="description"
+                    [matAutocomplete]="auto" class="form-control">
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let d of filteredDescriptions" [value]="d">
+                        {{ d }}
+                    </mat-option>
+                </mat-autocomplete>
+            </fieldset>
+
+            <fieldset class="col-md-3">
+                <label>{{'Amount' | translate}}</label>
+                <input currencyMask [options]="currencyMaskOptions" [(ngModel)]="element.amount" name="amount" class="form-control">
+            </fieldset>
+
+            <mat-icon *ngIf="isCreateNew() && incomeHeader.incomeTransactions.length > 1" style="left: -34px; position: absolute;color:red;"
+                (click)="removeTransaction($index)">remove</mat-icon>
+
+            <mat-icon *ngIf="!isCreateNew() && incomeHeader.incomeTransactions.length > 1" style="left: -34px; position: absolute;color:red;"
+                (click)="removeTransactionWarning($index, element.id)">remove</mat-icon>
+
+        </mat-list-item>
+
+    </mat-list>
+    <div class="row">
+        <button style="background-color: #ffffff;margin-left: 70px;" mat-mini-fab (click)="addTransaction()">
+            <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+        </button>
+
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <label>Tổng cộng: {{getTotalHeaderAmount() | currencyformat}}</label>
+    <div style="justify-content: flex-end;float: right;">
+        <button mat-button mat-dialog-close>Hủy</button>
+        <button [disabled]="incomeHeader.amount < 1" mat-raised-button color="primary" [mat-dialog-close]="incomeHeader">Đồng
+            ý</button>
+    </div>
+</mat-dialog-actions>

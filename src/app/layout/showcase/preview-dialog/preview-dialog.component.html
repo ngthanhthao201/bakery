@@ -1,0 +1,50 @@
+<div   id="phonePreivew">
+  <div *ngIf="!products" class="phone-screen">
+    <img style="width: 100%;padding: 2%;" src="../../../../assets/images/statusbardark.png">
+    
+    <div style="width: 100%;padding: 2%;margin: 0px;" class="row">
+      <img class="img-logo" src="{{currentShop.icon}}" />
+      <div style="margin-left:10px;">
+        <p>
+          {{currentShop.name}}
+        </p>
+        <p style="font-size: 10px;">
+          {{currentShop.address.address1}} {{currentShop.address.district}}
+        </p>
+      </div>
+      
+    </div>
+    <div style="width: 100%;padding: 2%; margin-left: 0;overflow-y: auto;height: 428px;" class="row">
+      <div *ngFor="let c of productCategories" class="col-md-6" style="width:47% ;border-radius:10px; padding: 2px; height: 150px; overflow: hidden;; position: relative">
+        
+            <img class="category-img-preview" src="{{c.image}}">
+            
+            <div class="bottom-left">
+                <img class="shadow-black-overlay" src="../../../../assets/images/ShadowOverlay.png">
+     
+            </div>
+            <div class="bottom-left" style="font-size: 12px;margin-left:5px;">
+                
+              {{c.name}}
+            </div>
+        
+
+      </div>
+      
+
+    </div>
+  </div>
+  <div *ngIf="products" class="phone-screen">
+    <div *ngFor="let p of products" style="background: #aaa; padding: 5px;">
+
+      <div  class="">
+          
+              <img class="product-sample-img"  src={{p.image}} >
+         
+         <p>
+            {{p.name}}
+          </p>
+      </div>
+    </div>
+  </div>
+</div>

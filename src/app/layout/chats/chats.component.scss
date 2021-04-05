@@ -1,0 +1,109 @@
+// Chat panel
+body.chat-page {
+    .main-panel {
+        min-height: calc(100% - 85px);
+        height: calc(100% - 85px);
+    }
+}
+
+// Chat application
+.chat-application {
+    // wrapper
+    .content-wrapper {
+        // padding: 0 !important;
+    }
+
+    // chat sidebar
+    .chat-sidebar {
+        background: white;
+        position: fixed;
+        width: 300px;
+        vertical-align: top;
+        height: calc(96vh - 130px);
+        border-right: 1px solid #e4e7ed;
+        z-index: 999;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    // chat search
+    .chat-fixed-search {
+        width: 300px;
+        position: fixed;
+        z-index: 999;
+        background: white;
+        border-bottom: 1px solid #e4e7ed;
+        border-right: 1px solid #e4e7ed;
+    }
+
+    // users list
+    .users-list-padding {
+        padding-top: 63px;
+    }
+
+    // Heading
+    .list-group-item-heading {
+        font-size: 0.8rem;
+        font-weight: 500;
+        span {
+            font-size: 0.8rem;
+            font-weight: 400;
+        }
+    }
+    .border-none {
+        border: none;
+    }
+
+    // Chat name
+    .chat-name {
+        margin-left: 300px;
+        border-bottom: 1px solid #e4e7ed;
+    }
+
+    app-chat-window {
+        margin-left: 300px;
+        display: block;
+        height: calc(95vh - 117px);
+    }
+}
+
+.li-messages {
+    list-style-type: none;
+    text-align: center;
+    display: inline-block;
+    margin-left: 20px;
+}
+.div-center {
+    margin: auto;
+    max-width: 600px;
+    padding: 7px 0px;
+}
+.btn-messages {
+    background: #e4e6eb;
+    border: 3px solid #e4e6eb;
+    border-radius: 20px;
+    padding: 4px 15px;
+    color: black !important;
+    font-size: 24px;
+	font-family: sans-serif;
+	transition: 0.5s;
+}
+.btn-messages-active {
+    background: rgb(0, 132, 255);
+    border: 3px solid rgb(0, 132, 255);
+    color: white !important;
+}
+.btn-messages:hover {
+    background: rgb(0, 132, 255);
+    border: 3px solid rgb(0, 132, 255);
+    color: white !important;
+}
+.btn-messages:focus{
+	outline:0;
+}
+.router-active{
+    border-bottom: 2px solid rgb(0, 38, 255);
+}
+.a-tab{
+    font-size: 24px;
+}

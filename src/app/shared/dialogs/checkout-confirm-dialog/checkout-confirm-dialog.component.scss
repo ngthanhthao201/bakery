@@ -1,0 +1,93 @@
+.price-chip {
+    font-size: 14px;
+    padding: 10px !important;
+}
+
+mat-chip {
+    margin-bottom: 10px !important;
+    margin-left: 10px !important;
+}
+
+// .numpad-container {
+//     $button: #F9A03F;
+//     $active: darken($button, 5%);
+
+//     * {
+//         box-sizing: border-box;
+//     }
+
+//     .numpad {
+//         width: 260px;
+//         height: 260px;
+
+//         display: flex;
+//         flex-flow: row wrap;
+//     }
+
+//     .button {
+//         display: flex;
+//         align-items: center;
+//         justify-content: center;
+//         flex: 1 0 33.3333%;
+
+//         background-color: $button;
+//         color: white;
+//         border: 1px solid rgba(255, 255, 255, .25);
+
+//         &:nth-of-type(10) {
+//             flex-basis: 66.6667%;
+//         }
+
+//         &:hover {
+//             background-color: $active;
+//         }
+//     }
+
+
+
+
+//     // Playground stuff - Not related to the demo
+//     .playground {
+//         // height: 100vh;
+//         display: flex;
+//         align-items: center;
+//         justify-content: center;
+//         // background-color: #f1f1f1;
+//     }
+
+
+//     // General stuff - Not related to the playground
+//     .general {
+//         position: fixed;
+//         left: 0;
+//         right: 0;
+
+//         display: flex;
+//         height: 40px;
+//         padding: 0 20px;
+
+//         background-color: white;
+
+//         a {
+//             height: 100%;
+//             display: flex;
+//             align-items: center;
+//             flex: 1;
+
+//             font-family: "source-code-pro";
+//             font-size: .8rem;
+//             text-decoration: none;
+
+//             color: #c9c9c9;
+//             transition: color 300ms ease;
+
+//             &:hover {
+//                 color: $active;
+//             }
+//         }
+
+//         a:last-of-type {
+//             justify-content: flex-end;
+//         }
+//     }
+// }

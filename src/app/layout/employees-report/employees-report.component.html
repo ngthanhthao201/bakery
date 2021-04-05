@@ -1,0 +1,115 @@
+<section _ngcontent-c11="" id="card-deck" style="margin-bottom: 50px;">
+  <div _ngcontent-c11="" class="row">
+    <div _ngcontent-c11="" class="col-12 mt-3 mb-1">
+      <div _ngcontent-c11="" class="content-header">Biểu đồ đơn hàng</div>
+      <p _ngcontent-c11="" class="content-sub-header">Hiển thị báo cáo đơn hàng theo tháng.</p>
+    </div>
+  </div>
+  <div _ngcontent-c11="" class="row">
+    <div _ngcontent-c11="" class="col-12" style="background-color: white">
+      <canvas baseChart height="500" width="1200" [datasets]="lineChartDataOrder" [labels]="lineChartLabelsOrder"
+        [options]="lineChartOptionsOrder" [colors]="lineChartColorsOrder" [legend]="lineChartLegend"
+        [chartType]="lineChartType">
+      </canvas>
+    </div>
+  </div>
+</section>
+
+<div class="row">
+
+  <fieldset class="form-group col-md-1">
+    <label style="padding: 10px; font-weight:500">{{'ReportBy' | translate}}</label>
+    <mat-select class="form-control" [(ngModel)]="kindOfReport" style="position: absolute;margin-left: 15px;"
+      (selectionChange)="kindOfReportChange()">
+      <mat-option [value]="1">
+        Ngày
+      </mat-option>
+      <mat-option [value]="2">
+        Tuần
+      </mat-option>
+      <mat-option [value]="3">
+        Tháng
+      </mat-option>
+    </mat-select>
+  </fieldset>
+
+  <div>
+    <div class="form-group col-md-4" style="margin-left: 10%; position: absolute;; display: flex" *ngIf="kindOfReport == 1">
+      <label style="padding: 10px;">Ngày</label><br>
+      <input  [matDatepicker]="picker1" [(ngModel)]="employeeReportDay.startDate"
+        [matDatepickerFilter]="myFilter" (dateChange)="dateChange($event)" class="form-control text-align" readonly>
+      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+      <mat-datepicker #picker1></mat-datepicker>
+    </div>
+
+    <div *ngIf="kindOfReport == 2">
+      <div class="form-group col-md-4" style="margin-left: 10%; position: absolute;; display: flex">
+        <a class="ft-arrow-left btn btn-raised mr-1 btn-round btn-info" (click)="previousWeek()"></a>
+        <label class="padding">{{'StartDate' | translate}}</label><br>
+        <div class="form-control text-align" readonly>{{employeeReportWeek.startDate | date}}</div>
+      </div>
+      <div class="form-group col-md-4" style="margin-left: 30%; position: absolute;; display: flex">
+        <label class="padding">{{'EndDate' | translate}}</label><br>
+        <div class="form-control text-align" readonly>{{employeeReportWeek.endDate | date}}</div>
+        <a style="margin-left: 15px;" class="ft-arrow-right btn btn-raised mr-1 btn-round btn-info" (click)="nextWeek()"></a>
+      </div>
+    </div>
+
+    <div *ngIf="kindOfReport == 3">
+      <div class="form-group col-md-4" style="margin-left: 10%; position: absolute;; display: flex">
+        <a class="ft-arrow-left btn btn-raised mr-1 btn-round btn-info" (click)="previousMonth()"></a>
+        <label class="padding">{{'StartDate' | translate}}</label><br>
+        <div class="form-contro text-alignl" readonly>{{employeeReportMonth.startDate | date}}</div>
+      </div>
+      <div class="form-group col-md-4" style="margin-left: 30%; position: absolute;; display: flex">
+        <label class="padding">{{'EndDate' | translate}}</label><br>
+        <div class="form-control text-align" readonly>{{employeeReportMonth.endDate | date}}</div>
+        <a style="margin-left: 15px;" class="ft-arrow-right btn btn-raised mr-1 btn-round btn-info" (click)="nextMonth()"></a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="row" *ngIf="lineChartLabels.length > 0">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title-wrap bar-success">
+          <h4 class="card-title">Biểu đồ bán</h4>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-block">
+          <div class="height-400">
+            <canvas height="400" baseChart class="chart" [datasets]="lineChartData" [labels]="lineChartLabels"
+              [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType"
+              (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-5" style="max-height: 50vh;overflow-y: auto; margin-left: 50px">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nhân Viên</th>
+          <th>Tổng Tiền Bán</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let e of employeeSaleInfo; let index = index">
+          <th scope="row">{{index + 1}}</th>
+          <td>
+            <div style="display: -webkit-box;"><img src="{{e.memberImage}}" alt="" class="img-member"> <span>{{e.memberName}}</span></div>
+          </td>
+          <td>{{e.totalSale | currencyformat}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

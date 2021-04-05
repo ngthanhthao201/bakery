@@ -1,0 +1,41 @@
+<mat-dialog-content>
+    <!-- <mat-list role="list">
+        <mat-list-item *ngFor="let entry of incomeGroupByDay | keys" role="listitem">
+            <div class="row col-md-12">
+                <div class="col-md-6">
+                        {{entry.key | date}}
+                </div>
+                <div class="col-md-6">
+                    {{getTotal(entry.value) | currencyformat}}
+                </div>
+            </div>
+            
+        </mat-list-item>
+      </mat-list> -->
+
+      <table class="table">
+          <thead>
+            <th>
+                Ngày
+            </th>
+            <th>
+                THU
+            </th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let entry of incomeGroupByDay | keys">
+                <td>
+                    {{entry.key | date}}
+                </td>
+                <td>
+                    {{getTotal(entry.value) | currencyformat}}
+                </td>
+            </tr>
+          </tbody>
+      </table>
+
+
+</mat-dialog-content>
+<mat-dialog-actions style="justify-content: flex-end;float: right;">
+    <button mat-button mat-dialog-close>Đóng</button>
+</mat-dialog-actions>

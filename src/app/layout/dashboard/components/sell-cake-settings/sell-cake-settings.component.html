@@ -1,0 +1,8 @@
+<div style="display: grid;" >
+
+    <label>Cho phép bán bánh & thanh toán bằng thiết bị di động</label>
+
+    <mat-checkbox *ngFor="let l of labels" [(ngModel)]="quickOrderService.membersSellCaleSettings[l]" (change)="updateSettings(l)">{{l}}</mat-checkbox>
+
+    <button mat-raised-button color="accent" (click)="apply()">Áp Dụng</button>
+</div>

@@ -1,0 +1,89 @@
+<section (keyup)="$event.stopPropagation();handleKeyboardEvent($event)">
+    <div class="row" mat-dialog-title >
+        <span style="font-size: 1.75rem;">Xác nhận lại tiền</span>
+        <span *ngIf="member" style="float: right;">
+            <img src="{{member.image}}" width="50" height="50" style="border-radius: 50%; margin-right: 10px">
+            <span>{{member.name}}</span>
+        </span>
+    </div>
+    <div mat-dialog-content style="min-height:320px">
+        <!-- <div class="row">
+      <div class="b-main" style="text-align: center; font-family: 'Open Sans Condensed'; font-size: 1.5em; line-height: 1.5em;">Khách đưa</div>
+    <input> 
+  </div>
+  <div class="row">
+      <div class="r-main" style="text-align: center; font-family: 'Open Sans Condensed'; font-size: 1.5em; line-height: 1.5em;">Tiền bánh</div>
+      <div class="r-main" style="text-align: center; font-family: 'Open Sans Condensed'; font-size: 1.5em; line-height: 1.5em;">{{checkoutCash.moneyCake}}</div>
+    </div>
+  <div class="row"> 
+      <div class="g-main" style="text-align: center; font-family: 'Open Sans Condensed'; font-size: 1.5em; line-height: 1.5em;">Tiền thối lại</div>   
+    </div> -->
+
+        <mat-hint>
+            Chọn nhanh
+        </mat-hint>
+
+        <mat-chip-list>
+            <mat-chip *ngFor="let pc of quickCashes" (click)="selectQuick(pc)" class="price-chip">
+                {{pc | currencyformat}}</mat-chip>
+        </mat-chip-list>
+        <div class="row col-md-12">
+            <table class="col-md-7">
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="b-main"
+                                style="font-weight: bold; font-family: 'Open Sans Condensed'; font-size: 1.5em; line-height: 1.5em;">
+                                Khách đưa</div>
+                        </td>
+                        <td style="text-align: center;width: 235px;">
+
+                            <input (keyup.enter)="checkout()" cdkFocusInitial
+                                style="  font-weight: bold; width:50%; margin-bottom: 14px;color: #39b2ee; font-family: 'Open Sans Condensed'; font-size: 1.5em; line-height: 1.5em; text-align: right; border: solid 1px #39b2ee; height: 35px;"
+                                matInput [(ngModel)]="checkoutCash.moneyCustomer">
+                            <span class="b-main"
+                                style=" font-weight: bold;font-family: 'Open Sans Condensed'; font-size: 1.5em; line-height: 1.5em;">.000
+                                đ</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left">
+                            <div class="r-main"
+                                style=" font-weight: bold;font-family: 'Open Sans Condensed'; font-size: 1.5em; line-height: 1.5em;">
+                                Tiền bánh</div>
+                        </td>
+                        <td style="text-align: center">
+                            <div class="r-main"
+                                style="font-weight: bold;font-family: 'Open Sans Condensed'; font-size: 1.5em; line-height: 1.5em;">
+                                {{checkoutCash.moneyCake| currencyformat}}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left">
+                            <div class="g-main"
+                                style="font-weight: bold; font-family: 'Open Sans Condensed'; font-size: 1.5em; line-height: 1.5em;">
+                                Tiền dư</div>
+                        </td>
+                        <td style="text-align: center">
+                            <div class="g-main"
+                                style="font-weight: bold;font-family: 'Open Sans Condensed'; font-size: 1.5em; line-height: 1.5em;">
+                                {{(checkoutCash.moneyCustomer *1000) - checkoutCash.moneyCake| currencyformat}}</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <numpad-container class="col-md-5" [checkoutCash]="checkoutCash"></numpad-container>
+
+        </div>
+    </div>
+
+    <div class="row col-md-12" mat-dialog-actions style="float:right">
+        <button class="col-md-2" mat-button mat-dialog-close>Hủy</button>
+        <button class="col-md-4" style="width: 150px;height: 70px;" color="primary" mat-raised-button
+            (click)="checkout(); ">Xong (F9)<br> (Có In Hóa Đơn)</button>
+        <button class="col-md-4" style="height: 70px;" color="accent" mat-raised-button
+            (click)="checkout(false);">Xong (F10)<br> (Không In Hóa Đơn)</button>
+    </div>
+    <!--End Invoice-->
+</section>

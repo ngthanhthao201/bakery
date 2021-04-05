@@ -1,0 +1,475 @@
+<div id="sellCakeMap-container" *ngIf="quickOrderService.sellCakeMap">
+    <div *ngFor="let entry of quickOrderService.sellCakeMap | keys" class="sellCakeMap-item"
+        [hidden]="entry.value.incomeTransactions.length === 0">
+        <div class="header">
+            {{getMemberNameFromGroupName(entry.key)}}
+        </div>
+        <div class="body">
+            <ul>
+                <li *ngFor="let t of entry.value.incomeTransactions">
+                    <span>{{t.description}}</span><br>
+                    <span>{{t.quantity * t.unitPrice | currencyformat}}</span>
+                </li>
+            </ul>
+        </div>
+        <div class="footer">
+            T Cộng: {{entry.value.amount | currencyformat}}
+        </div>
+    </div>
+</div>
+
+<div *ngIf="quickOrderService.incomeHeader.incomeTransactions">
+    <a class="btn btn-social-icon btn-round mr-2 mb-2 btn-pinterest"
+        *ngIf="quickOrderService.incomeHeader.incomeTransactions.length > 0" (click)="empty()"
+        style="z-index: 9;position: absolute; left: -28px;top:0" matTooltip="Xóa tất cả"><i class="fa fa-times"></i>
+    </a>
+    <a class="btn btn-social-icon btn-round mr-2 mb-2 btn-flickr" *ngIf="isOrder == true"
+        (click)="isMinimize = !isMinimize" style="z-index: 9;position: absolute;left: -28px;top: 45px;"
+        matTooltip="{{isMinimize ? 'mở' : 'đóng'}}"><i
+            class="{{isMinimize ? 'ft-chevron-left' : 'ft-chevron-right'}}"></i>
+    </a>
+    <div class="row" style="margin: 5px;">
+        <div class="col-md-10" class="menu_sellcakemap">
+            <span class="col-md-4">Tên bánh</span>
+            <!-- <span class="col-md-3">SL</span> -->
+            <span class="col-md-3">Đơn giá</span>
+            <span class="col-md-3">T tiền</span>
+        </div>
+        <div ngbDropdown placement="bottom-right" class="menu_sellcakemap col-md-2">
+            <a id="fees" ngbDropdownToggle class="badge badge-danger" style="color: white">Phí </a>
+            <div ngbDropdownMenu aria-labelledby="fees">
+                <div class="arrow_box" *ngFor="let fee of fees">
+                    <a class="dropdown-item py-1" href="javascript:;" *ngIf="fee.name"
+                        (click)="addQuickPrice(fee.name, SaleType.Product,fee.price)">
+                        <span style="margin-right: 25px">{{fee.name}}</span>
+                        <span class="float-right">{{fee.price | currencyformat}}</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ul class="timeline">
+        <li *ngFor="let transaction of quickOrderService.incomeHeader.incomeTransactions" class="timeline-inverted">
+            <div class="">
+                <div class="col-md-12" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    <a *ngIf="!transaction.barcode" (click)="decreaseQuantity(transaction)"><sup
+                            class="ft-x-circle badge-danger" style="border-radius: 0.5rem"></sup></a>
+                    <span style="text-transform: uppercase;font-weight: bold;">{{transaction.description}}</span>
+                    <span *ngIf="!transaction.barcode" class="float-right" style="font-weight: bold; font-size: 20px">
+                        {{transaction.amount | currencyformat}}
+                    </span>
+                </div>
+                <div *ngIf="(transaction.barcode && transaction.barcode.startsWith('C')) || (transaction.barcode && transaction.barcode.startsWith(''))"
+                    class="row" style="margin: 0;">
+                    <div class="col-md-5" style="display: flex;">
+                        <span>
+                            <button type="button" (click)="decreaseQuantity(transaction)"
+                                class="quantity-left-minus btn btn-number" data-type="minus" data-field=""
+                                style="margin: auto; font-size: 12px;vertical-align: middle;">
+                                <span class="fa fa-minus"></span>
+                            </button>
+                        </span>
+                        <input (keyup.enter)="checkout()" style="width: 30px;text-align: center;border: none" matInput
+                            class="input-number input-transaction" [(ngModel)]="transaction.quantity"
+                            (change)="quantityChanged(transaction)">
+                        <span>
+                            <button (click)="increaseQuantity(transaction)" type="button"
+                                class="quantity-right-plus btn btn-number" data-type="plus" data-field=""
+                                style="margin: auto; font-size: 12px;vertical-align: middle;">
+                                <span class="fa fa-plus"></span>
+                            </button>
+                        </span>
+                    </div>
+                    <div class="col-md-7" style=" vertical-align: -webkit-baseline-middle;">
+                        <span class="unitPriceClass">{{transaction.unitPrice | currencyformat}}</span>
+                        <span class="float-right" style="font-weight: bold; font-size: 20px">
+                            {{transaction.amount | currencyformat}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+    <div style="position: absolute; bottom: 0;width: 100%;">
+        <div style="padding: 5px;">
+            <div class="customer-box">
+                <h5>Khách Hàng</h5>
+                <div style="width:100%">
+                    <fieldset class="form-group">
+                        <div>
+                            <span style="vertical-align: -webkit-baseline-middle;">Sđt</span>
+                            <sup *ngIf="selectedCustomer" (click)="deleteSelectedCustomer()"
+                                class="ft-x-circle badge-danger" matTooltip="Xoá"
+                                style="border-radius: 0.5rem; margin-left: 2px; cursor: pointer;"></sup>
+                            <span class="btn btn-outline-info float-right" style="margin-bottom: 0.25rem;"
+                                *ngIf="!isClickUserButton" (click)="clickButton()">
+                                Mã KH</span>
+                            <input placeholder="Nhập Mã KH" class="form-control float-right"
+                                style="width: 60%; border-color: #1E9FF2;text-align: center;"
+                                [(ngModel)]="externalIdUserInput" id="customerCodeInput" inputWithNumpad
+                                [hidden]="!isClickUserButton">
+                        </div>
+
+                        <p [hidden]="!message" class="text-danger" style="margin-bottom: 0 !important">{{message}}</p>
+                        <!-- Numpad -->
+                        <input [(ngModel)]="selectedCustomer" maxlength="10" [matAutocomplete]="auto" type="tel"
+                            class="form-control" [formControl]="searchCtrl" inputWithNumpad #autoCompleteInput
+                            (numberPressedChanged)="numberPressedChanged()" [customControl]="searchCtrl">
+                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+                            (optionSelected)="onSelectionChanged($event)">
+                            <mat-option *ngFor="let c of filteredCustomers | async" [value]="c">
+                                <span>{{ c.phoneNumber }}</span>
+                                <span>({{c.name}})</span>
+                                <span> <img style="height: 32px;" src="{{c.customerType.icon}}" /></span>
+                            </mat-option>
+                        </mat-autocomplete>
+                    </fieldset>
+                </div>
+
+                <div [hidden]="(selectedCustomer && selectedCustomer.id)" style="width:100%">
+                    <fieldset class="form-group">
+                        <label>Tên (không bắt buộc)</label>
+                        <input class="form-control" [(ngModel)]="newCustomerName" inputWithWordPad>
+                    </fieldset>
+                </div>
+                <mat-hint *ngIf="selectedCustomer && selectedCustomer.id">
+                    <span class="badge badge-info" style="width: fit-content; display: flex">
+                        <span *ngIf="selectedCustomer && selectedCustomer.id && customerShop"
+                            style="float: left; margin-top: 7px;vertical-align: middle;">
+                            {{selectedCustomer.name}}, lượt mua:
+                            <span style="font-weight: bold; font-size:larger; ">{{customerShop.buyCount + 1}}</span>
+                            ,lượt đặt:
+                            <span style="font-weight: bold; font-size:larger; ">{{customerShop.orderCount}}</span>
+                        </span>
+                        <!-- <span *ngIf="selectedCustomer && !selectedCustomer.id ">Mới</span> -->
+
+                        <!-- not have externalId yet-->
+                        <span class="badge badge-danger" style="cursor: pointer;margin-left: 5px;"
+                            *ngIf="((selectedCustomer && !selectedCustomer.id) || (selectedCustomer && selectedCustomer.id &&customerShop && !customerShop.externalId)) && !message"
+                            (click)="openLinkCustomer()">
+                            Chưa có thẻ
+                        </span>
+
+                        <!-- have externalId -->
+                        <span
+                            *ngIf="selectedCustomer && selectedCustomer.id && customerShop && customerShop.externalId">
+                            <span class="fa fa-list-alt" style="font-size: x-large;padding-left: 5px;">
+                                <sup class=" badge-pill badge-danger"
+                                    style="color: white; font-size: xx-small; vertical-align: super">VIP</sup>
+                            </span>
+                        </span>
+                    </span>
+                </mat-hint>
+            </div>
+            <div style="padding: 10px 10px 0 10px;">
+                <mat-checkbox class="text-info" [(ngModel)]="isOrder" (change)="isOrderChange()">
+                    <div class="order-font-size">
+                        <mat-icon style="font-size:x-large">reorder</mat-icon> Tạo Đơn Bánh
+                    </div>
+                </mat-checkbox>
+            </div>
+        </div>
+        <div>
+            <button [hidden]="isOrder" id="checkout-button" (click)="checkout()" class="buy">Thanh Toán
+                <span class="checkout-button">(F8)</span>
+                <div style="margin-top: 10px">{{quickOrderService.getTotal() | currencyformat}}</div>
+            </button>
+        </div>
+    </div>
+
+    <div [@ordersTimelineTransition]="isOrder ? 'in' : 'out'" [hidden]="!isOrder || !newOrder" id="order-part"
+        class="description {{isMinimize ? 'display-none' : ''}}">
+        <div class="bg-image" *ngIf="newOrder">
+            <!-- <div style="width: 100%; text-align: center">
+                <mat-radio-group [(ngModel)]="selectedOrderInfoType" (change)="selectedOrderInfoTypeChanged()">
+                    <mat-radio-button [value]="OrderInfoTypeSimple" style="margin-right: 10px">Rút gọn
+                    </mat-radio-button>
+                    <mat-radio-button [value]="OrderInfoTypeDetail">Chi tiết<span class="text-info">(khuyến nghị)</span>
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div> -->
+
+            <div>
+                <table class="form-group" id="orderCommentTable"
+                    style="overflow-y: auto; overflow-x: hidden;width: 100%;">
+                    <tbody>
+                        <!-- <tr *ngIf="selectedOrderInfoType == 1 && newOrder">
+                            <td colspan="2">
+                                <fieldset class="form-group">
+                                    <label>Nội dung</label>
+                                    <textarea class="form-control"
+                                        style="background: white !important;text-align: left; width: 100%" rows="3" matInput
+                                        [(ngModel)]="newOrder.comments"></textarea>
+                                </fieldset>
+                            </td>
+                        </tr> -->
+                        <tr>
+                            <td colspan="2">
+                                <fieldset class="form-group">
+                                    <div>
+                                        <label class="font-small-2" style="vertical-align: sub;">L.Bánh - K.Thước
+                                        </label>
+                                        <input style="display:none" type="file" ngModel (change)="getFiles($event)"
+                                            accept="image/*" id="icon-input">
+                                        <label for="icon-input"
+                                            class="btn btn-raised mr-4 btn-success font-small-2 float-right"
+                                            style="cursor: pointer"> + Mẫu Bánh
+                                        </label>
+                                    </div>
+                                    <!-- <input class="form-control" style="text-align: left;width: 90%;"
+                                        [(ngModel)]="newOrder.advanceInfo.size" inputWithWordPad> -->
+                                    <textarea class="form-control"
+                                        style="background: white !important;text-align: left;" rows="2" matInput
+                                        [(ngModel)]="newOrder.advanceInfo.size" inputWithWordPad></textarea>
+
+                                    <div *ngIf="newOrder.attachments.length > 0" class="row"
+                                        style="padding: 10px; background-color: #fff;height: 64px;">
+                                        <div class="col-md-4" *ngFor="let a of newOrder.attachments">
+                                            <img alt="Cake_Image" src="{{a.url}}" style="width: auto;height: 45px;">
+                                            <span class="img-ul-close ft-x" (click)="onRemoved(a)"></span>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <fieldset class="form-group row">
+
+                                            <div class="col-md-6">
+                                                <label class="font-small-2">Nhân</label>
+                                                <input class="form-control"
+                                                    style="background: white !important;text-align: left;" rows="3" matInput
+                                                    [(ngModel)]="newOrder.advanceInfo.filling" inputWithWordPad>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="font-small-2">Nến số</label>
+                                                <select  [(ngModel)]="newOrder.advanceInfo.numberCandle" class="form-control form-control-sm" style="background: white !important;text-align: left;" rows="3"> 
+                                                    <option value="">Không lấy</option>
+                                                    <option *ngFor="let a of nensoArray; let index = index" value="{{index + 1}}">{{index + 1}}</option>
+                                                </select>
+                                            </div>
+
+                                </fieldset>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <fieldset class="form-group">
+                                    <label class="font-small-2">Nội dung</label>
+                                    <textarea class="form-control"
+                                        style="background: white !important;text-align: left;" rows="3" matInput
+                                        [(ngModel)]="newOrder.advanceInfo.note" inputWithWordPad></textarea>
+                                </fieldset>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-small-2 textWith">Giờ Giao</td>
+                            <td style="text-align: right;">
+                                <fieldset>
+                                    <input [min]="min" [(ngModel)]="newOrder.deliveryPickupTime"
+                                        [owlDateTimeTrigger]="dt" [owlDateTime]="dt" class="form-control"
+                                        style="width: 100%;cursor: pointer;">
+                                    <owl-date-time #dt></owl-date-time>
+                                </fieldset>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-small-2">
+                                <label>Đ/C Giao</label>
+                            </td>
+                            <td style="text-align: right;">
+                                <fieldset class="form-group">
+                                    <input placeholder="Nhập địa chỉ..." class="form-control"
+                                        ngx-google-places-autocomplete
+                                        [options]="{types: [],componentRestrictions: { country: 'VN' }}"
+                                        style="text-align: left;   width: 100%;" #placesRef="ngx-places"
+                                        (onAddressChange)="handleAddressChange($event)"
+                                        [(ngModel)]="newOrder.advanceInfo.address" inputWithWordPad>
+                                </fieldset>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-small-2">
+                                <label>Chỉ dẫn </label>
+                            </td>
+                            <td style="text-align: right;">
+                                <fieldset class="form-group">
+                                    <input placeholder="Nhập chỉ dẫn đường đi..." class="form-control"  [(ngModel)]="newOrder.advanceInfo.deliveryInstruction"
+                                        style="text-align: left;   width: 100%;" inputWithWordPad>
+                                </fieldset>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="font-small-2">Phí</td>
+                            <td>
+                                <input currencyMask [options]="currencyMaskOptions" [(ngModel)]="newOrder.fee"
+                                    (keyup.enter)="checkoutNewOrder()" class="form-control float-right"
+                                    style="text-align: right;" inputWithNumpad (ngModelChange)="feeChanged()">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div [@ordersTimelineTransition]="isOrder ? 'in' : 'out'" [hidden]="!isOrder || !newOrder"
+            id="order-part" class="stats-item-container">          
+            <table
+                style="width: 96%; bottom: 120px; margin-right: 10px; margin-bottom: 35px; ">
+                <tbody>
+                    <tr>
+                        <td class="font-small-2" style="width: 20%;">
+                            <div style="border-bottom: 3px solid #2196F3;  width:60px">Tổng đơn</div>
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="b-main" style="text-align: right;color: black;text-align: center; font-family: 'Open Sans Condensed'; font-size: 1em; line-height: 1em; display: contents;">
+                                    {{quickOrderService.getTotal() + Number(newOrder.fee) | currencyformat}}</div>
+                            </td>
+                    </tr>
+                    <tr>
+                        <td class="font-small-2" style="width: 20%;">
+                            <div style="border-bottom: 3px solid #8cff06; width:50px;margin-top: 10px; margin-bottom: 10px">
+                                Đặt cọc
+                            </div>
+                            </td>
+                        <td style="text-align: right; ">
+                            <input (keyup.enter)="checkoutNewOrder()"
+                                style="background: white; width:100%; text-align: right; border: solid 1px #8cff06; margin-top: 10px; margin-bottom: 10px"
+                                matInput [(ngModel)]="newOrder.deposit" [matAutocomplete]="autoDeposit"
+                                [formControl]="depositControl" class="form-control float-right">
+                            <mat-autocomplete #autoDeposit="matAutocomplete" autoActiveFirstOption
+                                (optionSelected)="onSelectionChangedDeposit($event)">
+                                <mat-option *ngIf="(quickOrderService.getTotal() + Number(newOrder.fee) )> 0"
+                                    [value]="quickOrderService.getTotal() + Number(newOrder.fee)">
+                                    <span>{{quickOrderService.getTotal() + Number(newOrder.fee) | currencyformat }} (trả
+                                        đủ)</span>
+                                </mat-option>
+                                <mat-option *ngFor="let d of filteredDeposits | async" [value]="d">
+                                    <span>{{d | currencyformat }}</span>
+                                </mat-option>
+                            </mat-autocomplete>
+
+                        </td>
+                    </tr>
+                    <tr >
+                        <td class="font-small-2" style="width: 20%;">
+                            <div style="border-bottom: 3px solid #ec3d05;  width:50px; margin-bottom: 10px">Còn lại</div>
+                        </td>
+                        <td style="text-align: right;">
+                            <div style="text-align: right;color: black;text-align: center; font-family: 'Open Sans Condensed'; font-size: 1em; line-height: 1em;  margin-bottom: 10px; display: contents;">
+                                    {{quickOrderService.getTotal() - newOrder.deposit + Number(newOrder.fee)| currencyformat}}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr *ngIf="!(newOrder && (newOrder.id > 0))">
+                        <td class="font-small-2">
+                            <mat-slide-toggle [(ngModel)]="isPrint">{{(isPrint?'In Hóa Đơn':'Không In' )}}
+                            </mat-slide-toggle>
+                        </td>
+                        <td style="text-align: right;">
+                            <button (click)="minusReceiptCount()" class="quantity-left-minus btn btn-number">
+                                <i class="fa fa-minus"></i></button>
+                            <label class="btn btn-raised"
+                                style="background-color: #fff;">{{newOrder.receiptCount}}</label>
+                            <button (click)="plusReceiptCount()" class="quantity-right-plus btn btn-number">
+                                <i class="fa fa-plus"></i></button>
+                        </td>
+                    </tr>
+                    <tr >
+                        <td class="font-small-2" style="width: 20%;">Người tạo</td>
+                        <td style="text-align: right;">
+                        <select  [(ngModel)]="newOrder.memberId"  *ngIf="shopService.sellMembers"  class="form-control form-control-sm" style="background: white !important;text-align: left;" rows="3"> 
+                            <option   *ngFor="let m of shopService.sellMembers" [value]="m.id"  >{{(m.name)}}</option>
+                        </select>
+                        </td>                      
+                    </tr>
+                    <tr>
+                        <td class="font-small-2 urgently">
+                            <mat-slide-toggle  style="margin-top: 18px;" [(ngModel)]="newOrder.isUrgent">Gấp
+                            </mat-slide-toggle>
+                        </td>
+                        <!-- <td style="text-align: right;">
+                            <button (click)="minusReceiptCount()" class="quantity-left-minus btn btn-number">
+                                <i class="fa fa-minus"></i></button>
+                            <label class="btn btn-raised"
+                                style="background-color: #fff;">{{newOrder.receiptCount}}</label>
+                            <button (click)="plusReceiptCount()" class="quantity-right-plus btn btn-number">
+                                <i class="fa fa-plus"></i></button>
+                        </td> -->
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+            <button [hidden]="!(isOrder && newOrder)" id="checkout-button" (click)="checkoutNewOrder()"
+                class="checkout-footer">
+                <div>
+                    <mat-hint class="{{ (newOrder && (newOrder.id > 0)) ? 'editOrderTitle' : 'makeNewOrderTitle'}}">
+                        {{ (newOrder && (newOrder.id > 0)) ? "Sửa đơn" : "TẠO ĐƠN"}}
+                    </mat-hint>
+                </div>
+                <!-- <div [@ordersTimelineTransition]="isOrder ? 'in' : 'out'" [hidden]="!isOrder || !newOrder"
+                    id="order-part" class="stats-item-container">
+                    <table class="checkout-table" style="width: 100%;">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div style="border-bottom: 3px solid #2196F3;font-size: 18px">Tổng đơn</div>
+                                </td>
+                                <td>
+                                    <div class="b-main"
+                                        style="color: #fff;text-align: center; font-family: 'Open Sans Condensed'; font-size: 1em; line-height: 1em;">
+                                        {{quickOrderService.getTotal() + Number(newOrder.fee) | currencyformat}}</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="border-bottom: 3px solid #8cff06; font-size: 18px;">Đặt cọc</div>
+                                </td>
+                                <td>
+                                    <div class="r-main"
+                                        style="color: #fff;text-align: center; font-family: 'Open Sans Condensed'; font-size: 1em; line-height: 1em;">
+                                        {{newOrder.deposit | currencyformat}}</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="border-bottom: 3px solid #ec3d05; font-size: 18px;">Còn lại</div>
+                                </td>
+                                <td>
+                                    <div
+                                        style="color: #fff;text-align: center; font-family: 'Open Sans Condensed'; font-size: 1em; line-height: 1em;">
+                                        {{quickOrderService.getTotal() - newOrder.deposit + Number(newOrder.fee)| currencyformat}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> -->
+            </button>
+            <!-- <ul *ngIf="shopService.sellMembers" class="dock">
+                <li *ngFor="let m of shopService.sellMembers">
+                    <a (click)="checkout(m)" href="javascript:;" title="{{m.name}}">
+                        <img src="{{m.image || '../../../../../../assets/images/avatar_placeholder.png'}}" />
+                    </a>
+                    <div class="p-name">
+                        {{shopService.getNameShort(m.name)}}
+                    </div>
+                </li>
+            </ul> -->
+        </div>
+    </div>
+</div>
+
+<ul class="dock" *ngIf="shopService.sellMembers" [@ordersTimelineTransition]="isOrder ? 'out' : 'in'">
+    <li *ngFor="let m of shopService.sellMembers">
+        <a (click)="checkout(m)" href="javascript:;" title="{{m.name}}">
+            <img src="{{m.image || '../../../../../../assets/images/avatar_placeholder.png'}}" />
+        </a>
+
+        <p class="p-name">
+            {{shopService.getNameShort(m.name)}}
+        </p>
+    </li>
+</ul>
